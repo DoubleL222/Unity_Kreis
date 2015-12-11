@@ -12,7 +12,7 @@ Vabljeni k editiranju in dodajanju vsebi.
 **$ git checkout -b [name_of_your_new_branch]**
 
 
-1. in ga pushajte na repozitorij:
+2. in ga pushajte na repozitorij:
 
 
 **$ git push -u origin [name_of_your_new_branch]**
