@@ -1,29 +1,15 @@
-# README #
+Živijo
 
-This README would normally document whatever steps are necessary to get your application up and running.
+Živijo ekipa.
 
-### What is this repository for? ###
+Narejen je Basecamp Campsite (here) in Bitbucket repozitorij. Če kdo ni bil povabljen naj sporoči tu ali preko drugega medija.
+Vabljeni k editiranju in dodajanju vsebi.
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+Kar se tiče programiranja če se bo kdo lotil naj gre v gitu na master branch in iz tega naredi svoj branch:
 
-### How do I get set up? ###
+$ git checkout -b [name_of_your_new_branch]
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+in ga pushajte na repozitorij:
+$ git push -u origin [name_of_your_new_branch]
 
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+Če ima kdo težave z gitom me lahko pokliče/sms-a na 041-877-465
