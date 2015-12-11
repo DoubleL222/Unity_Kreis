@@ -6,13 +6,13 @@ Narejen je Basecamp Campsite in Bitbucket (here) repozitorij. Če kdo ni bil pov
 Vabljeni k editiranju in dodajanju vsebi.
 
 
-1. Kar se tiče programiranja če se bo kdo lotil naj gre v gitu na master branch in iz tega naredi svoj branch:
+Kar se tiče programiranja če se bo kdo lotil naj gre v gitu na master branch in iz tega naredi svoj branch:
 
 
 **$ git checkout -b [name_of_your_new_branch]**
 
 
-2. in ga pushajte na repozitorij:
+in ga pushajte na repozitorij:
 
 
 **$ git push -u origin [name_of_your_new_branch]**
