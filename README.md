@@ -2,7 +2,7 @@
 
 Živijo ekipa.
 
-Narejen je Basecamp Campsite (here) in Bitbucket repozitorij. Če kdo ni bil povabljen naj sporoči tu ali preko drugega medija.
+Narejen je Basecamp Campsite in Bitbucket (here) repozitorij. Če kdo ni bil povabljen naj sporoči tu ali preko drugega medija.
 Vabljeni k editiranju in dodajanju vsebi.
 
 Kar se tiče programiranja če se bo kdo lotil naj gre v gitu na master branch in iz tega naredi svoj branch:
