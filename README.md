@@ -7,7 +7,7 @@ Vabljeni k editiranju in dodajanju vsebi.
 
 
 1. Kar se tiče programiranja če se bo kdo lotil naj gre v gitu na master branch in iz tega naredi svoj branch:
-1. 
+
 
 **$ git checkout -b [name_of_your_new_branch]**
 
