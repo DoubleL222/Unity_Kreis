@@ -5,9 +5,12 @@ public class SegmentManager : MonoBehaviour {
 
 	public GameObject mesh;
 	public GameObject physics;
+
+	private static int count = 0;
 	// Use this for initialization
 	void Start () {
-		
+		count++;
+		Debug.Log ("Number of segments: " + count);
 	}
 
 	public void SetPosition(Vector2 pos){

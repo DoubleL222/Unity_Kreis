@@ -10,6 +10,8 @@ public class LocalPlayerController : MonoBehaviour {
 
 	private int gravity;
 
+	private float lastGravityChangeTime;
+	private static float gravityChangeDelay = 0.3f;
 
 	// Use this for initialization
 	void Start () {
@@ -26,7 +28,8 @@ public class LocalPlayerController : MonoBehaviour {
 		if (Input.GetKey ("d")) {
 			rigidbody.AddForce (10f, 0, 0);
 		}
-		if (Input.GetKey ("w")) {
+		if (Input.GetKey ("w") && lastGravityChangeTime + gravityChangeDelay < Time.time) {
+			lastGravityChangeTime = Time.time;
 			gravity = -gravity;
 		}
 
@@ -41,7 +44,13 @@ public class LocalPlayerController : MonoBehaviour {
 		mesh.transform.position = new Vector3(mx, my, 0);
 		mesh.transform.rotation = Quaternion.Euler (0, 0, (angle) * 180f / Mathf.PI + 90f);
 
-		rigidbody.velocity += gravity * Physics.gravity * Time.deltaTime;
+
+		Vector3 grav = new Vector3 (-rigidbody.position.x, -rigidbody.position.y, 0);
+		grav.Normalize ();
+		float scale = 1f/grav.y * Physics.gravity.y * gravity * Time.deltaTime;
+		grav.Scale (new Vector3(scale, scale, scale));
+	
+		rigidbody.velocity += grav;
 
 		//mesh.transform.position = new Vector3 ();
 	}
