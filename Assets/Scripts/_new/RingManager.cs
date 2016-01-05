@@ -21,7 +21,7 @@ public class RingManager{
 
 		for(int i=0; i < max; i++){
 			GameObject currentSegment = MonoBehaviour.Instantiate(segmentPrefab/*, new Vector3(min + step * i, distance, 0), new Quaternion()*/) as GameObject;
-			SegmentManager currentSegmentManager = currentSegment.GetComponent<SegmentManager> ();
+			SegmentController currentSegmentManager = currentSegment.GetComponent<SegmentController> ();
 			currentSegmentManager.SetPosition (new Vector2 ((min + step * i), distance));
 			Debug.Log ("Segment position at: " + new Vector2 ((min + step * i), distance));
 			segments.Add(currentSegment);

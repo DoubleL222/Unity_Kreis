@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SegmentManager : MonoBehaviour {
+public class SegmentController : PolarPhysicsObject{
 
 	public GameObject mesh;
 	public GameObject physics;
 
 	private static int count = 0;
-	private static float scaleMultiplier = Mathf.PI*2;
 
 	// Use this for initialization
 	void Start () {
@@ -36,6 +35,9 @@ public class SegmentManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-	
+		StartUpdate (mesh, physics, null);
+
+
+		EndUpdate(mesh, physics,  null);
 	}
 }
