@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class PolarPhysicsObject : MonoBehaviour{
+	protected static readonly float widthMultiplier = 10f;
 	protected static float scaleMultiplier = Mathf.PI*2;
 	protected static float maxHorizontalSpeed = 2f;
 	protected static float maxVerticalSpeed = 5f;
@@ -11,9 +12,13 @@ public class PolarPhysicsObject : MonoBehaviour{
 
 	public GameObject mesh;
 	public GameObject physics;
+	public GameObject physics_parent;
 	public Rigidbody2D rigidbody;
 
 	protected void Awake(){
+		Vector3 tmp = physics_parent.transform.localScale;
+		tmp.Scale (new Vector3(widthMultiplier, 1, 1));
+		physics_parent.transform.localScale = tmp;
 		oldscale = 1;
 		oldVelocity = new Vector2 (0f, 0f);
 		Debug.Log ("Start called!");
@@ -21,13 +26,13 @@ public class PolarPhysicsObject : MonoBehaviour{
 
 	protected void StartUpdate(){
 		if (physics != null) {
-			if (physics.transform.position.x > Mathf.PI) {
+			if (physics.transform.position.x > Mathf.PI * widthMultiplier) {
 				Vector3 tmp = physics.transform.position;
-				tmp.x -= 2 * Mathf.PI;
+				tmp.x -= 2 * Mathf.PI * widthMultiplier;
 				physics.transform.position = tmp;
-			} else if (physics.transform.position.x < -Mathf.PI) {
+			} else if (physics.transform.position.x < -Mathf.PI * widthMultiplier) {
 				Vector3 tmp = physics.transform.position;
-				tmp.x += 2 * Mathf.PI;
+				tmp.x += 2 * Mathf.PI * widthMultiplier;
 				physics.transform.position = tmp;
 			}
 		}
@@ -37,7 +42,7 @@ public class PolarPhysicsObject : MonoBehaviour{
 			tmpvel.Scale (new Vector2 (oldscale, oldscale));
 			oldVelocity += tmpvel;
 			oldVelocity.Scale (new Vector2 (1f / oldscale, 1f));
-			oldVelocity.x = Mathf.Clamp (oldVelocity.x, -maxHorizontalSpeed, maxHorizontalSpeed);
+			oldVelocity.x = Mathf.Clamp (oldVelocity.x, -maxHorizontalSpeed * widthMultiplier, maxHorizontalSpeed * widthMultiplier);
 			oldVelocity.y = Mathf.Clamp (oldVelocity.y, -maxVerticalSpeed, maxVerticalSpeed);
 			rigidbody.velocity = oldVelocity;
 			oldscale = scaleMultiplier / rigidbody.position.y;
@@ -49,7 +54,7 @@ public class PolarPhysicsObject : MonoBehaviour{
 		if (physics != null && mesh != null) {
 			Vector3 pos = physics.transform.position;
 	
-			float angle = pos.x;
+			float angle = pos.x / widthMultiplier;
 			float distance = pos.y;
 
 			float mx = distance * Mathf.Cos (angle);
