@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour {
 	GameObject localPlayer2;
 
 	// Use this for initialization
-	void Start () {
+	void Start() {
 		GameObject localPlayerPrefab = Resources.Load ("_new/LocalPlayer") as GameObject;
 		localPlayer1 = MonoBehaviour.Instantiate (localPlayerPrefab, new Vector3 (0, 27.5f, 0), new Quaternion ()) as GameObject;
 		localPlayer2 = MonoBehaviour.Instantiate (localPlayerPrefab, new Vector3 (0, 27.5f, 0), new Quaternion ()) as GameObject;

@@ -3,11 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class LocalPlayerController : PolarPhysicsObject {
-
-	public GameObject mesh;
-	public GameObject physics;
-	public Rigidbody rigidbody;
-
 	private int gravity;
 
 	private float lastGravityChangeTime;
@@ -23,7 +18,9 @@ public class LocalPlayerController : PolarPhysicsObject {
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Awake() {
+		Debug.Log ("Start called");
+		base.Awake();
 		gravity = 1;
 		oldscale = scaleMultiplier/rigidbody.position.y;
 		if (keys == null) {
@@ -36,16 +33,16 @@ public class LocalPlayerController : PolarPhysicsObject {
 	}
 		
 	void FixedUpdate () {
-		StartUpdate (mesh, physics, rigidbody);
+		StartUpdate ();
 		if (Input.GetKey (keys["left"])) {
-			Vector3 f = new Vector3 (-movementForce, 0, 0);
-			Vector3 sc = new Vector3 (Time.fixedDeltaTime, Time.fixedDeltaTime, Time.fixedDeltaTime);
+			Vector2 f = new Vector2 (-movementForce, 0);
+			Vector2 sc = new Vector2 (Time.fixedDeltaTime, Time.fixedDeltaTime);
 			f.Scale (sc);
 			rigidbody.AddForce (f);
 		}
 		if (Input.GetKey (keys["right"])) {
-			Vector3 f = new Vector3 (movementForce, 0, 0);
-			Vector3 sc = new Vector3 (Time.fixedDeltaTime, Time.fixedDeltaTime, Time.fixedDeltaTime);
+			Vector2 f = new Vector2 (movementForce, 0);
+			Vector2 sc = new Vector2 (Time.fixedDeltaTime, Time.fixedDeltaTime);
 			f.Scale (sc);
 			rigidbody.AddForce (f);
 		}
@@ -53,11 +50,11 @@ public class LocalPlayerController : PolarPhysicsObject {
 			lastGravityChangeTime = Time.time;
 			gravity = -gravity;
 		}
-		Vector3 grav = new Vector3(0f, gravityForce * gravity, 0f);
+		Vector2 grav = new Vector2(0f, gravityForce * gravity);
 		//Debug.Log("Grav: " + grav);
 		//rigidbody.velocity += grav;
 		rigidbody.AddForce(grav);
-		EndUpdate (mesh, physics, rigidbody);
+		EndUpdate ();
 	}
 
 }

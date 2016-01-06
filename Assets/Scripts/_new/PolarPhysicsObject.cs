@@ -2,16 +2,24 @@
 using System.Collections;
 
 public class PolarPhysicsObject : MonoBehaviour{
-
-	protected Vector3 oldVelocity;
-	protected float oldscale;
 	protected static float scaleMultiplier = Mathf.PI*2;
 	protected static float maxHorizontalSpeed = 2f;
 	protected static float maxVerticalSpeed = 5f;
 
+	protected Vector2 oldVelocity;
+	protected float oldscale;
 
+	public GameObject mesh;
+	public GameObject physics;
+	public Rigidbody2D rigidbody;
 
-	protected void StartUpdate(GameObject mesh, GameObject physics, Rigidbody rigidbody){
+	protected void Awake(){
+		oldscale = 1;
+		oldVelocity = new Vector2 (0f, 0f);
+		Debug.Log ("Start called!");
+	}
+
+	protected void StartUpdate(){
 		if (physics != null) {
 			if (physics.transform.position.x > Mathf.PI) {
 				Vector3 tmp = physics.transform.position;
@@ -24,11 +32,11 @@ public class PolarPhysicsObject : MonoBehaviour{
 			}
 		}
 		if (rigidbody != null) {
-			Vector3 tmpvel = rigidbody.velocity;
+			Vector2 tmpvel = rigidbody.velocity;
 			tmpvel -= oldVelocity;
-			tmpvel.Scale (new Vector3 (oldscale, oldscale, oldscale));
+			tmpvel.Scale (new Vector2 (oldscale, oldscale));
 			oldVelocity += tmpvel;
-			oldVelocity.Scale (new Vector3 (1f / oldscale, 1f, 1f / oldscale));
+			oldVelocity.Scale (new Vector2 (1f / oldscale, 1f));
 			oldVelocity.x = Mathf.Clamp (oldVelocity.x, -maxHorizontalSpeed, maxHorizontalSpeed);
 			oldVelocity.y = Mathf.Clamp (oldVelocity.y, -maxVerticalSpeed, maxVerticalSpeed);
 			rigidbody.velocity = oldVelocity;
@@ -37,7 +45,7 @@ public class PolarPhysicsObject : MonoBehaviour{
 	}
 
 
-	protected void EndUpdate(GameObject mesh, GameObject physics, Rigidbody rigidbody){
+	protected void EndUpdate(){
 		if (physics != null && mesh != null) {
 			Vector3 pos = physics.transform.position;
 	
@@ -52,15 +60,15 @@ public class PolarPhysicsObject : MonoBehaviour{
 		}
 		if (rigidbody != null) {
 			oldVelocity = rigidbody.velocity;
-			Debug.Log ("Actual velocity: " + rigidbody.velocity);
-			oldVelocity.Scale (new Vector3 (oldscale, 1f, oldscale));
+			//Debug.Log ("Actual velocity: " + rigidbody.velocity);
+			oldVelocity.Scale (new Vector2 (oldscale, 1f));
 
 			rigidbody.velocity = oldVelocity;
-			Debug.Log ("Applied velocity: " + rigidbody.velocity);
+			//Debug.Log ("Applied velocity: " + rigidbody.velocity);
 
-			Vector3 tmpvec = rigidbody.velocity;
-			tmpvec.Scale (new Vector3 (rigidbody.position.y, 1f, rigidbody.position.y));
-			Debug.Log ("Velocity given position: " + tmpvec);
+			//Vector3 tmpvec = rigidbody.velocity;
+			//tmpvec.Scale (new Vector2 (rigidbody.position.y, 1f));
+			//Debug.Log ("Velocity given position: " + tmpvec);
 
 			float oldyscale = rigidbody.transform.localScale.y;
 			rigidbody.transform.localScale = new Vector3 (oldscale, oldyscale, oldscale);
