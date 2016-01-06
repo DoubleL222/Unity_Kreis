@@ -1,16 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SegmentManager : MonoBehaviour {
-
-	public GameObject mesh;
-	public GameObject physics;
-
+public class SegmentController : PolarPhysicsObject{
 	private static int count = 0;
-	private static float scaleMultiplier = Mathf.PI*2;
 
 	// Use this for initialization
-	void Start () {
+	void Awake() {
+		Debug.Log ("Start called");
+		base.Awake();
 		count++;
 		//Debug.Log ("Number of segments: " + count);
 	}
@@ -28,14 +25,17 @@ public class SegmentManager : MonoBehaviour {
 		mesh.transform.rotation = Quaternion.Euler (0, 0, (angle) * 180f / Mathf.PI + 90f);
 
 		float sc = scaleMultiplier / pos.y;
-		physics.transform.position = new Vector3(pos.x, pos.y, 0);
-		physics.transform.localScale = new Vector3 (sc, sc, sc);	
+		physics.transform.position = new Vector2(pos.x, pos.y);
+		physics.transform.localScale = new Vector2(sc, sc);	
 
 		//Debug.Log ("Segment pos set to " + mesh.transform.position + " " + physics.transform.position);
 	}
 
 	// Update is called once per frame
 	void Update () {
-	
+		StartUpdate ();
+
+
+		EndUpdate();
 	}
 }
