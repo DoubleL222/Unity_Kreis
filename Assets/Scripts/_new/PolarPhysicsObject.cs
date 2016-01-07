@@ -16,7 +16,7 @@ public class PolarPhysicsObject : MonoBehaviour{
 	protected void Awake(){
 		oldscale = 1;
 		oldVelocity = new Vector2 (0f, 0f);
-		Debug.Log ("Start called!");
+	//	Debug.Log ("Start called!");
 	}
 
 	protected void StartUpdate(){
