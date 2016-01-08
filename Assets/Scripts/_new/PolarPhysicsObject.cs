@@ -47,13 +47,9 @@ public class PolarPhysicsObject : MonoBehaviour{
 			rigidbody.velocity = oldVelocity;
 			oldscale = scaleMultiplier / rigidbody.position.y;
 		}
-	}
-
-
-	protected void EndUpdate(){
 		if (physics != null && mesh != null) {
 			Vector3 pos = physics.transform.position;
-	
+
 			float angle = pos.x / widthMultiplier;
 			float distance = pos.y;
 
@@ -63,6 +59,10 @@ public class PolarPhysicsObject : MonoBehaviour{
 			mesh.transform.position = new Vector3 (mx, my, 0);
 			mesh.transform.rotation = Quaternion.Euler (0, 0, (angle) * 180f / Mathf.PI + 90f);
 		}
+	}
+
+
+	protected void EndUpdate(){
 		if (rigidbody != null) {
 			oldVelocity = rigidbody.velocity;
 			//Debug.Log ("Actual velocity: " + rigidbody.velocity);

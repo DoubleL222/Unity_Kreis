@@ -6,7 +6,6 @@ public class SegmentController : PolarPhysicsObject{
 
 	// Use this for initialization
 	void Awake() {
-		Debug.Log ("Start called");
 		base.Awake();
 		count++;
 		//Debug.Log ("Number of segments: " + count);
