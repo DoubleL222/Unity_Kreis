@@ -13,13 +13,23 @@ public class LocalPlayerController : PolarPhysicsObject {
 
 	private IDictionary<string,string> keys;
 
+	//LUKA
+	private float shotOffset = 1f;
+	private float fireRate = 2.0f;
+	private float lastShoot = 0.0f;
+	GameObject shotPrefab;
+	//END LUKA
+
 	public void setKeys(IDictionary<string,string> keys){
 		this.keys = keys;
 	}
 
 	// Use this for initialization
 	void Awake() {
-		Debug.Log ("Start called");
+		//Debug.Log ("Start called");
+		//LUKA
+		shotPrefab = Resources.Load ("_new/PlayerShot") as GameObject;
+		//END LUKA
 		base.Awake();
 		gravity = 1;
 		oldscale = scaleMultiplier/rigidbody.position.y;
@@ -28,6 +38,9 @@ public class LocalPlayerController : PolarPhysicsObject {
 			defaultKeys.Add ("left", "a");
 			defaultKeys.Add ("right", "d");
 			defaultKeys.Add ("gravityChange", "w");
+			//LUKA
+			defaultKeys.Add ("shoot", "s");
+			//END LUKA
 			setKeys (defaultKeys);
 		}
 	}
@@ -49,6 +62,13 @@ public class LocalPlayerController : PolarPhysicsObject {
 		if (Input.GetKey (keys["gravityChange"]) && lastGravityChangeTime + gravityChangeDelay < Time.time) {
 			lastGravityChangeTime = Time.time;
 			gravity = -gravity;
+		}
+		if (Input.GetKey (keys["shoot"]) && (lastShoot+fireRate) < Time.time) {
+			lastShoot = Time.time;
+			GameObject shotInstance = MonoBehaviour.Instantiate(shotPrefab, physics.transform.position + new Vector3(0.0f, -gravity*shotOffset ,0.0f), new Quaternion()) as GameObject;
+			Vector2 shotVel = new Vector2(0.0f, -gravity);
+			Debug.Log(shotVel);
+			shotInstance.GetComponent<ShotController>().setVelocity(shotVel);
 		}
 		Vector2 grav = new Vector2(0f, gravityForce * gravity);
 		//Debug.Log("Grav: " + grav);

@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour {
 		p2keys.Add ("left", "g");
 		p2keys.Add ("right", "j");
 		p2keys.Add ("gravityChange", "z");
+		p2keys.Add ("shoot", "h");
 		localPlayer2.GetComponent<LocalPlayerController>().setKeys (p2keys);
 
 
@@ -28,7 +29,7 @@ public class GameManager : MonoBehaviour {
 		rings.Add (new RingManager (35f));
 		rings.Add (new RingManager (40f));
 		rings.Add (new RingManager (50f));
-		Debug.Log ("Initialized!");
+		//Debug.Log ("Initialized!");
 	}
 	
 	// Update is called once per frame

@@ -14,6 +14,10 @@ public class RingManager{
 		}
 
 		int max = (int)distance;
+
+		//LUKA
+		//max = (int)Mathf.Floor (distance * Mathf.PI * 2);
+		//END LUKA
 		segments = new List<GameObject> (max);
 
 		float min = -Mathf.PI;
@@ -23,7 +27,7 @@ public class RingManager{
 			GameObject currentSegment = MonoBehaviour.Instantiate(segmentPrefab/*, new Vector3(min + step * i, distance, 0), new Quaternion()*/) as GameObject;
 			SegmentController currentSegmentManager = currentSegment.GetComponent<SegmentController> ();
 			currentSegmentManager.SetPosition (new Vector2 ((min + step * i), distance));
-			Debug.Log ("Segment position at: " + new Vector2 ((min + step * i), distance));
+			//Debug.Log ("Segment position at: " + new Vector2 ((min + step * i), distance));
 			segments.Add(currentSegment);
 			//Debug.Log ("New segment added");
 			//i++;
