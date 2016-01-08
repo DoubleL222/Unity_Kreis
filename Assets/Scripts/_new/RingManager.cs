@@ -13,10 +13,10 @@ public class RingManager{
 			segmentPrefab = Resources.Load("_new/Segment") as GameObject;
 		}
 
-		int max = (int)distance;
 
+		//int max = (int)distance;
 		//LUKA
-		//max = (int)Mathf.Floor (distance * Mathf.PI * 2);
+		int max = (int)Mathf.Floor (distance * Mathf.PI * 2);
 		//END LUKA
 		segments = new List<GameObject> (max);
 
