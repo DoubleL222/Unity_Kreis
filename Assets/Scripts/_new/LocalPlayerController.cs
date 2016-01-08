@@ -14,7 +14,7 @@ public class LocalPlayerController : PolarPhysicsObject {
 	private IDictionary<string,string> keys;
 
 	//LUKA
-	private float shotOffset = 1f;
+	private float shotOffset = 1.2f;
 	private float fireRate = 2.0f;
 	private float lastShoot = 0.0f;
 	GameObject shotPrefab;
@@ -26,11 +26,11 @@ public class LocalPlayerController : PolarPhysicsObject {
 
 	// Use this for initialization
 	void Awake() {
+		base.Awake();
 		//Debug.Log ("Start called");
 		//LUKA
 		shotPrefab = Resources.Load ("_new/PlayerShot") as GameObject;
 		//END LUKA
-		base.Awake();
 		gravity = 1;
 		oldscale = scaleMultiplier/rigidbody.position.y;
 		if (keys == null) {
