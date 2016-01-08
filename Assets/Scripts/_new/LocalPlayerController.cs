@@ -15,10 +15,21 @@ public class LocalPlayerController : PolarPhysicsObject {
 
 	//LUKA
 	private float shotOffset = 1f;
-	private float fireRate = 2.0f;
+	private float fireRate = 0.1f;
 	private float lastShoot = 0.0f;
 	GameObject shotPrefab;
 	//END LUKA
+
+
+	// medo
+
+	public AudioClip[] sfx_crashes;
+	public AudioClip[] sfx_gravity;
+	public AudioClip sfx_spawn;
+	public AudioClip sfx_death;
+	public AudioClip sfx_shoot;
+
+	// end medo
 
 	public void setKeys(IDictionary<string,string> keys){
 		this.keys = keys;
@@ -62,6 +73,12 @@ public class LocalPlayerController : PolarPhysicsObject {
 		if (Input.GetKey (keys["gravityChange"]) && lastGravityChangeTime + gravityChangeDelay < Time.time) {
 			lastGravityChangeTime = Time.time;
 			gravity = -gravity;
+
+			// sound
+			AudioSource audio = GetComponent<AudioSource>();
+			if(this.gravity < 0) audio.clip = sfx_gravity[0];
+			else audio.clip = sfx_gravity[1];
+			audio.Play();
 		}
 		if (Input.GetKey (keys["shoot"]) && (lastShoot+fireRate) < Time.time) {
 			lastShoot = Time.time;
@@ -69,6 +86,11 @@ public class LocalPlayerController : PolarPhysicsObject {
 			Vector2 shotVel = new Vector2(0.0f, -gravity);
 			Debug.Log(shotVel);
 			shotInstance.GetComponent<ShotController>().setVelocity(shotVel);
+
+			// sound
+			AudioSource audio = this.GetComponent<AudioSource>();
+			audio.clip = sfx_shoot;
+			audio.Play();
 		}
 		Vector2 grav = new Vector2(0f, gravityForce * gravity);
 		//Debug.Log("Grav: " + grav);
