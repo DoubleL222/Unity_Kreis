@@ -4,7 +4,7 @@ using System.Collections;
 public class PolarPhysicsObject : MonoBehaviour{
 	protected static readonly float widthMultiplier = 10f;
 	protected static float scaleMultiplier = Mathf.PI*2;
-	protected static float maxHorizontalSpeed = 2f;
+	protected static float maxHorizontalSpeed = 5f;
 	protected static float maxVerticalSpeed = 5f;
 
 	protected Vector2 oldVelocity;
