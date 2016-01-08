@@ -6,7 +6,7 @@ public class LocalPlayerController : PolarPhysicsObject {
 	private int gravity;
 
 	private float lastGravityChangeTime;
-	private static float gravityChangeDelay = 0.3f;
+	private static float gravityChangeDelay = 0.4f;
 
 	private static float movementForce = 1200;//400f;
 	private static float gravityForce = 30f;
@@ -59,12 +59,12 @@ public class LocalPlayerController : PolarPhysicsObject {
 			f.Scale (sc);
 			rigidbody.AddForce (f);
 		}
-		if (Input.GetKey (keys["gravityChange"]) && lastGravityChangeTime + gravityChangeDelay < Time.time) {
-			lastGravityChangeTime = Time.time;
+		if (Input.GetKey (keys["gravityChange"]) && lastGravityChangeTime + gravityChangeDelay < Time.fixedTime) {
+			lastGravityChangeTime = Time.fixedTime;
 			gravity = -gravity;
 		}
-		if (Input.GetKey (keys["shoot"]) && (lastShoot+fireRate) < Time.time) {
-			lastShoot = Time.time;
+		if (Input.GetKey (keys["shoot"]) && (lastShoot+fireRate) < Time.fixedTime) {
+			lastShoot = Time.fixedTime;
 			GameObject shotInstance = MonoBehaviour.Instantiate(shotPrefab, physics.transform.position + new Vector3(0.0f, -gravity*shotOffset ,0.0f), new Quaternion()) as GameObject;
 			Vector2 shotVel = new Vector2(0.0f, -gravity);
 			Debug.Log(shotVel);
@@ -74,6 +74,20 @@ public class LocalPlayerController : PolarPhysicsObject {
 		//Debug.Log("Grav: " + grav);
 		//rigidbody.velocity += grav;
 		rigidbody.AddForce(grav);
+
+		//rotate player mesh
+		{
+			float rotationTime = (Time.fixedTime - lastGravityChangeTime) / (gravityChangeDelay);
+			rotationTime = Mathf.Clamp01 (rotationTime);
+			Vector3 tmp = mesh.transform.rotation.eulerAngles;
+			if (gravity < 0)
+				tmp.z += rotationTime * 180;
+			else
+				tmp.z += (1 - rotationTime) * 180;
+			Quaternion rot = mesh.transform.rotation;
+			rot.eulerAngles = tmp;
+			mesh.transform.rotation = rot;
+		}
 		EndUpdate ();
 	}
 
