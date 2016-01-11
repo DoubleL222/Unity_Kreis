@@ -79,33 +79,29 @@ public abstract class PolarPhysicsObject : MonoBehaviour{
 			mesh.transform.position = new Vector3 (mx, my, 0);
 			mesh.transform.rotation = Quaternion.Euler (0, 0, (angle) * 180f / Mathf.PI + 90f);
 		}
-		if(this is LocalPlayerController)
-			for(int i=0; i < colliders.Length; i++){
-				Collider2D col = colliders [i];
-				Bounds bounds = col.bounds;
-				Vector3 min = bounds.min;
-				Vector3 max = bounds.max;
-				if (min.x < -Mathf.PI * widthMultiplier) {
-					collidercopiesright [i].enabled = true;
-					Vector2 offset = collidercopiesright [i].offset;
-					offset.x = colliders[i].offset.x + (2 * Mathf.PI * Mathf.PI) / (physics.transform.localScale.x);
-					collidercopiesright [i].offset = offset;
-					Debug.Log ("Size: " + bounds.size);
-					Debug.Log ("min " + min + " max " + max);
-				} else {
-					collidercopiesright [i].enabled = false;
-				}
-
-				if (max.x > Mathf.PI * widthMultiplier) {
-					collidercopiesleft [i].enabled = true;
-					Vector2 offset = collidercopiesleft [i].offset;
-					offset.x = colliders[i].offset.x - (2 * Mathf.PI * Mathf.PI) / (physics.transform.localScale.x);
-					collidercopiesleft [i].offset = offset;
-					Debug.Log ("Size: " + bounds.size);
-				} else {
-					collidercopiesleft [i].enabled = false;
-				}
+		for(int i=0; i < colliders.Length; i++){
+			Collider2D col = colliders [i];
+			Bounds bounds = col.bounds;
+			Vector3 min = bounds.min;
+			Vector3 max = bounds.max;
+			if (min.x < -Mathf.PI * widthMultiplier) {
+				collidercopiesright [i].enabled = true;
+				Vector2 offset = collidercopiesright [i].offset;
+				offset.x = colliders[i].offset.x + (2 * Mathf.PI * widthMultiplier) / (physics.transform.lossyScale.x);
+				collidercopiesright [i].offset = offset;
+			} else {
+				collidercopiesright [i].enabled = false;
 			}
+
+			if (max.x > Mathf.PI * widthMultiplier) {
+				collidercopiesleft [i].enabled = true;
+				Vector2 offset = collidercopiesleft [i].offset;
+				offset.x = colliders[i].offset.x - (2 * Mathf.PI * widthMultiplier) / (physics.transform.lossyScale.x);
+				collidercopiesleft [i].offset = offset;
+			} else {
+				collidercopiesleft [i].enabled = false;
+			}
+		}
 	}
 
 
