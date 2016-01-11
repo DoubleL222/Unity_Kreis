@@ -8,11 +8,12 @@ public class RingManager{
 
 	List<GameObject> segments;
 
-	public RingManager (float distance) { //length == distance, 1 unit ~= 1 segment
+		
+
+	public RingManager (float distance) {
 		if (segmentPrefab == null) {
 			segmentPrefab = Resources.Load("_new/Segment") as GameObject;
 		}
-
 
 		//int max = (int)distance;
 		//LUKA
@@ -22,15 +23,19 @@ public class RingManager{
 
 		float min = -Mathf.PI;
 		float step = (2 * Mathf.PI / (float)max);
+		Debug.Log ("# segments in ring " + max);
+	
+		SegmentTickBehaviourMove stbm = new SegmentTickBehaviourMove (1.5f);
+		SegmentTriggerBehaviourDestroy stbd = new SegmentTriggerBehaviourDestroy ();
 
 		for(int i=0; i < max; i++){
 			GameObject currentSegment = MonoBehaviour.Instantiate(segmentPrefab/*, new Vector3(min + step * i, distance, 0), new Quaternion()*/) as GameObject;
-			SegmentController currentSegmentManager = currentSegment.GetComponent<SegmentController> ();
+			SegmentController currentSegmentManager = currentSegment.GetComponentInChildren<SegmentController> ();
 			currentSegmentManager.SetPosition (new Vector2 ((min + step * i + 0.0001f), distance));
-			//Debug.Log ("Segment position at: " + new Vector2 ((min + step * i), distance));
+			currentSegmentManager.addBehaviour (stbm);
+			currentSegmentManager.addBehaviour (stbd);
+			//currentSegmentManager.SetPosition (new Vector2 ((min + step * i), distance));
 			segments.Add(currentSegment);
-			//Debug.Log ("New segment added");
-			//i++;
 		}
 	}
 }
