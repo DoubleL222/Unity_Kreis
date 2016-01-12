@@ -13,7 +13,6 @@ public class ShotDestroyerScript : MonoBehaviour {
 	
 	}
 	void OnTriggerEnter2D(Collider2D col){
-		Debug.Log ("ONTRIGGERENTER");
 		if (col.gameObject.tag == "Segment") {
 			Destroy(col.transform.parent.parent.gameObject);
 		}

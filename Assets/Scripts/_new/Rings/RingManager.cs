@@ -17,7 +17,7 @@ public class RingManager{
 
 		//int max = (int)distance;
 		//LUKA
-		int max = (int)Mathf.Floor (distance * Mathf.PI * 2);
+		int max = (int)Mathf.Floor (distance * Mathf.PI * 0.5f);
 		//END LUKA
 		segments = new List<GameObject> (max);
 
@@ -25,7 +25,7 @@ public class RingManager{
 		float step = (2 * Mathf.PI / (float)max);
 		Debug.Log ("# segments in ring " + max);
 	
-		SegmentTickBehaviourMove stbm = new SegmentTickBehaviourMove (1.5f);
+		SegmentTickBehaviourMove stbm = new SegmentTickBehaviourMove (5f);
 		SegmentTriggerBehaviourDestroy stbd = new SegmentTriggerBehaviourDestroy ();
 
 		for(int i=0; i < max; i++){

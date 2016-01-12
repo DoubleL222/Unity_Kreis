@@ -20,7 +20,6 @@ public class ShotController : PolarPhysicsObject {
 		if (velocitySet) {
 			StartUpdate ();
 			if (rigidbody.velocity != (moveVelocity * shotSpeed)) {
-				Debug.Log ("setting shot velocity");
 				rigidbody.velocity = moveVelocity * shotSpeed;
 			}
 			EndUpdate ();

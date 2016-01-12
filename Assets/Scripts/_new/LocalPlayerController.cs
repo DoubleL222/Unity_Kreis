@@ -67,7 +67,6 @@ public class LocalPlayerController : PolarPhysicsObject {
 			lastShoot = Time.fixedTime;
 			GameObject shotInstance = MonoBehaviour.Instantiate(shotPrefab, physics.transform.position + new Vector3(0.0f, -gravity*shotOffset ,0.0f), new Quaternion()) as GameObject;
 			Vector2 shotVel = new Vector2(0.0f, -gravity);
-			Debug.Log(shotVel);
 			shotInstance.GetComponent<ShotController>().setVelocity(shotVel);
 		}
 		Vector2 grav = new Vector2(0f, gravityForce * gravity);

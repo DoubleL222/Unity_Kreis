@@ -17,5 +17,4 @@ public class SegmentTickBehaviourMove : SegmentTickBehaviour{
 
 	void SegmentTickBehaviour.Tick(SegmentController segmentController){
 	}
-
 }
