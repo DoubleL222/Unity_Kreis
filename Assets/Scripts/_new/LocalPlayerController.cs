@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class LocalPlayerController : PolarPhysicsObject {
-	private int gravity;
+	public int gravity;
 
 	private float lastGravityChangeTime;
 	private static float gravityChangeDelay = 0.4f;
@@ -90,5 +90,4 @@ public class LocalPlayerController : PolarPhysicsObject {
 		}
 		EndUpdate ();
 	}
-
 }
