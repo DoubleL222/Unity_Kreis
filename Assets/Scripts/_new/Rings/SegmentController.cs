@@ -5,12 +5,17 @@ using System.Collections.Generic;
 public class SegmentController : PolarPhysicsObject{
 	private static int count = 0;
 
+	//LUKA
+	private GameObject ExplosionEffect;
+	//END LUKA
+
 	// Use this for initialization
 	IList <SegmentTickBehaviour> tickBehaviours;
 	IList <SegmentCollisionBehaviour> collisionBehaviours;
 	IList <SegmentTriggerBehaviour> triggerBehaviours;
 
 	void Awake() {
+		ExplosionEffect = Resources.Load ("_new/ExplosionEffect") as GameObject;
 		base.Awake();
 		count++;
 		tickBehaviours = new List<SegmentTickBehaviour> ();
@@ -72,7 +77,32 @@ public class SegmentController : PolarPhysicsObject{
 		foreach (SegmentTriggerBehaviour segmentTriggerBehaviour in triggerBehaviours) {
 			segmentTriggerBehaviour.Enter (other, this);
 		}
-	}
+		//LUKA
+		if (other.gameObject.tag == "Shot") {
+			Destroy(other.transform.root.gameObject);
+			Debug.Log("MAKING EXPLOSION");
+			Vector3 spawnPos = transformToPolar(other.transform.position);
+			GameObject explosionInstance = Instantiate(ExplosionEffect, spawnPos, Quaternion.identity) as GameObject;
+			mesh.transform.GetChild(0).gameObject.SetActive(false);
+			explosionInstance.transform.SetParent(mesh.transform);
+			gameObject.GetComponent<BoxCollider2D>().enabled = false;
+			//Destroy(transform.root.gameObject);
+			//explosionInstance.transform.SetParent(transform);
 
+		}
+		//END LUKA
+	}
+	//LUKA
+	Vector3 transformToPolar(Vector3 pos){
+		
+		float angle = pos.x / 10.0f;
+		float distance = pos.y;
+		
+		float mx = distance * Mathf.Cos (angle);
+		float my = distance * Mathf.Sin (angle);
+		
+		return new Vector3 (mx, my, 0.0f);
+	}
+	//END LUKA
 	
 }

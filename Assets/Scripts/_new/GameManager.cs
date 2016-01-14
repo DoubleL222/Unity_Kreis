@@ -24,9 +24,9 @@ public class GameManager : MonoBehaviour {
 
 
 		rings = new List<RingManager> ();
-		rings.Add (new RingManager (25f));
-		rings.Add (new RingManager (20f));
-		rings.Add (new RingManager (15f));
+	//	rings.Add (new RingManager (35f));
+		rings.Add (new RingManager (24f));
+		rings.Add (new RingManager (17f));
 		rings.Add (new RingManager (10f));
 		//rings.Add (new RingManager (5f));
 		//Debug.Log ("Initialized!");

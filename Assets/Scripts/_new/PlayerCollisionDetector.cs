@@ -5,6 +5,10 @@ public class PlayerCollisionDetector : MonoBehaviour {
 	Vector2 prevVelocity;
 	LocalPlayerController MyLCP;
 	Rigidbody2D rigidBody;
+	GameObject bumpEffect;
+	GameObject ExplosionEffect;
+
+	public Transform meshTransform;
 
 	private float BumpAwayMultiplyer = 2.0f;
 	private float SelfBumpMultiplyer = 1.0f;
@@ -12,6 +16,8 @@ public class PlayerCollisionDetector : MonoBehaviour {
 
 
 	void Start(){
+		ExplosionEffect = Resources.Load ("new/ExplosionEffect") as GameObject;
+		bumpEffect = Resources.Load ("_new/BumpEffect") as GameObject;
 		rigidBody = gameObject.GetComponent<Rigidbody2D> ();
 		MyLCP = GetComponentInParent<LocalPlayerController> ();
 		if (MyLCP != null) {
@@ -40,6 +46,11 @@ public class PlayerCollisionDetector : MonoBehaviour {
 					Debug.Log("pushing him for" +myVelocity*BumpAwayMultiplyer);
 					HisPCD.BumpAway(myVelocity);
 					SelfBump(myVelocity);
+					Vector2 contactPoint = coll.contacts[0].point;
+					Vector3 spawnPos = transformToPolar(new Vector3(contactPoint.x, contactPoint.y, 0.0f));
+
+					GameObject bumpMaker = Instantiate(bumpEffect, spawnPos, Quaternion.identity) as GameObject;
+					bumpMaker.transform.SetParent(meshTransform);
 					//hisRbd.ad
 				}
 			}
@@ -52,5 +63,24 @@ public class PlayerCollisionDetector : MonoBehaviour {
 	public void BumpAway(Vector2 BumpForce){
 		Vector2 yForce = new Vector2 (0.0f, YBumpForce*(-MyLCP.gravity));
 		rigidBody.AddForce (((BumpForce+yForce) * BumpAwayMultiplyer), ForceMode2D.Impulse);
+	}
+	void OnTriggerEnter2D(Collider2D other){
+		if (other.gameObject.tag == "Shot") {
+			Destroy(other.transform.root.gameObject);
+			GameObject explosionInstance = Instantiate(ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
+			Destroy(transform.root.gameObject);
+			//explosionInstance.transform.SetParent(transform);
+
+		}
+	}
+	Vector3 transformToPolar(Vector3 pos){
+		
+		float angle = pos.x / 10.0f;
+		float distance = pos.y;
+		
+		float mx = distance * Mathf.Cos (angle);
+		float my = distance * Mathf.Sin (angle);
+		
+		return new Vector3 (mx, my, 0.0f);
 	}
 }

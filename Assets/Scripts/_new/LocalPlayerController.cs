@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class LocalPlayerController : PolarPhysicsObject {
 	public int gravity;
 
+	private float descelerationRate = 0.995f;
+
 	private float lastGravityChangeTime;
 	private static float gravityChangeDelay = 0.4f;
 
@@ -14,6 +16,7 @@ public class LocalPlayerController : PolarPhysicsObject {
 	private IDictionary<string,string> keys;
 
 	//LUKA
+	public GameObject boosterEmiter;
 	private float shotOffset = 1.2f;
 	private float fireRate = 2.0f;
 	private float lastShoot = 0.0f;
@@ -47,17 +50,27 @@ public class LocalPlayerController : PolarPhysicsObject {
 		
 	void FixedUpdate () {
 		StartUpdate ();
-		if (Input.GetKey (keys["left"])) {
+		if (Input.GetKey (keys ["left"])) {
+			if(!boosterEmiter.activeSelf){
+				boosterEmiter.SetActive(true);
+			}
 			Vector2 f = new Vector2 (-movementForce, 0);
 			Vector2 sc = new Vector2 (Time.fixedDeltaTime, Time.fixedDeltaTime);
 			f.Scale (sc);
 			rigidbody.AddForce (f);
-		}
-		if (Input.GetKey (keys["right"])) {
+		} else if (Input.GetKey (keys ["right"])) {
+			if(!boosterEmiter.activeSelf){
+				boosterEmiter.SetActive(true);
+			}
 			Vector2 f = new Vector2 (movementForce, 0);
 			Vector2 sc = new Vector2 (Time.fixedDeltaTime, Time.fixedDeltaTime);
 			f.Scale (sc);
 			rigidbody.AddForce (f);
+		} else {
+			if(boosterEmiter.activeSelf){
+				boosterEmiter.SetActive(false);
+			}
+			rigidbody.velocity = new Vector2 (rigidbody.velocity.x*descelerationRate, rigidbody.velocity.y);
 		}
 		if (Input.GetKey (keys["gravityChange"]) && lastGravityChangeTime + gravityChangeDelay < Time.fixedTime) {
 			lastGravityChangeTime = Time.fixedTime;

@@ -4,7 +4,7 @@ using System.Collections;
 public class ShotController : PolarPhysicsObject {
 	private Vector2 moveVelocity;
 	private bool velocitySet;
-	private float shotSpeed = 5.0f;
+	private float shotSpeed = 30.0f;
 	// Use this for initialization
 	void Awake () {
 		base.Awake ();
