@@ -5,8 +5,8 @@ public class PlayerCollisionDetector : MonoBehaviour {
 	Vector2 prevVelocity;
 	LocalPlayerController MyLCP;
 	Rigidbody2D rigidBody;
-	GameObject bumpEffect;
-	GameObject ExplosionEffect;
+	static GameObject bumpEffect;
+	static GameObject ExplosionEffect;
 
 	public Transform meshTransform;
 
@@ -16,8 +16,10 @@ public class PlayerCollisionDetector : MonoBehaviour {
 
 
 	void Start(){
-		ExplosionEffect = Resources.Load ("new/ExplosionEffect") as GameObject;
-		bumpEffect = Resources.Load ("_new/BumpEffect") as GameObject;
+		if(ExplosionEffect == null)
+			ExplosionEffect = Resources.Load ("_new/ExplosionEffect") as GameObject;
+		if(bumpEffect == null)
+			bumpEffect = Resources.Load ("_new/BumpEffect") as GameObject;
 		rigidBody = gameObject.GetComponent<Rigidbody2D> ();
 		MyLCP = GetComponentInParent<LocalPlayerController> ();
 		if (MyLCP != null) {
@@ -48,7 +50,7 @@ public class PlayerCollisionDetector : MonoBehaviour {
 					SelfBump(myVelocity);
 					Vector2 contactPoint = coll.contacts[0].point;
 					Vector3 spawnPos = transformToPolar(new Vector3(contactPoint.x, contactPoint.y, 0.0f));
-
+					Debug.Log ("BumpEffect is null ? " + (bumpEffect == null));
 					GameObject bumpMaker = Instantiate(bumpEffect, spawnPos, Quaternion.identity) as GameObject;
 					bumpMaker.transform.SetParent(meshTransform);
 					//hisRbd.ad
