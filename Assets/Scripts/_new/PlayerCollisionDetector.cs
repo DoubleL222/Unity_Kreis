@@ -5,8 +5,8 @@ public class PlayerCollisionDetector : MonoBehaviour {
 	Vector2 prevVelocity;
 	LocalPlayerController MyLCP;
 	Rigidbody2D rigidBody;
-	GameObject bumpEffect;
-	GameObject ExplosionEffect;
+	public GameObject bumpEffect;
+	public GameObject ExplosionEffect;
 
 	public Transform meshTransform;
 
@@ -16,8 +16,6 @@ public class PlayerCollisionDetector : MonoBehaviour {
 
 
 	void Start(){
-		ExplosionEffect = Resources.Load ("new/ExplosionEffect") as GameObject;
-		bumpEffect = Resources.Load ("_new/BumpEffect") as GameObject;
 		rigidBody = gameObject.GetComponent<Rigidbody2D> ();
 		MyLCP = GetComponentInParent<LocalPlayerController> ();
 		if (MyLCP != null) {
@@ -69,6 +67,7 @@ public class PlayerCollisionDetector : MonoBehaviour {
 			Destroy(other.transform.root.gameObject);
 			GameObject explosionInstance = Instantiate(ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
 			Destroy(transform.root.gameObject);
+			Debug.Log ("PLAYER HIT");
 			//explosionInstance.transform.SetParent(transform);
 
 		}

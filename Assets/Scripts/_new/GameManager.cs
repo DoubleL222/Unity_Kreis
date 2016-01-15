@@ -9,11 +9,10 @@ public class GameManager : MonoBehaviour {
 	GameObject localPlayer1;
 	GameObject localPlayer2;
 
-	GameObject PhaseInEffect;
+	public GameObject PhaseInEffect;
+	public GameObject localPlayerPrefab;
 	// Use this for initialization
 	void Start() {
-		GameObject localPlayerPrefab = Resources.Load ("_new/LocalPlayer") as GameObject;
-		PhaseInEffect = Resources.Load ("_new/PhaseInEffect") as GameObject;
 
 		Vector3 SpawnPosition = new Vector3 (0, 15f, 0);
 

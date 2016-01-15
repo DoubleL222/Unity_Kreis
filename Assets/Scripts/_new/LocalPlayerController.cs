@@ -10,17 +10,17 @@ public class LocalPlayerController : PolarPhysicsObject {
 	private float lastGravityChangeTime;
 	private static float gravityChangeDelay = 0.4f;
 
-	private static float movementForce = 1200;//400f;
-	private static float gravityForce = 30f;
+	private static float movementForce = 1200f;//400f;
+	private static float gravityForce = 120f;//30f
 
 	private IDictionary<string,string> keys;
 
 	//LUKA
 	public GameObject boosterEmiter;
-	private float shotOffset = 1.2f;
+	private float shotOffset = 2f;
 	private float fireRate = 2.0f;
 	private float lastShoot = 0.0f;
-	GameObject shotPrefab;
+	public GameObject shotPrefab;
 	//END LUKA
 
 	public void setKeys(IDictionary<string,string> keys){
@@ -31,9 +31,6 @@ public class LocalPlayerController : PolarPhysicsObject {
 	void Awake() {
 		base.Awake();
 		//Debug.Log ("Start called");
-		//LUKA
-		shotPrefab = Resources.Load ("_new/PlayerShot") as GameObject;
-		//END LUKA
 		gravity = 1;
 		oldscale = scaleMultiplier/rigidbody.position.y;
 		if (keys == null) {

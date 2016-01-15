@@ -4,10 +4,8 @@ using System.Collections.Generic;
 
 public class SegmentController : PolarPhysicsObject{
 	private static int count = 0;
-
-	//LUKA
-	private GameObject ExplosionEffect;
-	//END LUKA
+	
+	public GameObject ExplosionEffect;
 
 	// Use this for initialization
 	IList <SegmentTickBehaviour> tickBehaviours;
@@ -15,7 +13,6 @@ public class SegmentController : PolarPhysicsObject{
 	IList <SegmentTriggerBehaviour> triggerBehaviours;
 
 	void Awake() {
-		ExplosionEffect = Resources.Load ("_new/ExplosionEffect") as GameObject;
 		base.Awake();
 		count++;
 		tickBehaviours = new List<SegmentTickBehaviour> ();
