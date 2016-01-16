@@ -3,6 +3,8 @@ using System.Collections;
 
 public class ShotDestroyerScript : MonoBehaviour {
 
+
+
 	// Use this for initialization
 	void Start () {
 	

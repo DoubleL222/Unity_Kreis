@@ -28,6 +28,7 @@ public class LocalPlayerController : PolarPhysicsObject {
 	public AudioClip sfx_spawn;
 	public AudioClip sfx_death;
 	public AudioClip sfx_shoot;
+	public AudioClip sfx_drive;
 
 	// end medo
 
@@ -58,6 +59,9 @@ public class LocalPlayerController : PolarPhysicsObject {
 		
 	void FixedUpdate () {
 		StartUpdate ();
+
+		Debug.Log ("mf" + movementForce);
+
 		if (Input.GetKey (keys["left"])) {
 			Vector2 f = new Vector2 (-movementForce, 0);
 			Vector2 sc = new Vector2 (Time.fixedDeltaTime, Time.fixedDeltaTime);
@@ -75,10 +79,12 @@ public class LocalPlayerController : PolarPhysicsObject {
 			gravity = -gravity;
 
 			// sound
-			AudioSource audio = GetComponent<AudioSource>();
-			if(this.gravity < 0) audio.clip = sfx_gravity[0];
-			else audio.clip = sfx_gravity[1];
-			audio.Play();
+			if(this.gravity < 0) 
+				//StartCoroutine(Sound_mgr_script.PlaySingle(sfx_gravity[1], 0.0f));
+				Sound_mgr_script.instance.PlaySingle(sfx_gravity[0], 0.0f);
+			else 
+				//StartCoroutine(Sound_mgr_script.PlaySingle(sfx_gravity[0], 0.0f));
+				Sound_mgr_script.instance.PlaySingle(sfx_gravity[1], 0.0f);
 		}
 		if (Input.GetKey (keys["shoot"]) && (lastShoot+fireRate) < Time.time) {
 			lastShoot = Time.time;
@@ -88,14 +94,18 @@ public class LocalPlayerController : PolarPhysicsObject {
 			shotInstance.GetComponent<ShotController>().setVelocity(shotVel);
 
 			// sound
-			AudioSource audio = this.GetComponent<AudioSource>();
-			audio.clip = sfx_shoot;
-			audio.Play();
+			//StartCoroutine( Sound_mgr_script.PlaySingle(sfx_shoot, 0.0f));
+			Sound_mgr_script.instance.PlaySingle(sfx_shoot, 0.0f);
+
 		}
 		Vector2 grav = new Vector2(0f, gravityForce * gravity);
 		//Debug.Log("Grav: " + grav);
 		//rigidbody.velocity += grav;
+		
 		rigidbody.AddForce(grav);
+		Vector2 vel_vector = rigidbody.velocity;
+		float vel = vel_vector.magnitude;
+		//Sound_mgr_script.instance.PlaySingle (sfx_drive, vel);
 		EndUpdate ();
 	}
 
