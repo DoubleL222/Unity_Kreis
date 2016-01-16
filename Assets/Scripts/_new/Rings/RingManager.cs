@@ -1,0 +1,41 @@
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+public class RingManager{
+
+	private static GameObject segmentPrefab;
+
+	List<GameObject> segments;
+
+		
+
+	public RingManager (float distance) {
+		if (segmentPrefab == null) {
+			segmentPrefab = Resources.Load("_new/Segment") as GameObject;
+		}
+
+		//int max = (int)distance;
+		//LUKA
+		int max = (int)Mathf.Floor (distance * Mathf.PI * 0.5f);
+		//END LUKA
+		segments = new List<GameObject> (max);
+
+		float min = -Mathf.PI;
+		float step = (2 * Mathf.PI / (float)max);
+		Debug.Log ("# segments in ring " + max);
+	
+		SegmentTickBehaviourMove stbm = new SegmentTickBehaviourMove (5f);
+		SegmentTriggerBehaviourDestroy stbd = new SegmentTriggerBehaviourDestroy ();
+
+		for(int i=0; i < max; i++){
+			GameObject currentSegment = MonoBehaviour.Instantiate(segmentPrefab/*, new Vector3(min + step * i, distance, 0), new Quaternion()*/) as GameObject;
+			SegmentController currentSegmentManager = currentSegment.GetComponentInChildren<SegmentController> ();
+			currentSegmentManager.SetPosition (new Vector2 ((min + step * i + 0.0001f), distance));
+			currentSegmentManager.addBehaviour (stbm);
+			currentSegmentManager.addBehaviour (stbd);
+			//currentSegmentManager.SetPosition (new Vector2 ((min + step * i), distance));
+			segments.Add(currentSegment);
+		}
+	}
+}
