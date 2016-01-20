@@ -56,7 +56,6 @@ public class SegmentController : PolarPhysicsObject{
 		StartUpdate ();
 
 		foreach (SegmentTickBehaviour segmentTickBehaviour in tickBehaviours) {
-			//Debug.Log ("Stuff!");
 			segmentTickBehaviour.FixedTick(this);
 		}
 
