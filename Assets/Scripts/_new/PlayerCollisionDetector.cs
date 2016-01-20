@@ -64,11 +64,15 @@ public class PlayerCollisionDetector : MonoBehaviour {
 	}
 	void OnTriggerEnter2D(Collider2D other){
 		if (other.gameObject.tag == "Shot") {
-			Destroy(other.transform.root.gameObject);
-			GameObject explosionInstance = Instantiate(ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
-			Destroy(transform.root.gameObject);
-			Debug.Log ("PLAYER HIT");
+			ShotDestroyerScript SDS = other.gameObject.GetComponent<ShotDestroyerScript> ();
+			if(!SDS.IsUsed){
+				SDS.IsUsed = true;
+				Destroy(other.transform.root.gameObject);
+				GameObject explosionInstance = Instantiate(ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
+				Destroy(transform.root.gameObject);
+				Debug.Log ("PLAYER HIT");
 			//explosionInstance.transform.SetParent(transform);
+			}
 
 		}
 	}

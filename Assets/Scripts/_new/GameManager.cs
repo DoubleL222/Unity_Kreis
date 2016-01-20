@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
+	List<Color> playerColors;
 
 	List<RingManager> rings;
 
@@ -18,6 +19,14 @@ public class GameManager : MonoBehaviour {
 	public GameObject localPlayerPrefab;
 	// Use this for initialization
 	void Start() {
+		playerColors = new List<Color> ();
+		playerColors.Add (new Color32 (255, 238, 13, 255));
+		playerColors.Add (new Color32 (232, 94, 12, 255));
+		playerColors.Add (new Color32 (234, 0, 255, 255));
+		playerColors.Add (new Color32 (12, 99, 232, 255));
+		playerColors.Add (new Color32 (0, 255, 69, 255));
+
+
 		ParticleSystem[] PSS = PhaseInEffect.GetComponentsInChildren<ParticleSystem>();
 		foreach (ParticleSystem PS in PSS) {
 			if (PS.duration < PhaseInDelay) {
@@ -103,7 +112,7 @@ public class GameManager : MonoBehaviour {
 		//StartCoroutine( SpawnPlayerAfter (5.0f));
 		Vector3 SpawnPosition = new Vector3 (0, 17f, 0);
 		for(int i=0; i<NumberOfPlayers;i++){
-			StartCoroutine( SpawnPlayerAfter (keyCodes[i], SpawnPositions[i]));
+			StartCoroutine( SpawnPlayerAfter (keyCodes[i], SpawnPositions[i], i));
 		}
 		/*
 
@@ -131,12 +140,15 @@ public class GameManager : MonoBehaviour {
 		return positons;
 	}
 
-	IEnumerator SpawnPlayerAfter(IDictionary<string,KeyCode> playerKeys, Vector3 SpawnPosition){
+	IEnumerator SpawnPlayerAfter(IDictionary<string,KeyCode> playerKeys, Vector3 SpawnPosition, int playerI){
 		Instantiate (PhaseInEffect, transformToPolar (SpawnPosition), Quaternion.identity);
-		Debug.Log ("waiting for " + PhaseInDelay);
 		yield return new WaitForSeconds (PhaseInDelay);
-		Debug.Log ("Execute Spawn Player");
 		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefab, SpawnPosition, new Quaternion ()) as GameObject;
+
+		SpriteRenderer PlayerSR = localPlayer.GetComponentInChildren<SpriteRenderer> ();
+		Debug.Log ("GETTING COLOR AT INDEX " + playerI);
+		PlayerSR.color = playerColors[(playerI % (playerColors.Count))];
+
 		localPlayer.GetComponent<LocalPlayerController>().setKeys (playerKeys);
 	}
 }
