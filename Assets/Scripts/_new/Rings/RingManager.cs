@@ -10,22 +10,20 @@ public class RingManager{
 
 		
 
-	public RingManager (float distance) {
+	public RingManager (float distance, float tickMove) {
 		if (segmentPrefab == null) {
 			segmentPrefab = Resources.Load("_new/Segment") as GameObject;
 		}
 
-		//int max = (int)distance;
-		//LUKA
-		int max = (int)Mathf.Floor (distance * Mathf.PI * 0.5f);
-		//END LUKA
+		int max = (int)Mathf.Floor (distance * Mathf.PI * 1.25f);
+
 		segments = new List<GameObject> (max);
 
 		float min = -Mathf.PI;
 		float step = (2 * Mathf.PI / (float)max);
 		Debug.Log ("# segments in ring " + max);
 	
-		SegmentTickBehaviourMove stbm = new SegmentTickBehaviourMove (5f);
+		SegmentTickBehaviourMove stbm = new SegmentTickBehaviourMove (tickMove);
 		SegmentTriggerBehaviourDestroy stbd = new SegmentTriggerBehaviourDestroy ();
 
 		for(int i=0; i < max; i++){

@@ -56,7 +56,6 @@ public class SegmentController : PolarPhysicsObject{
 		StartUpdate ();
 
 		foreach (SegmentTickBehaviour segmentTickBehaviour in tickBehaviours) {
-			//Debug.Log ("Stuff!");
 			segmentTickBehaviour.FixedTick(this);
 		}
 
@@ -76,16 +75,19 @@ public class SegmentController : PolarPhysicsObject{
 		}
 		//LUKA
 		if (other.gameObject.tag == "Shot") {
-			Destroy(other.transform.root.gameObject);
-			Debug.Log("MAKING EXPLOSION");
-			Vector3 spawnPos = transformToPolar(other.transform.position);
-			GameObject explosionInstance = Instantiate(ExplosionEffect, spawnPos, Quaternion.identity) as GameObject;
-			mesh.transform.GetChild(0).gameObject.SetActive(false);
-			explosionInstance.transform.SetParent(mesh.transform);
-			gameObject.GetComponent<BoxCollider2D>().enabled = false;
-			//Destroy(transform.root.gameObject);
-			//explosionInstance.transform.SetParent(transform);
-
+			ShotDestroyerScript SDS = other.gameObject.GetComponent<ShotDestroyerScript> ();
+			if(!SDS.IsUsed){
+				SDS.IsUsed = true;
+				Destroy(other.transform.root.gameObject);
+				Debug.Log("MAKING EXPLOSION");
+				Vector3 spawnPos = transformToPolar(other.transform.position);
+				GameObject explosionInstance = Instantiate(ExplosionEffect, spawnPos, Quaternion.identity) as GameObject;
+				mesh.transform.GetChild(0).gameObject.SetActive(false);
+				explosionInstance.transform.SetParent(mesh.transform);
+				gameObject.GetComponent<BoxCollider2D>().enabled = false;
+				//Destroy(transform.root.gameObject);
+				//explosionInstance.transform.SetParent(transform);
+			}
 		}
 		//END LUKA
 	}
