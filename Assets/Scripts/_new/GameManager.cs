@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour {
 	GameObject localPlayer1;
 	GameObject localPlayer2;
 
-	float[] RingSizes;
+	float[,] RingSizes;
 	Vector3[] SpawnPositions;
 	float PhyciscSegmentOffset = 7.0f;
 	float PhaseInDelay = float.MaxValue;
@@ -24,14 +24,19 @@ public class GameManager : MonoBehaviour {
 				PhaseInDelay = PS.duration;
 			}
 		}
-		RingSizes = new float[4];
-		RingSizes [0] = 10f;
-		RingSizes [1] = 17f;
-		RingSizes [2] = 24f;
-		RingSizes [3] = 31f;
+		if (PhaseInDelay == float.MaxValue) {
+			PhaseInDelay = 5.0f;
+		}
+		RingSizes = new float[3,2];
+		RingSizes [0,0] = 10f;
+		RingSizes [0,1] = 5f;
+		RingSizes [1,0] = 17f;
+		RingSizes [1,1] = -3f;
+		RingSizes [2,0] = 24f;
+		RingSizes [2,1] = 4f;
 
 		SpawnRings (RingSizes);
-		SpawnPlayers (10);
+		SpawnPlayers (5);
 
 	}
 	Vector3 transformToPolar(Vector3 pos){
@@ -48,10 +53,10 @@ public class GameManager : MonoBehaviour {
 	void Update () {
 	
 	}
-	public void SpawnRings(float[] RingSizes){
+	public void SpawnRings(float[,] RingSizes){
 		rings = new List<RingManager> ();
-		foreach (float f in RingSizes) {
-			rings.Add (new RingManager (f));
+		for (int i = 0; i < RingSizes.GetLength (0); i++) {
+			rings.Add (new RingManager (RingSizes[i,0], RingSizes[i,1]));
 		}
 	}
 
@@ -115,17 +120,20 @@ public class GameManager : MonoBehaviour {
 		Vector3[] positons = new Vector3[NumPlayers];
 		for (int i = 0; i < NumPlayers; i++) {
 			int x = 0;
-			if (i + 1 >= RingSizes.Length) x = 1;
-			if (i + 1 >= RingSizes.Length * 2 - 1) x = 2;
-			if (i + 1 >= RingSizes.Length * 3 - 2) x = 3;
-			int j = i % (RingSizes.Length - 1);
-			positons [i] = new Vector3 (x*10.0f, (RingSizes [j + 1] + RingSizes [j])/2.0f, 0.0f);
+			if (i + 1 >= RingSizes.GetLength (0)) x = 1;
+			if (i + 1 >= RingSizes.GetLength (0) * 2 - 1) x = 2;
+			if (i + 1 >= RingSizes.GetLength (0) * 3 - 2) x = 3;
+			if (i + 1 >= RingSizes.GetLength (0) * 4 - 3) x = 4;
+			if (i + 1 >= RingSizes.GetLength (0) * 5 - 4) x = 5;
+			int j = i % (RingSizes.GetLength (0) - 1);
+			positons [i] = new Vector3 (x*10.0f, (RingSizes [j + 1, 0] + RingSizes [j,0])/2.0f, 0.0f);
 		}
 		return positons;
 	}
 
 	IEnumerator SpawnPlayerAfter(IDictionary<string,KeyCode> playerKeys, Vector3 SpawnPosition){
 		Instantiate (PhaseInEffect, transformToPolar (SpawnPosition), Quaternion.identity);
+		Debug.Log ("waiting for " + PhaseInDelay);
 		yield return new WaitForSeconds (PhaseInDelay);
 		Debug.Log ("Execute Spawn Player");
 		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefab, SpawnPosition, new Quaternion ()) as GameObject;
