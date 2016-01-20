@@ -13,7 +13,7 @@ public class LocalPlayerController : PolarPhysicsObject {
 	private static float movementForce = 1200f;//400f;
 	private static float gravityForce = 120f;//30f
 
-	private IDictionary<string,string> keys;
+	private IDictionary<string,KeyCode> keys;
 
 	//LUKA
 	public GameObject boosterEmiter;
@@ -23,7 +23,7 @@ public class LocalPlayerController : PolarPhysicsObject {
 	public GameObject shotPrefab;
 	//END LUKA
 
-	public void setKeys(IDictionary<string,string> keys){
+	public void setKeys(IDictionary<string,KeyCode> keys){
 		this.keys = keys;
 	}
 
@@ -33,16 +33,14 @@ public class LocalPlayerController : PolarPhysicsObject {
 		//Debug.Log ("Start called");
 		gravity = 1;
 		oldscale = scaleMultiplier/rigidbody.position.y;
-		if (keys == null) {
+		/*if (keys == null) {
 			IDictionary<string,string> defaultKeys = new Dictionary<string,string> ();
 			defaultKeys.Add ("left", "a");
 			defaultKeys.Add ("right", "d");
 			defaultKeys.Add ("gravityChange", "w");
-			//LUKA
 			defaultKeys.Add ("shoot", "s");
-			//END LUKA
 			setKeys (defaultKeys);
-		}
+		}*/
 	}
 		
 	void FixedUpdate () {
