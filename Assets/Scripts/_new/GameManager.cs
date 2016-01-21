@@ -10,6 +10,11 @@ public class GameManager : MonoBehaviour {
 	GameObject localPlayer1;
 	GameObject localPlayer2;
 
+	bool gameEnded = false;
+
+	List<GameObject> LivingPlayers;
+
+	string[] playerNames;
 	float[,] RingSizes;
 	Vector3[] SpawnPositions;
 	float PhyciscSegmentOffset = 7.0f;
@@ -17,8 +22,10 @@ public class GameManager : MonoBehaviour {
 
 	public GameObject PhaseInEffect;
 	public GameObject localPlayerPrefab;
+	public WinnerCanvasController WCC;
 	// Use this for initialization
 	void Start() {
+		LivingPlayers = new List<GameObject> ();
 		playerColors = new List<Color> ();
 		playerColors.Add (new Color32 (255, 238, 13, 255));
 		playerColors.Add (new Color32 (232, 94, 12, 255));
@@ -36,6 +43,18 @@ public class GameManager : MonoBehaviour {
 		if (PhaseInDelay == float.MaxValue) {
 			PhaseInDelay = 5.0f;
 		}
+		playerNames = new string[10];
+		playerNames [0] = "Phil";
+		playerNames [1] = "Amy";
+		playerNames [2] = "Carl";
+		playerNames [3] = "Lucy";
+		playerNames [4] = "Nick";
+		playerNames [5] = "Megan";
+		playerNames [6] = "Ralph";
+		playerNames [7] = "Don";
+		playerNames [8] = "Liz";
+		playerNames [9] = "Bob";
+
 		RingSizes = new float[3,2];
 		RingSizes [0,0] = 10f;
 		RingSizes [0,1] = 5f;
@@ -60,7 +79,9 @@ public class GameManager : MonoBehaviour {
 	}
 	// Update is called once per frame
 	void Update () {
-	
+		if(Input.GetKeyDown(KeyCode.Space)){
+			Application.LoadLevel(Application.loadedLevel);
+		}
 	}
 	public void SpawnRings(float[,] RingSizes){
 		rings = new List<RingManager> ();
@@ -70,6 +91,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void SpawnPlayers(int NumberOfPlayers){
+		gameEnded = false;
 		SpawnPositions = CalculateSpawnPositions (NumberOfPlayers);
 		IDictionary<string,KeyCode> p1keys = new Dictionary<string,KeyCode> ();
 		p1keys.Add ("left", KeyCode.A);
@@ -139,16 +161,48 @@ public class GameManager : MonoBehaviour {
 		}
 		return positons;
 	}
+	public void PlayerDied(GameObject player){
+		if (!gameEnded) {
+			LivingPlayers.Remove (player);
+			if (LivingPlayers.Count <= 1) {
+				EndGame ();
+			}
+		}
+	}
 
 	IEnumerator SpawnPlayerAfter(IDictionary<string,KeyCode> playerKeys, Vector3 SpawnPosition, int playerI){
 		Instantiate (PhaseInEffect, transformToPolar (SpawnPosition), Quaternion.identity);
 		yield return new WaitForSeconds (PhaseInDelay);
 		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefab, SpawnPosition, new Quaternion ()) as GameObject;
-
+		LivingPlayers.Add (localPlayer);
 		SpriteRenderer PlayerSR = localPlayer.GetComponentInChildren<SpriteRenderer> ();
-		Debug.Log ("GETTING COLOR AT INDEX " + playerI);
+		//Debug.Log ("GETTING COLOR AT INDEX " + playerI);
 		PlayerSR.color = playerColors[(playerI % (playerColors.Count))];
+		LocalPlayerController LCP = localPlayer.GetComponent<LocalPlayerController> ();
+		LCP.setKeys (playerKeys);
+		LCP.PlayerName = playerNames [playerI % playerNames.Length];
+	}
 
-		localPlayer.GetComponent<LocalPlayerController>().setKeys (playerKeys);
+	public void FinalDestruction(float delayStep){
+		float mem = delayStep;
+		foreach (RingManager rm in rings) {
+			//Debug.Log ("final destruction called, segment controllers : " + rm.segmentControlers.Count);
+			delayStep = mem;
+			foreach (SegmentController sc in rm.segmentControlers) {
+				StartCoroutine (sc.DestroySegmentAFter (delayStep/rm.segmentControlers.Count));
+				delayStep += mem;
+			}
+		}
+	} 
+	void EndGame(){
+		gameEnded = true;
+		FinalDestruction (7.5f);
+		if (LivingPlayers.Count > 0) {
+			LocalPlayerController LPC = LivingPlayers [0].GetComponent<LocalPlayerController> ();
+			string PName = LPC.PlayerName;
+			GameObject playerMesh = Instantiate (LPC.mesh, LPC.mesh.transform.position, LPC.mesh.transform.rotation) as GameObject;
+			Destroy (LPC.gameObject);
+			WCC.FinishGame (playerMesh, PName);
+		}
 	}
 }

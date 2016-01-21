@@ -14,8 +14,10 @@ public class PlayerCollisionDetector : MonoBehaviour {
 	private float SelfBumpMultiplyer = 1.0f;
 	private float YBumpForce = 5.0f;
 
+	GameManager gManager;
 
 	void Start(){
+		gManager = FindObjectOfType<GameManager> ();
 		rigidBody = gameObject.GetComponent<Rigidbody2D> ();
 		MyLCP = GetComponentInParent<LocalPlayerController> ();
 		if (MyLCP != null) {
@@ -71,6 +73,7 @@ public class PlayerCollisionDetector : MonoBehaviour {
 				GameObject explosionInstance = Instantiate(ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
 				Destroy(transform.root.gameObject);
 				Debug.Log ("PLAYER HIT");
+				gManager.PlayerDied (transform.root.gameObject);
 			//explosionInstance.transform.SetParent(transform);
 			}
 

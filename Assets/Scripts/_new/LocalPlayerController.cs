@@ -16,9 +16,10 @@ public class LocalPlayerController : PolarPhysicsObject {
 	private IDictionary<string,KeyCode> keys;
 
 	//LUKA
+	public string PlayerName;
 	public GameObject boosterEmiter;
 	private float shotOffset = 2f;
-	private float fireRate = 2.0f;
+	private float fireRate = 0.5f;
 	private float lastShoot = 0.0f;
 	public GameObject shotPrefab;
 	//END LUKA
