@@ -67,17 +67,22 @@ public class PlayerCollisionDetector : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other){
 		if (other.gameObject.tag == "Shot") {
 			ShotDestroyerScript SDS = other.gameObject.GetComponent<ShotDestroyerScript> ();
-			if(!SDS.IsUsed){
+			if (!SDS.IsUsed) {
 				SDS.IsUsed = true;
-				Destroy(other.transform.root.gameObject);
-				GameObject explosionInstance = Instantiate(ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
-				Destroy(transform.root.gameObject);
+				Destroy (other.transform.root.gameObject);
+				GameObject explosionInstance = Instantiate (ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
+				Destroy (transform.root.gameObject);
 				Debug.Log ("PLAYER HIT");
 				gManager.PlayerDied (transform.root.gameObject);
-			//explosionInstance.transform.SetParent(transform);
+				//explosionInstance.transform.SetParent(transform);
 			}
-
+		} else if (other.gameObject.tag == "Boundary") {
+			GameObject explosionInstance = Instantiate (ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
+			Destroy (transform.root.gameObject);
+			Debug.Log ("PLAYER BOUNDARY");
+			gManager.PlayerDied (transform.root.gameObject);
 		}
+
 	}
 	Vector3 transformToPolar(Vector3 pos){
 		
