@@ -5,8 +5,11 @@ public class ShotDestroyerScript : MonoBehaviour {
 	public GameObject ExplosionEffect;
 	public Transform ShotTransform;
 	public bool IsUsed = false;
+
+	private static CamShakeManager CamShakeM;
 	// Use this for initialization
-	void Start () {
+	void Awake () {
+		CamShakeM = FindObjectOfType<CamShakeManager> ();
 	}
 	
 	// Update is called once per frame
@@ -15,6 +18,7 @@ public class ShotDestroyerScript : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D col){
 		if (!IsUsed) {
 			if (col.gameObject.tag == "Shot") {
+				CamShakeM.PlayTestShake (0.1f, 0.1f);
 				IsUsed = true;
 				if (col != null) {
 					if (col.gameObject != null) {

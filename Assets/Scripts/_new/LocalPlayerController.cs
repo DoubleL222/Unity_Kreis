@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class LocalPlayerController : PolarPhysicsObject {
 	public int gravity;
 
+	private static SoundManager SoundM;
+
 	private float descelerationRate = 0.995f;
 
 	private float lastGravityChangeTime;
@@ -30,6 +32,7 @@ public class LocalPlayerController : PolarPhysicsObject {
 
 	// Use this for initialization
 	void Awake() {
+		SoundM = FindObjectOfType<SoundManager> ();
 		base.Awake();
 		//Debug.Log ("Start called");
 		gravity = 1;
@@ -71,12 +74,14 @@ public class LocalPlayerController : PolarPhysicsObject {
 		if (Input.GetKey (keys["gravityChange"]) && lastGravityChangeTime + gravityChangeDelay < Time.fixedTime) {
 			lastGravityChangeTime = Time.fixedTime;
 			gravity = -gravity;
+			SoundM.PlayJumpClip ();
 		}
 		if (Input.GetKey (keys["shoot"]) && (lastShoot+fireRate) < Time.fixedTime) {
 			lastShoot = Time.fixedTime;
 			GameObject shotInstance = MonoBehaviour.Instantiate(shotPrefab, physics.transform.position + new Vector3(0.0f, -gravity*shotOffset ,0.0f), new Quaternion()) as GameObject;
 			Vector2 shotVel = new Vector2(0.0f, -gravity);
 			shotInstance.GetComponent<ShotController>().setVelocity(shotVel);
+			SoundM.PlayShotClip ();
 		}
 		Vector2 grav = new Vector2(0f, gravityForce * gravity);
 		//Debug.Log("Grav: " + grav);
