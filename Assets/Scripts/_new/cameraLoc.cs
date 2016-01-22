@@ -7,8 +7,12 @@ public class cameraLoc : MonoBehaviour {
     Vector3 tmpCenter;
     float maxDistance = 0;
     Camera cam;
+    static bool updatePlayers = false;
+
     public float smoothing = 0.05f;
     public float zoomFactor = 0.4f;
+
+
 
 	// Use this for initialization
 	void Start () {
@@ -17,7 +21,7 @@ public class cameraLoc : MonoBehaviour {
         center = new Vector3(0, 0, transform.position.z);
         tmpCenter=new Vector3(0, 0, transform.position.z);
 
-        foreach( GameObject player in players){
+        /*foreach( GameObject player in players){
             tmpCenter += player.transform.position;
             if (Vector3.Distance(player.transform.position, center) > maxDistance)
             {
@@ -28,12 +32,17 @@ public class cameraLoc : MonoBehaviour {
 
         center = center + (tmpCenter - tmpCenter) * smoothing;
         center.z = transform.position.z;
-        transform.position = center;
+        transform.position = center;*/
 	}
+
 	
 	// Update is called once per frame
 	void Update () {
-        
+        if (updatePlayers)
+        {
+            players = GameObject.FindGameObjectsWithTag("Player");
+            updatePlayers = false;
+        }
         foreach (GameObject player in players)
         {
             tmpCenter = tmpCenter + player.transform.position;
