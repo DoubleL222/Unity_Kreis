@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class SegmentController : PolarPhysicsObject{
+	private static CamShakeManager CamShakeM;
+	private static SoundManager SoundM;
+
 	private static int count = 0;
 	
 	public GameObject ExplosionEffect;
@@ -12,7 +15,11 @@ public class SegmentController : PolarPhysicsObject{
 	IList <SegmentCollisionBehaviour> collisionBehaviours;
 	IList <SegmentTriggerBehaviour> triggerBehaviours;
 
+	bool isDestroyed = false;
+
 	void Awake() {
+		SoundM = FindObjectOfType<SoundManager> ();
+		CamShakeM = FindObjectOfType<CamShakeManager> ();
 		base.Awake();
 		count++;
 		tickBehaviours = new List<SegmentTickBehaviour> ();
@@ -81,15 +88,24 @@ public class SegmentController : PolarPhysicsObject{
 				Destroy(other.transform.root.gameObject);
 				Debug.Log("MAKING EXPLOSION");
 				Vector3 spawnPos = transformToPolar(other.transform.position);
-				GameObject explosionInstance = Instantiate(ExplosionEffect, spawnPos, Quaternion.identity) as GameObject;
-				mesh.transform.GetChild(0).gameObject.SetActive(false);
-				explosionInstance.transform.SetParent(mesh.transform);
-				gameObject.GetComponent<BoxCollider2D>().enabled = false;
+				DestroySegment (spawnPos);
 				//Destroy(transform.root.gameObject);
 				//explosionInstance.transform.SetParent(transform);
 			}
 		}
 		//END LUKA
+	}
+
+	void DestroySegment(Vector3 explodePosition){
+		if (!isDestroyed) {
+			isDestroyed = true;
+			GameObject explosionInstance = Instantiate (ExplosionEffect, explodePosition, Quaternion.identity) as GameObject;
+			CamShakeM.PlayTestShake (0.1f, 0.5f);
+			SoundM.PlayExplosionClip ();
+			mesh.transform.GetChild (0).gameObject.SetActive (false);
+			explosionInstance.transform.SetParent (mesh.transform);
+			gameObject.GetComponent<BoxCollider2D> ().enabled = false;
+		}
 	}
 	//LUKA
 	Vector3 transformToPolar(Vector3 pos){
@@ -101,6 +117,12 @@ public class SegmentController : PolarPhysicsObject{
 		float my = distance * Mathf.Sin (angle);
 		
 		return new Vector3 (mx, my, 0.0f);
+	}
+
+	public IEnumerator DestroySegmentAFter(float delay){
+		//Debug.Log ("startedCoroutine");
+		yield return new WaitForSeconds (delay);
+		DestroySegment (transformToPolar (transform.position));
 	}
 	//END LUKA
 	

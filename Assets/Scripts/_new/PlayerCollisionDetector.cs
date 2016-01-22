@@ -8,19 +8,23 @@ public class PlayerCollisionDetector : MonoBehaviour {
 	public GameObject bumpEffect;
 	public GameObject ExplosionEffect;
 
+	private static CamShakeManager CameShakeM;
+	private static SoundManager SoundM;
+
 	public Transform meshTransform;
 
 	private float BumpAwayMultiplyer = 2.0f;
 	private float SelfBumpMultiplyer = 1.0f;
 	private float YBumpForce = 5.0f;
 
+	GameManager gManager;
 
-	void Start(){
+	void Awake(){
+		SoundM = FindObjectOfType<SoundManager> ();
+		CameShakeM = FindObjectOfType<CamShakeManager> ();
+		gManager = FindObjectOfType<GameManager> ();
 		rigidBody = gameObject.GetComponent<Rigidbody2D> ();
 		MyLCP = GetComponentInParent<LocalPlayerController> ();
-		if (MyLCP != null) {
-			Debug.Log ("local player controller found");
-		}
 	}
 	void FixedUpdate(){
 		prevVelocity = rigidBody.velocity;
@@ -40,6 +44,8 @@ public class PlayerCollisionDetector : MonoBehaviour {
 				Rigidbody2D hisRbd = coll.rigidbody;
 					//Debug.Log("his velocity "+hisVelocity + " my velocity "+ myVelocity);
 				if(myVelocity.magnitude > hisVelocity.magnitude){
+					SoundM.PlayBumpClip ();
+					CameShakeM.PlayTestShake (0.2f, 0.2f);
 					Debug.Log ("relative Velocity " + coll.relativeVelocity);
 					Debug.Log("pushing him for" +myVelocity*BumpAwayMultiplyer);
 					HisPCD.BumpAway(myVelocity);
@@ -65,16 +71,27 @@ public class PlayerCollisionDetector : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other){
 		if (other.gameObject.tag == "Shot") {
 			ShotDestroyerScript SDS = other.gameObject.GetComponent<ShotDestroyerScript> ();
-			if(!SDS.IsUsed){
+			if (!SDS.IsUsed) {
+				SoundM.PlayExplosionClip ();
+				CameShakeM.PlayTestShake (0.5f, 1);
 				SDS.IsUsed = true;
-				Destroy(other.transform.root.gameObject);
-				GameObject explosionInstance = Instantiate(ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
-				Destroy(transform.root.gameObject);
+				Destroy (other.transform.root.gameObject);
+				GameObject explosionInstance = Instantiate (ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
+				Destroy (transform.root.gameObject);
 				Debug.Log ("PLAYER HIT");
-			//explosionInstance.transform.SetParent(transform);
+				gManager.PlayerDied (transform.root.gameObject);
+				//explosionInstance.transform.SetParent(transform);
 			}
+		} else if (other.gameObject.tag == "Boundary") {
+			GameObject explosionInstance = Instantiate (ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
 
+			Destroy (transform.root.gameObject);
+			SoundM.PlayExplosionClip ();
+			CameShakeM.PlayTestShake (0.5f, 1);
+			Debug.Log ("PLAYER BOUNDARY");
+			gManager.PlayerDied (transform.root.gameObject);
 		}
+
 	}
 	Vector3 transformToPolar(Vector3 pos){
 		

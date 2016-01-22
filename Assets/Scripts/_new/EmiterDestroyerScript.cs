@@ -22,7 +22,7 @@ public class EmiterDestroyerScript : MonoBehaviour {
 			}
 			if(!isAlive)
 			{
-				Debug.Log("destroying Object");
+			//	Debug.Log("destroying Object");
 				Destroy(gameObject);
 			}
 		}
