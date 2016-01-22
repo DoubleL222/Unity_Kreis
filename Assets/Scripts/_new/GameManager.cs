@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class GameManager : MonoBehaviour {
 	List<Color> playerColors;
 
+	SoundManager SoundM;
+
 	List<RingManager> rings;
 
 	GameObject localPlayer1;
@@ -24,7 +26,11 @@ public class GameManager : MonoBehaviour {
 	public GameObject localPlayerPrefab;
 	public WinnerCanvasController WCC;
 	// Use this for initialization
+	void Awake(){
+		SoundM = FindObjectOfType<SoundManager> ();
+	}
 	void Start() {
+		SoundM.PlayBigBoomClip ();
 		LivingPlayers = new List<GameObject> ();
 		playerColors = new List<Color> ();
 		playerColors.Add (new Color32 (255, 238, 13, 255));
@@ -157,7 +163,7 @@ public class GameManager : MonoBehaviour {
 			if (i + 1 >= RingSizes.GetLength (0) * 4 - 3) x = 4;
 			if (i + 1 >= RingSizes.GetLength (0) * 5 - 4) x = 5;
 			int j = i % (RingSizes.GetLength (0) - 1);
-			positons [i] = new Vector3 (x*10.0f, (RingSizes [j + 1, 0] + RingSizes [j,0])/2.0f, 0.0f);
+			positons [i] = new Vector3 (x*30.0f, (RingSizes [j + 1, 0] + RingSizes [j,0])/2.0f, 0.0f);
 		}
 		return positons;
 	}
@@ -173,6 +179,7 @@ public class GameManager : MonoBehaviour {
 	IEnumerator SpawnPlayerAfter(IDictionary<string,KeyCode> playerKeys, Vector3 SpawnPosition, int playerI){
 		Instantiate (PhaseInEffect, transformToPolar (SpawnPosition), Quaternion.identity);
 		yield return new WaitForSeconds (PhaseInDelay);
+		SoundM.PlaySpawnClip ();
 		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefab, SpawnPosition, new Quaternion ()) as GameObject;
 		LivingPlayers.Add (localPlayer);
 		SpriteRenderer PlayerSR = localPlayer.GetComponentInChildren<SpriteRenderer> ();

@@ -84,7 +84,9 @@ public class PlayerCollisionDetector : MonoBehaviour {
 			}
 		} else if (other.gameObject.tag == "Boundary") {
 			GameObject explosionInstance = Instantiate (ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
+
 			Destroy (transform.root.gameObject);
+			SoundM.PlayExplosionClip ();
 			CameShakeM.PlayTestShake (0.5f, 1);
 			Debug.Log ("PLAYER BOUNDARY");
 			gManager.PlayerDied (transform.root.gameObject);

@@ -33,6 +33,8 @@ public class ShotDestroyerScript : MonoBehaviour {
 				if (transform.root.gameObject != null) {
 					Destroy (transform.root.gameObject);
 				}
+			} else if (col.gameObject.tag == "Boundary") {
+				Destroy (transform.root.gameObject);
 			}
 		}
 	}

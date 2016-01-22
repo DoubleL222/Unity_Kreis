@@ -29,6 +29,9 @@ public class SoundManager : MonoBehaviour
 	public void PlayExplosionClip(){
 		sfxAudio.PlayOneShot(audioClips[4]);
 	}
+	public void PlayBigBoomClip(){
+		sfxAudio.PlayOneShot(audioClips[5]);
+	}
 	// Update is called once per frame
 	void Update ()
 	{
