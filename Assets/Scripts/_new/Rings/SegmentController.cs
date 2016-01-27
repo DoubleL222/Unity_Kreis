@@ -7,8 +7,9 @@ public class SegmentController : PolarPhysicsObject{
 	private static SoundManager SoundM;
 
 	private static int count = 0;
-	
-	public GameObject ExplosionEffect;
+
+    spawnAnim spawnAnim;
+    public GameObject ExplosionEffect;
 
 	// Use this for initialization
 	IList <SegmentTickBehaviour> tickBehaviours;
@@ -25,8 +26,9 @@ public class SegmentController : PolarPhysicsObject{
 		tickBehaviours = new List<SegmentTickBehaviour> ();
 		collisionBehaviours = new List<SegmentCollisionBehaviour> ();
 		triggerBehaviours = new List<SegmentTriggerBehaviour> ();
-		//Debug.Log ("Number of segments: " + count);
-	}
+        spawnAnim = mesh.GetComponent<spawnAnim>();
+        //Debug.Log ("Number of segments: " + count);
+    }
 
 	public void addBehaviour(SegmentTickBehaviour segmentTickBehaviour){
 		tickBehaviours.Add (segmentTickBehaviour);
@@ -41,8 +43,8 @@ public class SegmentController : PolarPhysicsObject{
 	}
 
 	public void SetPosition(Vector2 pos){
-		//Debug.Log ("SetPosition called with " + pos);
-		float angle = pos.x;
+        //Debug.Log ("SetPosition called with " + pos);
+        float angle = pos.x;
 		float distance = pos.y;
 
 		float mx = distance * Mathf.Cos (angle);
@@ -54,10 +56,10 @@ public class SegmentController : PolarPhysicsObject{
 
 		float sc = scaleMultiplier / pos.y;
 		physics.transform.position = new Vector2(pos.x * PolarPhysicsObject.widthMultiplier, pos.y);
-		physics.transform.localScale = new Vector2(sc, sc);	
+		physics.transform.localScale = new Vector2(sc, sc);
 
-		//Debug.Log ("Segment pos set to " + mesh.transform.position + " " + physics.transform.position);
-	}
+        //Debug.Log ("Segment pos set to " + mesh.transform.position + " " + physics.transform.position);
+    }
 		
 	void FixedUpdate () {
 		StartUpdate ();
