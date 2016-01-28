@@ -13,8 +13,8 @@ public class PlayerCollisionDetector : MonoBehaviour {
 
 	public Transform meshTransform;
 
-	private float BumpAwayMultiplyer = 2.0f;
-	private float SelfBumpMultiplyer = 1.0f;
+	private float BumpAwayMultiplyer = 5.0f;
+	private float SelfBumpMultiplyer = 2.0f;
 	private float YBumpForce = 5.0f;
 
 	GameManager gManager;

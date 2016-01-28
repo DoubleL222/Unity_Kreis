@@ -9,7 +9,7 @@ public class LocalPlayerController : PolarPhysicsObject {
 
 	private float descelerationRate = 0.995f;
 
-	private float lastGravityChangeTime;
+	private float lastGravityChangeTime = 0.0f;
 	private static float gravityChangeDelay = 0.4f;
 
 	private static float movementForce = 1200f;//400f;
@@ -21,7 +21,10 @@ public class LocalPlayerController : PolarPhysicsObject {
 	public string PlayerName;
 	public GameObject boosterEmiter;
 	private float shotOffset = 2f;
-	private float fireRate = 0.5f;
+	private float gravityChangeRate = 2.0f;
+	private float lastGravityChange = 0.0f;
+
+	private float fireRate = 1.5f;
 	private float lastShoot = 0.0f;
 	public GameObject shotPrefab;
 	//END LUKA
@@ -71,8 +74,9 @@ public class LocalPlayerController : PolarPhysicsObject {
 			}
 			rigidbody.velocity = new Vector2 (rigidbody.velocity.x*descelerationRate, rigidbody.velocity.y);
 		}
-		if (Input.GetKey (keys["gravityChange"]) && lastGravityChangeTime + gravityChangeDelay < Time.fixedTime) {
+		if (Input.GetKey (keys["gravityChange"]) && lastGravityChangeTime + gravityChangeDelay < Time.fixedTime && (lastGravityChange + gravityChangeRate) < Time.fixedTime) {
 			lastGravityChangeTime = Time.fixedTime;
+			lastGravityChange = Time.fixedTime;
 			gravity = -gravity;
 			SoundM.PlayJumpClip ();
 		}

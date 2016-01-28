@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour {
 	GameObject localPlayer1;
 	GameObject localPlayer2;
 
+	private int NumPlayers = 2;
+
 	bool gameEnded = false;
 
 	List<GameObject> LivingPlayers;
@@ -26,11 +28,16 @@ public class GameManager : MonoBehaviour {
 	public GameObject localPlayerPrefab;
 	public WinnerCanvasController WCC;
 	// Use this for initialization
+	void StartGame(){
+		SpawnRings (RingSizes);
+		SpawnPlayers (NumPlayers);
+		SoundM.PlayBigBoomClip ();
+	}
+
 	void Awake(){
 		SoundM = FindObjectOfType<SoundManager> ();
 	}
 	void Start() {
-		SoundM.PlayBigBoomClip ();
 		LivingPlayers = new List<GameObject> ();
 		playerColors = new List<Color> ();
 		playerColors.Add (new Color32 (255, 238, 13, 255));
@@ -69,8 +76,7 @@ public class GameManager : MonoBehaviour {
 		RingSizes [2,0] = 24f;
 		RingSizes [2,1] = 4f;
 
-		SpawnRings (RingSizes);
-		SpawnPlayers (5);
+
 
 	}
 	Vector3 transformToPolar(Vector3 pos){
@@ -87,6 +93,21 @@ public class GameManager : MonoBehaviour {
 	void Update () {
 		if(Input.GetKeyDown(KeyCode.Space)){
 			Application.LoadLevel(Application.loadedLevel);
+		}
+		if(Input.GetKeyDown(KeyCode.KeypadEnter)){
+			StartGame ();
+		}
+		if (Input.GetKeyDown (KeyCode.Alpha2)) {
+			NumPlayers = 2;
+		}
+		if (Input.GetKeyDown (KeyCode.Alpha3)) {
+			NumPlayers = 3;
+		}
+		if (Input.GetKeyDown (KeyCode.Alpha4)) {
+			NumPlayers = 4;
+		}
+		if (Input.GetKeyDown (KeyCode.Alpha5)) {
+			NumPlayers = 5;
 		}
 	}
 	public void SpawnRings(float[,] RingSizes){
