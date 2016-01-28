@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour {
 	GameObject localPlayer1;
 	GameObject localPlayer2;
 
-	bool gameEnded = false;
+	public static bool gameEnded = false;
 
 	List<GameObject> LivingPlayers;
 
@@ -142,6 +142,8 @@ public class GameManager : MonoBehaviour {
 		for(int i=0; i<NumberOfPlayers;i++){
 			StartCoroutine( SpawnPlayerAfter (keyCodes[i], SpawnPositions[i], i));
 		}
+
+        
 		/*
 
 
@@ -188,7 +190,9 @@ public class GameManager : MonoBehaviour {
 		LocalPlayerController LCP = localPlayer.GetComponent<LocalPlayerController> ();
 		LCP.setKeys (playerKeys);
 		LCP.PlayerName = playerNames [playerI % playerNames.Length];
-	}
+
+        cameraLoc.updatePlayers = true;
+    }
 
 	public void FinalDestruction(float delayStep){
 		float mem = delayStep;
