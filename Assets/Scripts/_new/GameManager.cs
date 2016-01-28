@@ -23,7 +23,8 @@ public class GameManager : MonoBehaviour {
 	float PhaseInDelay = float.MaxValue;
 
 	public GameObject PhaseInEffect;
-	public GameObject localPlayerPrefab;
+	//public GameObject localPlayerPrefab;
+    public GameObject[] localPlayerPrefabs;
 	public WinnerCanvasController WCC;
 	// Use this for initialization
 	void Awake(){
@@ -182,11 +183,11 @@ public class GameManager : MonoBehaviour {
 		Instantiate (PhaseInEffect, transformToPolar (SpawnPosition), Quaternion.identity);
 		yield return new WaitForSeconds (PhaseInDelay);
 		SoundM.PlaySpawnClip ();
-		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefab, SpawnPosition, new Quaternion ()) as GameObject;
+		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefabs[playerI], SpawnPosition, new Quaternion ()) as GameObject;
 		LivingPlayers.Add (localPlayer);
-		SpriteRenderer PlayerSR = localPlayer.GetComponentInChildren<SpriteRenderer> ();
+		//SpriteRenderer PlayerSR = localPlayer.GetComponentInChildren<SpriteRenderer> ();
 		//Debug.Log ("GETTING COLOR AT INDEX " + playerI);
-		PlayerSR.color = playerColors[(playerI % (playerColors.Count))];
+		//PlayerSR.color = playerColors[(playerI % (playerColors.Count))];
 		LocalPlayerController LCP = localPlayer.GetComponent<LocalPlayerController> ();
 		LCP.setKeys (playerKeys);
 		LCP.PlayerName = playerNames [playerI % playerNames.Length];
