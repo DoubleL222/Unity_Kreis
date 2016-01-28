@@ -79,6 +79,7 @@ public class PlayerCollisionDetector : MonoBehaviour {
 				GameObject explosionInstance = Instantiate (ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
 				Destroy (transform.root.gameObject);
 				Debug.Log ("PLAYER HIT");
+                cameraLoc.updatePlayers = true;
 				gManager.PlayerDied (transform.root.gameObject);
 				//explosionInstance.transform.SetParent(transform);
 			}
@@ -89,7 +90,8 @@ public class PlayerCollisionDetector : MonoBehaviour {
 			SoundM.PlayExplosionClip ();
 			CameShakeM.PlayTestShake (0.5f, 1);
 			Debug.Log ("PLAYER BOUNDARY");
-			gManager.PlayerDied (transform.root.gameObject);
+            cameraLoc.updatePlayers = true;
+            gManager.PlayerDied (transform.root.gameObject);
 		}
 
 	}

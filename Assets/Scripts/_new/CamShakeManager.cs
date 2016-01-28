@@ -18,8 +18,9 @@ public class CamShakeManager : MonoBehaviour
 
 	void Update()
 	{
-		
-	}
+        originalCamSize = cameraLoc.size;
+        originalCamPos = cameraLoc.center;
+    }
 
 	public void PlayTestShake(float duration, float strength)
 	{
@@ -48,7 +49,7 @@ public class CamShakeManager : MonoBehaviour
 			y *= strength * damper;
 
 			Camera.main.orthographicSize = originalCamSize - strength * damper;
-			Camera.main.transform.position = new Vector3(x, y, originalCamPos.z);
+			Camera.main.transform.position = new Vector3(cameraLoc.center.x + x, cameraLoc.center.y + y, originalCamPos.z);
 
 			yield return null;
 		}
