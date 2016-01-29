@@ -5,9 +5,12 @@ public class ShotController : PolarPhysicsObject {
 	private Vector2 moveVelocity;
 	private bool velocitySet;
 	private float shotSpeed = 30.0f;
+	public ParticleSystem[] allParticleSystems;
+	bool firstIter;
 	// Use this for initialization
 	void Awake () {
 		base.Awake ();
+		firstIter = true;
 	}
 
 	public void setVelocity(Vector2 v){
@@ -19,6 +22,12 @@ public class ShotController : PolarPhysicsObject {
 	void Update () {
 		if (velocitySet) {
 			StartUpdate ();
+			if (firstIter) {
+				foreach (ParticleSystem PS in allParticleSystems) {
+					PS.Play ();
+				}
+				firstIter = false;
+			}
 			if (rigidbody.velocity != (moveVelocity * shotSpeed)) {
 				rigidbody.velocity = moveVelocity * shotSpeed;
 			}

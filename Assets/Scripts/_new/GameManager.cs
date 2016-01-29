@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour {
 	float PhyciscSegmentOffset = 7.0f;
 	float PhaseInDelay = float.MaxValue;
 
+	public Transform segmentsParent;
 	public GameObject PhaseInEffect;
 	//public GameObject localPlayerPrefab;
     public GameObject[] localPlayerPrefabs;
@@ -114,7 +115,7 @@ public class GameManager : MonoBehaviour {
 	public void SpawnRings(float[,] RingSizes){
 		rings = new List<RingManager> ();
 		for (int i = 0; i < RingSizes.GetLength (0); i++) {
-			rings.Add (new RingManager (RingSizes[i,0], RingSizes[i,1]));
+			rings.Add (new RingManager (RingSizes[i,0], RingSizes[i,1], segmentsParent));
 		}
 	}
 

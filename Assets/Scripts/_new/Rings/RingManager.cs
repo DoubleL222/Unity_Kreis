@@ -10,7 +10,7 @@ public class RingManager{
 
 	public List<SegmentController> segmentControlers;	
 
-	public RingManager (float distance, float tickMove) {
+	public RingManager (float distance, float tickMove, Transform segmentsParent) {
 		if (segmentPrefab == null) {
 			segmentPrefab = Resources.Load("_new/Segment") as GameObject;
 		}
@@ -36,6 +36,7 @@ public class RingManager{
 			currentSegmentManager.addBehaviour (stbd);
 			//currentSegmentManager.SetPosition (new Vector2 ((min + step * i), distance));
 			segments.Add(currentSegment);
+			currentSegment.transform.SetParent (segmentsParent);
 		}
 	}
 }
