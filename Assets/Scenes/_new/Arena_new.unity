@@ -1783,6 +1783,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1a79b5aa7edd3a4c896fb46a94e3870, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  segmentsParent: {fileID: 0}
   PhaseInEffect: {fileID: 107756, guid: 873cb0711238e0d478688f0f518a0494, type: 2}
   localPlayerPrefabs:
   - {fileID: 147376, guid: 318d4d2f07c819c469ba897cbfd0ad7c, type: 2}

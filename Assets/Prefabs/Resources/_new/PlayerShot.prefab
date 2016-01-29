@@ -367,6 +367,8 @@ MonoBehaviour:
   physics: {fileID: 126736}
   physics_parent: {fileID: 150350}
   rigidbody: {fileID: 5041568}
+  allParticleSystems:
+  - {fileID: 19827194}
 --- !u!198 &19827194
 ParticleSystem:
   m_ObjectHideFlags: 1
