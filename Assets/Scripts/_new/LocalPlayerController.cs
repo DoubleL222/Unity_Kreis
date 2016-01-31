@@ -68,7 +68,7 @@ public class LocalPlayerController : PolarPhysicsObject {
 			if (colliders [i].gameObject.tag == "Segment") 
 			{
 				isGrounded = true;
-				Debug.Log ("Grounded");
+				//Debug.Log ("Grounded");
 			}
 		}
 
