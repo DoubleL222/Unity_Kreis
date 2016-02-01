@@ -9,6 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 497540}
   - 114: {fileID: 11452646}
+  - 114: {fileID: 11407456}
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
@@ -28,6 +29,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &11407456
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 107318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7306b5be17d4ceb4796bcc32867dc6a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minSpawnDuration: 5
+  maxSpawnDuration: 10
+  powerUps: []
+  shield: {fileID: 0}
+  spawnPowerups: 0
 --- !u!114 &11452646
 MonoBehaviour:
   m_ObjectHideFlags: 1
