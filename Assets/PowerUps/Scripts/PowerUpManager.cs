@@ -43,11 +43,11 @@ public class PowerUpManager : MonoBehaviour
 
         int randomSegment = Random.Range(0, segments.Length - 1);
         GameObject segment = segments[randomSegment];
+		if(noOfPowerUps>0){
+	        GameObject powerup = (GameObject)Instantiate(powerUps[randomPowerup], segment.transform.position, new Quaternion());
 
-        GameObject powerup = (GameObject)Instantiate(powerUps[randomPowerup], segment.transform.position, new Quaternion());
-
-        powerup.transform.parent = segment.transform;
-
+	        powerup.transform.parent = segment.transform;
+		}
         // reset timer
         spawnDuration = Random.Range(minSpawnDuration, maxSpawnDuration);
         timer = .0f;

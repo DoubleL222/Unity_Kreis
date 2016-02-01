@@ -22,7 +22,7 @@ public class WinnerCanvasController : MonoBehaviour {
 	GameObject winner;
 
 	public void FinishGame(GameObject winnerPlayer, string WinnerName){
-		WinnerText.text = WinnerName.ToUpper() + " WINS!";
+		//WinnerText.text = WinnerName.ToUpper() + " WINS!";
 		AnimateCanvas ();
 		AnimatePlayer (winnerPlayer);
 	}
