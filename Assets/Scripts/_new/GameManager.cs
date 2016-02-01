@@ -15,7 +15,6 @@ public class GameManager : MonoBehaviour {
 	private int NumPlayers = 2;
 	public static bool gameEnded = false;
 
-
 	List<GameObject> LivingPlayers;
 
 	string[] playerNames;
@@ -29,11 +28,18 @@ public class GameManager : MonoBehaviour {
 	//public GameObject localPlayerPrefab;
     public GameObject[] localPlayerPrefabs;
 	public WinnerCanvasController WCC;
+
+  // powerups
+  PowerUpManager PUM;
+
 	// Use this for initialization
 	void StartGame(){
 		SpawnRings (RingSizes);
 		SpawnPlayers (NumPlayers);
 		SoundM.PlayBigBoomClip ();
+
+    // powerups
+    PUM = gameObject.GetComponent<PowerUpManager>();
 	}
 
 	void Awake(){
@@ -201,7 +207,8 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	IEnumerator SpawnPlayerAfter(IDictionary<string,KeyCode> playerKeys, Vector3 SpawnPosition, int playerI){
+	IEnumerator SpawnPlayerAfter(IDictionary<string,KeyCode> playerKeys, Vector3 SpawnPosition, int playerI)
+  {
 		Instantiate (PhaseInEffect, transformToPolar (SpawnPosition), Quaternion.identity);
 		yield return new WaitForSeconds (PhaseInDelay);
 		SoundM.PlaySpawnClip ();
@@ -214,8 +221,9 @@ public class GameManager : MonoBehaviour {
 		LCP.setKeys (playerKeys);
 		LCP.PlayerName = playerNames [playerI % playerNames.Length];
 
-        cameraLoc.updatePlayers = true;
-    }
+    cameraLoc.updatePlayers = true;
+    PUM.spawnPowerups = true;
+  }
 
 	public void FinalDestruction(float delayStep){
 		float mem = delayStep;
