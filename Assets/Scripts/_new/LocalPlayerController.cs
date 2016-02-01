@@ -25,7 +25,7 @@ public class LocalPlayerController : PolarPhysicsObject {
 	private float gravityChangeRate = 0.2f;
 	private float lastGravityChange = 0.0f;
 
-	private float fireRate = 0.2f;
+	private float fireRate = 1.5f;
 	private float lastShoot = 0.0f;
 	public GameObject shotPrefab;
 	//END LUKA
