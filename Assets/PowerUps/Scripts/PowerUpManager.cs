@@ -1,57 +1,29 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
+using System.Collections;
 
-public class PowerUpManager : MonoBehaviour
+public class PowerUpManager : PolarPhysicsObject
 {
-  // powerups span at random intervals from min to max duration
-  public float minSpawnDuration = 5.0f;
-  public float maxSpawnDuration = 10.0f;
-  // list of prefabs
-  public List<GameObject> powerUps;
+  public GameObject parentObject;
+
   // shield
-  public GameObject shield;
+  public GameObject shieldSprite;
+  public GameObject shieldCollider;
 
-  // switch for enabling/disabling the powerup spawner
-  [HideInInspector]
-  public bool spawnPowerups = false;
-
-  private float spawnDuration;
-  private float timer = .0f;
-  private int noOfPowerUps = 0;
-
-	// Use this for initialization
-	void Start ()
+  void Start()
   {
-    // duration of next spawn
-    spawnDuration = Random.Range(minSpawnDuration, maxSpawnDuration);
-
-    noOfPowerUps = powerUps.Count;
+    StartUpdate();
   }
-	
-	// Update is called once per frame
-	void Update ()
+
+  void OnTriggerEnter2D(Collider2D collider)
   {
-    if (spawnPowerups == true)
+    if (gameObject.tag == "Shield" && collider.gameObject.tag == "Player")
     {
-      timer += Time.deltaTime;
-
-      if (timer > spawnDuration)
-      {
-        // spawn new powerup
-        int randomPowerup = Random.Range(0, noOfPowerUps - 1);
-        GameObject[] segments = GameObject.FindGameObjectsWithTag("SegmentMesh");
-
-        int randomSegment = Random.Range(0, segments.Length - 1);
-        GameObject segment = segments[randomSegment];
-
-        GameObject powerup = (GameObject)Instantiate(powerUps[randomPowerup], segment.transform.position, new Quaternion());
-
-        powerup.transform.parent = segment.transform;
-
-        // reset timer
-        spawnDuration = Random.Range(minSpawnDuration, maxSpawnDuration);
-        timer = .0f;
-      }
+      LocalPlayerController LPC = collider.gameObject.GetComponentInParent<LocalPlayerController>();
+      GameObject newShieldSprite = (GameObject)Instantiate(shieldSprite, LPC.mesh.transform.position, new Quaternion());
+      newShieldSprite.transform.parent = LPC.mesh.transform;
+      GameObject newShieldCollider = (GameObject)Instantiate(shieldCollider, LPC.physics.transform.position, new Quaternion());
+      newShieldCollider.transform.parent = LPC.physics.transform;
+      Destroy(parentObject);
     }
   }
 }

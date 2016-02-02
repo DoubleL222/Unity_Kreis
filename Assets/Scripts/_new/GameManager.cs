@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour {
 	public WinnerCanvasController WCC;
 
   // powerups
-  PowerUpManager PUM;
+  PowerUpSpawner PUS;
 
 	// Use this for initialization
 	void StartGame(){
@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour {
 		SoundM.PlayBigBoomClip ();
 
     // powerups
-    PUM = gameObject.GetComponent<PowerUpManager>();
+    PUS = gameObject.GetComponent<PowerUpSpawner>();
 	}
 
 	void Awake(){
@@ -222,7 +222,7 @@ public class GameManager : MonoBehaviour {
 		LCP.PlayerName = playerNames [playerI % playerNames.Length];
 
     cameraLoc.updatePlayers = true;
-    PUM.spawnPowerups = true;
+    PUS.spawnPowerups = true;
   }
 
 	public void FinalDestruction(float delayStep){

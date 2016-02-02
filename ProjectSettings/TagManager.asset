@@ -8,7 +8,7 @@ TagManager:
   - Segment
   - Boundary
   - PlayerMesh
-  - SegmentMesh
+  - Shield
   layers:
   - Default
   - TransparentFX
