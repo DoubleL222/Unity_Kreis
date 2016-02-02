@@ -263,7 +263,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 106480}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -117.199997, y: -14.0543747, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children:
   - {fileID: 445002}
@@ -477,6 +477,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bumpEffect: {fileID: 156772, guid: e8c833e78a63f8f459c9500776a5ff2b, type: 2}
   ExplosionEffect: {fileID: 150424, guid: 119dcc4427d639046a6d5b948ac7ab5f, type: 2}
+  shieldExplosion: {fileID: 141338, guid: 59920e45c611c874b970d33074fee005, type: 2}
   meshTransform: {fileID: 431468}
 --- !u!114 &11439198
 MonoBehaviour:
@@ -545,6 +546,9 @@ MonoBehaviour:
   physics_parent: {fileID: 134578}
   rigidbody: {fileID: 5096338}
   gravity: 0
+  hasShield: 0
+  shieldSprite: {fileID: 0}
+  shieldCollider: {fileID: 0}
   PlayerName: 
   boosterEmiter: {fileID: 165440}
   shotPrefab: {fileID: 108226, guid: edd20bdaa7ad3d54986f5f714420ca18, type: 2}

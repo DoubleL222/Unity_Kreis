@@ -9,6 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 470904}
   - 58: {fileID: 5836598}
+  - 114: {fileID: 11449780}
   m_Layer: 0
   m_Name: ShieldCollider
   m_TagString: Shield
@@ -40,14 +41,34 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: .100000001
+  m_Radius: 1
+--- !u!114 &11449780
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 152352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e253ef1b52ca02d49ac619a92de280df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shieldExplosion: {fileID: 141338, guid: 59920e45c611c874b970d33074fee005, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: shieldExplosion
+      value: 
+      objectReference: {fileID: 141338, guid: 59920e45c611c874b970d33074fee005, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_Radius
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 152352}

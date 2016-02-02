@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerCollisionDetector : MonoBehaviour {
+public class PlayerCollisionDetector : MonoBehaviour
+{
 	Vector2 prevVelocity;
 	LocalPlayerController MyLCP;
 	Rigidbody2D rigidBody;
 	public GameObject bumpEffect;
 	public GameObject ExplosionEffect;
+  public GameObject shieldExplosion;
 
 	private static CamShakeManager CameShakeM;
 	private static SoundManager SoundM;
@@ -69,29 +71,44 @@ public class PlayerCollisionDetector : MonoBehaviour {
 		rigidBody.AddForce (((BumpForce+yForce) * BumpAwayMultiplyer), ForceMode2D.Impulse);
 	}
 	void OnTriggerEnter2D(Collider2D other){
-		if (other.gameObject.tag == "Shot") {
+		if (other.gameObject.tag == "Shot")
+    {
 			ShotDestroyerScript SDS = other.gameObject.GetComponent<ShotDestroyerScript> ();
-			if (!SDS.IsUsed) {
-				SoundM.PlayExplosionClip ();
-				CameShakeM.PlayTestShake (0.5f, 1);
-				SDS.IsUsed = true;
-				Destroy (other.transform.root.gameObject);
-				GameObject explosionInstance = Instantiate (ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
-				Destroy (transform.root.gameObject);
-				Debug.Log ("PLAYER HIT");
-                cameraLoc.updatePlayers = true;
-				gManager.PlayerDied (transform.root.gameObject);
+			if (!SDS.IsUsed)
+      {
+        if (MyLCP.hasShield)
+        {
+          LocalPlayerController LPC = gameObject.GetComponentInParent<LocalPlayerController>();
+          Instantiate(shieldExplosion, LPC.mesh.transform.position, new Quaternion());
+          LPC.hasShield = false;
+          Destroy(LPC.shieldCollider);
+          Destroy(LPC.shieldSprite);
+          Destroy(other.transform.root.gameObject);
+        }
+        else
+        {
+          SoundM.PlayExplosionClip();
+          CameShakeM.PlayTestShake(0.5f, 1);
+          SDS.IsUsed = true;
+          Destroy(other.transform.root.gameObject);
+          GameObject explosionInstance = Instantiate(ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
+          Destroy(transform.root.gameObject);
+          Debug.Log("PLAYER HIT");
+          cameraLoc.updatePlayers = true;
+          gManager.PlayerDied(transform.root.gameObject);
+        }
 				//explosionInstance.transform.SetParent(transform);
 			}
-		} else if (other.gameObject.tag == "Boundary") {
+		}
+    else if (other.gameObject.tag == "Boundary")
+    {
 			GameObject explosionInstance = Instantiate (ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
-
 			Destroy (transform.root.gameObject);
 			SoundM.PlayExplosionClip ();
 			CameShakeM.PlayTestShake (0.5f, 1);
 			Debug.Log ("PLAYER BOUNDARY");
-            cameraLoc.updatePlayers = true;
-            gManager.PlayerDied (transform.root.gameObject);
+      cameraLoc.updatePlayers = true;
+      gManager.PlayerDied (transform.root.gameObject);
 		}
 
 	}

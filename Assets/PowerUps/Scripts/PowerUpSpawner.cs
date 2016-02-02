@@ -10,8 +10,6 @@ public class PowerUpSpawner : MonoBehaviour
   public List<GameObject> powerUps;
   // list of distances
   public List<float> spawnDistances;
-  // shield
-  public GameObject shield;
 
   // switch for enabling/disabling the powerup spawner
   [HideInInspector]

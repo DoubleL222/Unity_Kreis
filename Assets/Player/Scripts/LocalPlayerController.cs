@@ -18,10 +18,18 @@ public class LocalPlayerController : PolarPhysicsObject {
 
 	private IDictionary<string,KeyCode> keys;
 
+  // powerups
+  [HideInInspector]
+  public bool hasShield = false;
+  [HideInInspector]
+  public GameObject shieldSprite;
+  [HideInInspector]
+  public GameObject shieldCollider;
+
 	//LUKA
 	public string PlayerName;
 	public GameObject boosterEmiter;
-	private float shotOffset = 1.15f;
+  private float shotOffset = 2.0f;
 	private float gravityChangeRate = 0.2f;
 	private float lastGravityChange = 0.0f;
 
