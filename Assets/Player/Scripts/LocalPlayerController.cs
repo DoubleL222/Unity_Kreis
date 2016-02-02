@@ -21,15 +21,12 @@ public class LocalPlayerController : PolarPhysicsObject {
   // powerups
   [HideInInspector]
   public bool hasShield = false;
-  [HideInInspector]
   public GameObject shieldSprite;
-  [HideInInspector]
-  public GameObject shieldCollider;
 
 	//LUKA
 	public string PlayerName;
 	public GameObject boosterEmiter;
-  private float shotOffset = 2.0f;
+  private float shotOffset = 1.5f;
 	private float gravityChangeRate = 0.2f;
 	private float lastGravityChange = 0.0f;
 
@@ -63,6 +60,7 @@ public class LocalPlayerController : PolarPhysicsObject {
 		Gizmos.color = Color.yellow;
 		Gizmos.DrawSphere (physics.transform.position, 1.0f);
 	}
+
 	void FixedUpdate () {
 		isGrounded = false;
 

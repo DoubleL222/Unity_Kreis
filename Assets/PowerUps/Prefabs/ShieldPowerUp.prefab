@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 483422}
   m_Layer: 0
   m_Name: ShieldPowerUp
-  m_TagString: Untagged
+  m_TagString: Shield
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -161,8 +161,6 @@ MonoBehaviour:
   physics: {fileID: 142562}
   physics_parent: {fileID: 176992}
   rigidbody: {fileID: 0}
-  shieldSprite: {fileID: 142442, guid: b94411fc34660424ab61890b22be7f13, type: 2}
-  shieldCollider: {fileID: 152352, guid: edb8ab97f5fcecf478d6c853f92f0af9, type: 2}
   shieldExplosion: {fileID: 141338, guid: 59920e45c611c874b970d33074fee005, type: 2}
 --- !u!198 &19820764
 ParticleSystem:
