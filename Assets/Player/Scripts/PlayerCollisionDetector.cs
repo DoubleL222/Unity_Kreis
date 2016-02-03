@@ -80,8 +80,7 @@ public class PlayerCollisionDetector : MonoBehaviour
         {
           LocalPlayerController LPC = gameObject.GetComponentInParent<LocalPlayerController>();
           Instantiate(shieldExplosion, LPC.mesh.transform.position, new Quaternion());
-          LPC.hasShield = false;
-          LPC.shieldSprite.SetActive(false);
+          LPC.DisableShield();
           Destroy(other.transform.root.gameObject);
         }
         else

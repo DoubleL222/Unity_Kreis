@@ -57,8 +57,9 @@ GameObject:
   m_Component:
   - 4: {fileID: 410438}
   - 212: {fileID: 21211136}
-  - 199: {fileID: 19968212}
-  - 198: {fileID: 19820764}
+  - 114: {fileID: 11459900}
+  - 199: {fileID: 19923854}
+  - 198: {fileID: 19857062}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -162,7 +163,22 @@ MonoBehaviour:
   physics_parent: {fileID: 176992}
   rigidbody: {fileID: 0}
   shieldExplosion: {fileID: 141338, guid: 59920e45c611c874b970d33074fee005, type: 2}
---- !u!198 &19820764
+--- !u!114 &11459900
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 190522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8be0ff512bbfc9c4b871ea7aabb855e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minSize: .800000012
+  maxSize: 1
+  scaleInDuration: .5
+  wobbleDuration: 2
+--- !u!198 &19857062
 ParticleSystem:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -173,7 +189,7 @@ ParticleSystem:
   speed: 1
   randomSeed: 0
   looping: 1
-  prewarm: 1
+  prewarm: 0
   playOnAwake: 1
   moveWithTransform: 1
   InitialModule:
@@ -1220,7 +1236,7 @@ ParticleSystem:
     subEmitterCollision1: {fileID: 0}
     subEmitterDeath: {fileID: 0}
     subEmitterDeath1: {fileID: 0}
---- !u!199 &19968212
+--- !u!199 &19923854
 ParticleSystemRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}

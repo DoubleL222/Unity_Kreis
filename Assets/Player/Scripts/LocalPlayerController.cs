@@ -133,4 +133,46 @@ public class LocalPlayerController : PolarPhysicsObject {
 		}
 		EndUpdate ();
 	}
+
+  // enable shield
+  public void EnableShield()
+  {
+    hasShield = true;
+    StartCoroutine(ShieldScaleIn());
+	}
+
+  IEnumerator ShieldScaleIn()
+  {
+    // enable and scale down shield
+    shieldSprite.SetActive(true);
+    shieldSprite.transform.localScale = new Vector3(.0f, .0f, .0f);
+
+    float elapsed = 0.0f;
+    // animation duration
+    float duration = .5f;
+    Vector3 newScale;
+
+    // increase scale for duration
+    while (elapsed < duration)
+    {
+      elapsed += Time.deltaTime;
+
+      float scale = Mathf.SmoothStep(.0f, 1.0f, elapsed / duration);
+      newScale = new Vector3(scale, scale, .0f);
+      shieldSprite.transform.localScale = newScale;
+
+      yield return null;
+    }
+
+    // set scale to 1
+    newScale = new Vector3(1.0f, 1.0f, .0f);
+    shieldSprite.transform.localScale = newScale;
+  }
+
+  // disable shield
+  public void DisableShield()
+  {
+    hasShield = false;
+    shieldSprite.SetActive(false);
+  }
 }

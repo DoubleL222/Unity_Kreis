@@ -21,8 +21,7 @@ public class PowerUpManager : PolarPhysicsObject
         // player already has shield?
         if (!LPC.hasShield)
         {
-          LPC.shieldSprite.SetActive(true);
-          LPC.hasShield = true;
+          LPC.EnableShield();
         }
         Destroy(transform.root.gameObject);
       }
