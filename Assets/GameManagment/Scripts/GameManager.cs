@@ -29,8 +29,9 @@ public class GameManager : MonoBehaviour {
 	public WinnerCanvasController WCC;
 
   // powerups
-  PowerUpSpawner PUS;
-	public bool usePowerUps = false;
+  	PowerUpSpawner PUS;
+	PowerUpManager PUM;
+	public bool usePowerUps;
 
 	// Use this for initialization
 	void StartGame(){
@@ -39,9 +40,11 @@ public class GameManager : MonoBehaviour {
 		SoundM.PlayBigBoomClip ();
 
     // powerups
-    PUS = gameObject.GetComponent<PowerUpSpawner>();
-		if(usePowerUps)
-    		PUM = gameObject.GetComponent<PowerUpManager>();
+    
+		if (usePowerUps) {
+			PUS = gameObject.GetComponent<PowerUpSpawner> ();
+			PUM = gameObject.GetComponent<PowerUpManager> ();
+		}
 	}
 
 	void Awake(){
@@ -225,7 +228,7 @@ public class GameManager : MonoBehaviour {
 
     cameraLoc.updatePlayers = true;
 	if(usePowerUps)
-  		PUM.spawnPowerups = true;
+  		PUS.spawnPowerups = true;
   }
 
 	public void FinalDestruction(float delayStep){

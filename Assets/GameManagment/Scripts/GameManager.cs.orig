@@ -2,12 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class GameManagerMulti : MonoBehaviour {
+public class GameManager : MonoBehaviour {
 	List<Color> playerColors;
 
 	SoundManager SoundM;
 
-	List<RingManagerMulti> rings;
+	List<RingManager> rings;
 
 	GameObject localPlayer1;
 	GameObject localPlayer2;
@@ -29,16 +29,19 @@ public class GameManagerMulti : MonoBehaviour {
 	public WinnerCanvasController WCC;
 
   // powerups
-  PowerUpManager PUM;
+  PowerUpSpawner PUS;
+	public bool usePowerUps = false;
 
 	// Use this for initialization
 	void StartGame(){
 		SpawnRings (RingSizes);
-		//SpawnPlayers (NumPlayers);
+		SpawnPlayers (NumPlayers);
 		SoundM.PlayBigBoomClip ();
 
     // powerups
-    PUM = gameObject.GetComponent<PowerUpManager>();
+    PUS = gameObject.GetComponent<PowerUpSpawner>();
+		if(usePowerUps)
+    		PUM = gameObject.GetComponent<PowerUpManager>();
 	}
 
 	void Awake(){
@@ -118,9 +121,9 @@ public class GameManagerMulti : MonoBehaviour {
 		}
 	}
 	public void SpawnRings(float[,] RingSizes){
-		rings = new List<RingManagerMulti> ();
+		rings = new List<RingManager> ();
 		for (int i = 0; i < RingSizes.GetLength (0); i++) {
-			rings.Add (new RingManagerMulti (RingSizes[i,0], RingSizes[i,1]));
+			rings.Add (new RingManager (RingSizes[i,0], RingSizes[i,1]));
 		}
 	}
 
@@ -221,12 +224,13 @@ public class GameManagerMulti : MonoBehaviour {
 		LCP.PlayerName = playerNames [playerI % playerNames.Length];
 
     cameraLoc.updatePlayers = true;
-//    PUM.spawnPowerups = true;
+	if(usePowerUps)
+  		PUM.spawnPowerups = true;
   }
 
 	public void FinalDestruction(float delayStep){
 		float mem = delayStep;
-		foreach (RingManagerMulti rm in rings) {
+		foreach (RingManager rm in rings) {
 			//Debug.Log ("final destruction called, segment controllers : " + rm.segmentControlers.Count);
 			delayStep = mem;
 			foreach (SegmentController sc in rm.segmentControlers) {
