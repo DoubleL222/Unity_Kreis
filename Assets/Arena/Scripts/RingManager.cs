@@ -37,7 +37,7 @@ public class RingManager{
 			segmentControlers.Add (currentSegmentManager);
 			currentSegmentManager.SetPosition (new Vector2 ((min + step * i + 0.0001f), distance));
 			currentSegmentManager.addBehaviour (stbm);
-			currentSegmentManager.addBehaviour (stbd);
+			//currentSegmentManager.addBehaviour (stbd);
 			//currentSegmentManager.SetPosition (new Vector2 ((min + step * i), distance));
 			segments.Add(currentSegment);
 			currentSegment.transform.SetParent (SegmentsParent.transform);

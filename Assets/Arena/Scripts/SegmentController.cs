@@ -82,23 +82,9 @@ public class SegmentController : PolarPhysicsObject{
 		foreach (SegmentTriggerBehaviour segmentTriggerBehaviour in triggerBehaviours) {
 			segmentTriggerBehaviour.Enter (other, this);
 		}
-		//LUKA
-		if (other.gameObject.tag == "Shot") {
-			ShotDestroyerScript SDS = other.gameObject.GetComponent<ShotDestroyerScript> ();
-			if(!SDS.IsUsed){
-				SDS.IsUsed = true;
-				Destroy(other.transform.root.gameObject);
-				Debug.Log("MAKING EXPLOSION");
-				Vector3 spawnPos = transformToPolar(other.transform.position);
-				DestroySegment (spawnPos);
-				//Destroy(transform.root.gameObject);
-				//explosionInstance.transform.SetParent(transform);
-			}
-		}
-		//END LUKA
 	}
 
-	void DestroySegment(Vector3 explodePosition){
+	public void DestroySegment(Vector3 explodePosition){
 		if (!isDestroyed) {
 			isDestroyed = true;
 			GameObject explosionInstance = Instantiate (ExplosionEffect, explodePosition, Quaternion.identity) as GameObject;
@@ -110,7 +96,7 @@ public class SegmentController : PolarPhysicsObject{
 		}
 	}
 	//LUKA
-	Vector3 transformToPolar(Vector3 pos){
+	public Vector3 transformToPolar(Vector3 pos){
 		
 		float angle = pos.x / 10.0f;
 		float distance = pos.y;

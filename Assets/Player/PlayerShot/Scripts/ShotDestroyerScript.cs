@@ -22,7 +22,6 @@ public class ShotDestroyerScript : MonoBehaviour {
 				IsUsed = true;
 				if (col != null) {
 					if (col.gameObject != null) {
-
 						//Destroy(col.gameObject.transform.root.gameObject);
 					}
 				}
@@ -33,9 +32,14 @@ public class ShotDestroyerScript : MonoBehaviour {
 				if (transform.root.gameObject != null) {
 					Destroy (transform.root.gameObject);
 				}
-			} else if (col.gameObject.tag == "Boundary") {
-				Destroy (transform.root.gameObject);
 			}
+		}
+		if (col.gameObject.tag == "Boundary") {
+			Destroy (transform.root.gameObject);
+		}
+		if (col.gameObject.tag == "Segment") {
+			if(transform.root.gameObject != null)
+				MonoBehaviour.Destroy(transform.root.gameObject);
 		}
 	}
 }

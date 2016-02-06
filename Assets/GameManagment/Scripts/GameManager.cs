@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.Space)){
 			Application.LoadLevel(Application.loadedLevel);
 		}
-		if(Input.GetKeyDown(KeyCode.KeypadEnter)){
+		if(Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return)){
 			StartGame ();
 		}
 		if (Input.GetKeyDown (KeyCode.Alpha2)) {
