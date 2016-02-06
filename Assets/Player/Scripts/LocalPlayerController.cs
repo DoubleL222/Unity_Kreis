@@ -62,6 +62,8 @@ public class LocalPlayerController : PolarPhysicsObject {
 	}
 
 	void FixedUpdate () {
+		StartUpdate ();
+
 		isGrounded = false;
 
 		// The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
@@ -78,7 +80,6 @@ public class LocalPlayerController : PolarPhysicsObject {
 			}
 		}
 
-		StartUpdate ();
 		if (Input.GetKey (keys ["left"])) {
 			if(!boosterEmiter.activeSelf){
 				boosterEmiter.SetActive(true);

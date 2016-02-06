@@ -2,12 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// A class that represents a ring of segments
+/// </summary>
 public class RingManager{
-
 	private static GameObject segmentPrefab;
-
 	List<GameObject> segments;
-
 	public List<SegmentController> segmentControlers;	
 
 	public RingManager (float distance, float tickMove) {
@@ -16,30 +16,31 @@ public class RingManager{
 		}
 		segmentControlers = new List<SegmentController> ();
 
-		int max = (int)Mathf.Floor (distance * Mathf.PI * 1.25f);
+		int max = (int)Mathf.Floor (distance * Mathf.PI * 1.25f); // number of segments
 
 		segments = new List<GameObject> (max);
 
-		float min = -Mathf.PI;
-		float step = (2 * Mathf.PI / (float)max);
-		//Debug.Log ("# segments in ring " + max);
+		float min = -Mathf.PI;						//First segment position
+		float step = (2 * Mathf.PI / (float)max);	//Distance between segments
 	
-		SegmentTickBehaviourMove stbm = new SegmentTickBehaviourMove (tickMove);
-		SegmentTriggerBehaviourDestroy stbd = new SegmentTriggerBehaviourDestroy ();
+		SegmentTickBehaviourMove stbm = new SegmentTickBehaviourMove (tickMove); //Segments with this tick behaviour will move
+		SegmentTriggerBehaviourDestroy stbd = new SegmentTriggerBehaviourDestroy (); //Segments with this tick behaviour will be destroyed upon getting shot
 
 		GameObject SegmentsParent = new GameObject ();
 		SegmentsParent.name = "SegmentsParent"+max;
 		SegmentsParent.transform.position = Vector3.zero;
 		SegmentsParent.transform.rotation = Quaternion.identity;
+
 		for(int i=0; i < max; i++){
-			GameObject currentSegment = MonoBehaviour.Instantiate(segmentPrefab/*, new Vector3(min + step * i, distance, 0), new Quaternion()*/) as GameObject;
+			GameObject currentSegment = MonoBehaviour.Instantiate(segmentPrefab) as GameObject;
 			SegmentController currentSegmentManager = currentSegment.GetComponentInChildren<SegmentController> ();
 			segmentControlers.Add (currentSegmentManager);
-			currentSegmentManager.SetPosition (new Vector2 ((min + step * i + 0.0001f), distance));
-			currentSegmentManager.addBehaviour (stbm);
-			//currentSegmentManager.addBehaviour (stbd);
-			//currentSegmentManager.SetPosition (new Vector2 ((min + step * i), distance));
 			segments.Add(currentSegment);
+
+			currentSegmentManager.SetPosition (new Vector2 ((min + step * i + 0.0001f), distance)); 
+			currentSegmentManager.addBehaviour (stbm);
+			currentSegmentManager.addBehaviour (stbd);
+
 			currentSegment.transform.SetParent (SegmentsParent.transform);
 		}
 	}
