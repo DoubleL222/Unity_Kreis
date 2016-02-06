@@ -64,7 +64,8 @@ public abstract class PolarPhysicsObject : MonoBehaviour{
 			oldVelocity.Scale (new Vector2 (1f / oldscale, 1f));
 			oldVelocity.x = Mathf.Clamp (oldVelocity.x, -maxHorizontalSpeed * widthMultiplier, maxHorizontalSpeed * widthMultiplier);
 			oldVelocity.y = Mathf.Clamp (oldVelocity.y, -maxVerticalSpeed, maxVerticalSpeed);
-			rigidbody.velocity = oldVelocity;
+			if(!UtilityScript.isVector2NanOrInf(oldVelocity))
+				rigidbody.velocity = oldVelocity;
 			oldscale = scaleMultiplier / rigidbody.position.y;
 		}
 		if (physics != null && mesh != null) {
@@ -110,8 +111,9 @@ public abstract class PolarPhysicsObject : MonoBehaviour{
 			oldVelocity = rigidbody.velocity;
 			//Debug.Log ("Actual velocity: " + rigidbody.velocity);
 			oldVelocity.Scale (new Vector2 (oldscale, 1f));
-
-			rigidbody.velocity = oldVelocity;
+			if(!UtilityScript.isVector2NanOrInf(oldVelocity))
+				rigidbody.velocity = oldVelocity;
+			
 			//Debug.Log ("Applied velocity: " + rigidbody.velocity);
 
 			//Vector3 tmpvec = rigidbody.velocity;
@@ -119,7 +121,8 @@ public abstract class PolarPhysicsObject : MonoBehaviour{
 			//Debug.Log ("Velocity given position: " + tmpvec);
 
 			float oldyscale = rigidbody.transform.localScale.y;
-			rigidbody.transform.localScale = new Vector3 (oldscale, oldyscale, oldscale);
+			if(!UtilityScript.isVector2NanOrInf(new Vector2(oldscale, oldyscale)))
+				rigidbody.transform.localScale = new Vector3 (oldscale, oldyscale, oldscale);
 		}
 	}
 

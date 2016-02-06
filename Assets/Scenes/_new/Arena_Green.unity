@@ -1787,7 +1787,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1a79b5aa7edd3a4c896fb46a94e3870, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  segmentsParent: {fileID: 0}
   PhaseInEffect: {fileID: 107756, guid: 873cb0711238e0d478688f0f518a0494, type: 2}
   localPlayerPrefabs:
   - {fileID: 147376, guid: 318d4d2f07c819c469ba897cbfd0ad7c, type: 2}
@@ -1796,6 +1795,7 @@ MonoBehaviour:
   - {fileID: 178046, guid: f83e09c224822f74b864a0d754b56fed, type: 2}
   - {fileID: 109306, guid: c807f7b65fdc36747ac654106a5f6066, type: 2}
   WCC: {fileID: 1147710129}
+  usePowerUps: 0
 --- !u!4 &1212005979
 Transform:
   m_ObjectHideFlags: 0
