@@ -46,14 +46,14 @@ public class LocalPlayerController : PolarPhysicsObject {
 		//Debug.Log ("Start called");
 		gravity = 1;
 		oldscale = scaleMultiplier/rigidbody.position.y;
-		/*if (keys == null) {
-			IDictionary<string,string> defaultKeys = new Dictionary<string,string> ();
-			defaultKeys.Add ("left", "a");
-			defaultKeys.Add ("right", "d");
-			defaultKeys.Add ("gravityChange", "w");
-			defaultKeys.Add ("shoot", "s");
+		if (keys == null) {
+			IDictionary<string,KeyCode> defaultKeys = new Dictionary<string,KeyCode> ();
+			defaultKeys.Add ("left", KeyCode.A);
+			defaultKeys.Add ("right", KeyCode.D);
+			defaultKeys.Add ("gravityChange",KeyCode.S);
+			defaultKeys.Add ("shoot", KeyCode.W);
 			setKeys (defaultKeys);
-		}*/
+		}
 	}
 		
 	void OnDrawGizmos() {

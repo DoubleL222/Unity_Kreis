@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour {
 
   // powerups
   PowerUpSpawner PUS;
+	public bool usePowerUps = false;
 
 	// Use this for initialization
 	void StartGame(){
@@ -39,6 +40,8 @@ public class GameManager : MonoBehaviour {
 
     // powerups
     PUS = gameObject.GetComponent<PowerUpSpawner>();
+		if(usePowerUps)
+    		PUM = gameObject.GetComponent<PowerUpManager>();
 	}
 
 	void Awake(){
@@ -221,7 +224,8 @@ public class GameManager : MonoBehaviour {
 		LCP.PlayerName = playerNames [playerI % playerNames.Length];
 
     cameraLoc.updatePlayers = true;
-    PUS.spawnPowerups = true;
+	if(usePowerUps)
+  		PUM.spawnPowerups = true;
   }
 
 	public void FinalDestruction(float delayStep){
