@@ -29,8 +29,7 @@ public class GameManager : MonoBehaviour {
 	public WinnerCanvasController WCC;
 
   // powerups
-  	PowerUpSpawner PUS;
-	PowerUpManager PUM;
+  PowerUpSpawner PUS;
 	public bool usePowerUps;
 
 	/// <summary>
@@ -45,7 +44,6 @@ public class GameManager : MonoBehaviour {
     
 		if (usePowerUps) {
 			PUS = gameObject.GetComponent<PowerUpSpawner> ();
-			PUM = gameObject.GetComponent<PowerUpManager> ();
 		}
 	}
 
@@ -219,8 +217,9 @@ public class GameManager : MonoBehaviour {
 		LCP.PlayerName = playerNames [playerI % playerNames.Length];
 
     cameraLoc.updatePlayers = true;
-	if(usePowerUps)
-  		PUS.spawnPowerups = true;
+
+	  if(usePowerUps)
+  		  PUS.spawnPowerups = true;
   }
 
 	public void FinalDestruction(float delayStep){
