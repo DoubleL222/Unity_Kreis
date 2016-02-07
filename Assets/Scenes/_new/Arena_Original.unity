@@ -1884,6 +1884,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1212005979}
   - 114: {fileID: 1212005978}
+  - 114: {fileID: 1212005980}
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
@@ -1910,7 +1911,7 @@ MonoBehaviour:
   - {fileID: 178046, guid: f83e09c224822f74b864a0d754b56fed, type: 2}
   - {fileID: 109306, guid: c807f7b65fdc36747ac654106a5f6066, type: 2}
   WCC: {fileID: 1147710129}
-  usePowerUps: 0
+  usePowerUps: 1
 --- !u!4 &1212005979
 Transform:
   m_ObjectHideFlags: 0
@@ -1923,6 +1924,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
+--- !u!114 &1212005980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1212005977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7306b5be17d4ceb4796bcc32867dc6a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minSpawnDuration: 5
+  maxSpawnDuration: 10
+  powerUps:
+  - {fileID: 116500, guid: 86d320406d921fb4e958f6ba0f6bb725, type: 2}
+  spawnDistances:
+  - 13.5
+  - 20.5
+  spawnPowerups: 0
 --- !u!1 &1360031502
 GameObject:
   m_ObjectHideFlags: 0
