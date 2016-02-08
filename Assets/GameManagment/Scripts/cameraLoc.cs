@@ -39,14 +39,14 @@ public class cameraLoc : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (updatePlayers)
+        if (updatePlayers)  //ko se unici igralec, zacne igra se prestavi update players na true
         {
             print("Camera: updating player array");
             players = GameObject.FindGameObjectsWithTag("PlayerMesh");
             updatePlayers = false;
         }
 
-        if (GameManager.gameEnded)
+        if (GameManager.gameEnded)//vrni kamero na izvorno lokacijo
         {
             tmpCenter = startLocation;
 
@@ -58,7 +58,7 @@ public class cameraLoc : MonoBehaviour {
         }
         else
         {
-            if (players != null)
+            if (players != null)//cakaj na igralce
             {
                 if (players.Length != 0)
                 {
@@ -70,13 +70,13 @@ public class cameraLoc : MonoBehaviour {
                             maxDistance = Vector3.Distance(player.transform.position, zoomCenter);
                         }
                     }
-                    tmpCenter = tmpCenter / players.Length;
+                    tmpCenter = tmpCenter / players.Length;//izracun lokacije kamere
 
                     center = center + (tmpCenter - center) * smoothing;
                     center = new Vector3(center.x, center.y, transform.position.z);
 
-                    tmpSize = maxDistance * zoomFactor;
-                    size = size + (tmpSize - size) * zoomSmoothing;
+                    tmpSize = maxDistance * zoomFactor;//velikost je odvisna od razdalje najbolj oddaljenega igralca
+                    size = size + (tmpSize - size) * zoomSmoothing;//izracun velikosti
 
                     cam.orthographicSize = size;
                     maxDistance = 0;
