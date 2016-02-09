@@ -9,26 +9,41 @@ public class MyNetworkManager : NetworkManager {
 	const short MyBeginMsg = 1002;
 	public Text DebuggingText;
 	int playerIds = 0;
-
+	public GameObject PlayerObject;
 	public GameObject MessageSender;
-	//public MySpawnerScript MSS;
+	public GameObject scriptsObjectPrefab;
+	public GameObject[] SceneEffectObjects;
 
-	List<GameObject> messageSenders;
+	private GameManager serverGameManager;
+	//public MySpawnerScript MSS;
+	public List<GameObject> AllPlayerObjects;
 
 	void Start(){
-		messageSenders = new List<GameObject> ();
 	}
 	// Use this for initialization
 	public override void OnServerConnect(NetworkConnection conn)
 	{
 		base.OnServerConnect (conn);
-		//NetworkClient nc = new NetworkClient ();
-//		conn.RegisterHandler (MyBeginMsg, HandlePlayerInput);
-		//Debug.Log ("client connected");
+		if (serverGameManager == null) {
+			SetupServerScene();
+		}
 		DebuggingText.text = "Client connected with connection id: "+ conn.connectionId +", with adress: " + conn.address + "\n"+ DebuggingText.text;
-		//NetworkServer.SpawnObjects ();
+	}
+	void SetupServerScene(){
+		var go = (GameObject)Instantiate(scriptsObjectPrefab, Vector3.zero, Quaternion.identity);
+		serverGameManager = go.GetComponent<GameManager> ();
+		NetworkServer.Spawn (go);
+		foreach (GameObject ServerSceneObject in SceneEffectObjects) {
+			go = (GameObject)Instantiate(ServerSceneObject, ServerSceneObject.transform.position, Quaternion.identity);
+			//serverGameManager = go.GetComponent<GameManager> ();
+			NetworkServer.Spawn (go);
+		}
 	}
 
+	void StartPlayingScene()
+	{
+
+	}
 //	[Server]
 	void spawnMessageSender(NetworkConnection conn){
 		var go = (GameObject)Instantiate(MessageSender, Vector3.zero, Quaternion.identity);
@@ -39,24 +54,19 @@ public class MyNetworkManager : NetworkManager {
 	public override void OnClientConnect(NetworkConnection conn)
 	{
 		base.OnClientConnect (conn);
-//		NetworkMessenger NM = FindObjectOfType<NetworkMessenger> ();
-//		NM.init (conn);
-		//Debug.Log ("client connected, i am client");
-		//if(conn.address!="localServer")
-		//spawnMessageSender (conn);
-		//ClientScene.AddPlayer(0);
-		//ClientScene.RegisterPrefab (MessageSender);
-		//spawnMessageSender (conn);
-		//GameObject.FindObjectOfType<InputHandler>().MessageSender = messageSenders[messag
-	//	int newID = NetworkServer.connections.Count;
-	//	FindObjectOfType<InputHandler> ().InputHandlerID = newID;
+//
 
 		DebuggingText.text = "I am client, and have connected to server con: " + conn.connectionId + ", with adress: " + conn.address + ", host id:" + conn.hostId + "\n" + DebuggingText.text;
 	}
 	public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
 	{
-		GameObject player = (GameObject)Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
-		player.GetComponent<LocalPlayerSender>().PlayerID = playerIds++;
+		//GameObject go = Instantiate (PlayerObject, Vector3.zero, Quaternion.identity) as GameObject;
+		GameObject player = (GameObject)Instantiate(playerPrefab, new Vector3 (0, 20f, 0), Quaternion.identity);
+		LocalPlayerSender hisLCP = player.GetComponent<LocalPlayerSender> ();
+		hisLCP.PlayerID = playerIds++;
+		//hisLCP.myPlayerOnTheServer = go.GetComponent<LocalPlayerController> ();
+		//go.SetActive (false);
 		NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
+		serverGameManager.LocalPlayerSenders.Add (hisLCP);
 	}
 }

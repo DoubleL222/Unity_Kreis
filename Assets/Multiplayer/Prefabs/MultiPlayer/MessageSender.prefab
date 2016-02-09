@@ -25,7 +25,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 164920}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 455.5, y: 192.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -41,7 +41,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c091624d8e2182942a5f57c69469b657, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DebugText: {fileID: 0}
+  PlayerControlerPrefab: {fileID: 128732, guid: 78b8f86daba9191409d0367f4e0d37aa,
+    type: 2}
 --- !u!114 &11428020
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -53,7 +54,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8158de5ba2faa4641a8f7d404fe9e342, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DebugText: {fileID: 0}
 --- !u!114 &11476384
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -97,6 +97,10 @@ Prefab:
       propertyPath: m_LocalPlayerAuthority
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: PlayerControlerPrefab
+      value: 
+      objectReference: {fileID: 128732, guid: 78b8f86daba9191409d0367f4e0d37aa, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 164920}

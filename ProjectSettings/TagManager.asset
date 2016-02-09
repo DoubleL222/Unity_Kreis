@@ -10,7 +10,11 @@ TagManager:
   - PlayerMesh
   - Shield
   - DebugText
-  - ButtonRight
+  - buttonRight
+  - SegmentMesh
+  - buttonLeft
+  - buttonUp
+  - buttonShoot
   layers:
   - Default
   - TransparentFX

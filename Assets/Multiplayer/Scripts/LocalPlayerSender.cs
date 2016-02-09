@@ -5,7 +5,9 @@ using UnityEngine.UI;
 
 [NetworkSettings(channel = 1, sendInterval = 0.0625f)]
 public class LocalPlayerSender : NetworkBehaviour {
-	public Text DebugText;
+	public LocalPlayerController myPlayerOnTheServer;
+	private Text DebugText;
+	public GameObject PlayerControlerPrefab;
 	private int playerID;
 	public int PlayerID
 	{
@@ -25,17 +27,44 @@ public class LocalPlayerSender : NetworkBehaviour {
 	}
 
 	void Start(){
-
+		if (isLocalPlayer) {
+			GameObject go =	Instantiate (PlayerControlerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+			ButtonInputGetter[] BIGs = go.GetComponentsInChildren<ButtonInputGetter>();
+			InputHandler myInputHandler = GetComponent<InputHandler>();
+			foreach(ButtonInputGetter BIG in BIGs){
+				BIG.inputHandler = myInputHandler;
+			}
+		}
 	}
 	// Use this for initialization
 	[Command]
-	public void CmdSendInputToServer(string input){
-		if (!hasAuthority) {
-			Debug.Log("NO AUTHORITY");
+	public void CmdPlayerPressingButton(PlayerInput pInput){
+		if (myPlayerOnTheServer != null) {
+			if (isServer) {
+				DebugText.text = "Player with ID: " + PlayerID + " IS PRESSING BUTTON: " + pInput.ToString () + "\n" + DebugText.text;
+				switch (pInput) {
+				case PlayerInput.left:
+					myPlayerOnTheServer.PlayerLeftControll ();
+					break;
+				case PlayerInput.right:
+					myPlayerOnTheServer.PlayerRightControll ();
+					break;
+				case PlayerInput.shoot:
+					myPlayerOnTheServer.PlayerShootControll ();
+					break;
+				case PlayerInput.up:
+					myPlayerOnTheServer.PlayerGravityShiftControll ();
+					break;
+				default:
+					break;
+				}
+			}
 		}
+	}
+	[Command]
+	public void CmdPlayerLetGoButton(PlayerInput pInput){
 		if (isServer) {
-
-			DebugText.text = "Received Command "+input+ " from Client with id: "+PlayerID+	 "\n"+DebugText.text;
+			DebugText.text = "Player with ID: "+PlayerID+" LET GO OF BUTTON: "+pInput.ToString()+ "\n"+DebugText.text;
 		}
 	}
 }
