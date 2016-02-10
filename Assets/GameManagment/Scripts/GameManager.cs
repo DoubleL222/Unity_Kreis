@@ -31,8 +31,7 @@ public class GameManager : MonoBehaviour {
 
 	//MULTIPLAYER
 	public bool multiplayerMode = false;
-	[HideInInspector]
-	public List<LocalPlayerSender> LocalPlayerSenders;
+	public List<LocalPlayerSender> LocalPlayerSenders = new List<LocalPlayerSender> ();
 
 
   // powerups
@@ -40,6 +39,10 @@ public class GameManager : MonoBehaviour {
 	PowerUpManager PUM;
 	public bool usePowerUps;
 
+	public void addLCP(LocalPlayerSender LPS){
+		LocalPlayerSenders.Add (LPS);
+
+	}
 	// Use this for initialization
 	void StartGame(){
 		SpawnRings (RingSizes);
@@ -59,7 +62,7 @@ public class GameManager : MonoBehaviour {
 		SoundM = FindObjectOfType<SoundManager> ();
 	}
 	void Start() {
-		LocalPlayerSenders = new List<LocalPlayerSender> ();
+
 		LivingPlayers = new List<GameObject> ();
 		playerColors = new List<Color> ();
 		playerColors.Add (new Color32 (255, 238, 13, 255));
@@ -188,6 +191,7 @@ public class GameManager : MonoBehaviour {
 	}
 	void MultiSpawnPlayers(){
 		SpawnPositions = CalculateSpawnPositions (LocalPlayerSenders.Count);
+		Debug.Log ( "NUMBEr OF LOCAL PLAYER SENDErS:"+ LocalPlayerSenders.Count);
 		int i = 0;
 		foreach (LocalPlayerSender LPS in LocalPlayerSenders) 
 		{

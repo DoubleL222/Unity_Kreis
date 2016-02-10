@@ -37,6 +37,12 @@ public class LocalPlayerController : PolarPhysicsObject {
 	public GameObject shotPrefab;
 	//END LUKA
 
+	// keys
+	public bool firePressed = false;
+	public bool leftPressed = false;
+	public bool rightPressed = false;
+	public bool jumpPressed = false;
+
 	public void setKeys(IDictionary<string,KeyCode> keys){
 		this.keys = keys;
 	}
@@ -123,21 +129,24 @@ public class LocalPlayerController : PolarPhysicsObject {
 		}
 
 		StartUpdate ();
-		if (!MultiBool) {
-			if (Input.GetKey (keys ["left"])) {
+
+		//if (!MultiBool) {
+
+		if (leftPressed) {
 				PlayerLeftControll();
-			} else if (Input.GetKey (keys ["right"])) {
+		} else if (rightPressed) {
 				PlayerRightControll();
-			} else {
-				PlayerStopMovingControll();
-			}
-			if (Input.GetKey (keys ["gravityChange"])) {
+		} else {
+			PlayerStopMovingControll();
+		}
+
+		if (jumpPressed) {
 				PlayerGravityShiftControll();
 			}
-			if (Input.GetKey (keys ["shoot"])) {
+		if (firePressed) {
 				PlayerShootControll();
 			}
-		}
+		//}
 		Vector2 grav = new Vector2(0f, gravityForce * gravity);
 		//Debug.Log("Grav: " + grav);
 		//rigidbody.velocity += grav;

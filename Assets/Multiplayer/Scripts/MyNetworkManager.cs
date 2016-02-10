@@ -60,6 +60,7 @@ public class MyNetworkManager : NetworkManager {
 	}
 	public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
 	{
+		Debug.Log ("ON SERVER ADD PLAYER CALLED");
 		//GameObject go = Instantiate (PlayerObject, Vector3.zero, Quaternion.identity) as GameObject;
 		GameObject player = (GameObject)Instantiate(playerPrefab, new Vector3 (0, 20f, 0), Quaternion.identity);
 		LocalPlayerSender hisLCP = player.GetComponent<LocalPlayerSender> ();
@@ -67,6 +68,6 @@ public class MyNetworkManager : NetworkManager {
 		//hisLCP.myPlayerOnTheServer = go.GetComponent<LocalPlayerController> ();
 		//go.SetActive (false);
 		NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
-		serverGameManager.LocalPlayerSenders.Add (hisLCP);
+		serverGameManager.addLCP (hisLCP);
 	}
 }
