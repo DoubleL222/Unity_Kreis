@@ -16,11 +16,18 @@ public class GameManager : MonoBehaviour {
 	private int NumPlayers = 2;
 	public static bool gameEnded = false;
 
+	public Sprite barrier, indestructableBarrier;
+
 	List<GameObject> LivingPlayers;
 
 	string[] playerNames;
-	float[,] RingSizes;
+	float[] RingSizes;
 	Vector3[] SpawnPositions;
+	List<SegmentCollisionBehaviour> [] segmentCollisionBehaviours;
+	List<SegmentTriggerBehaviour> [] segmentTriggerBehaviours;
+	List<SegmentTickBehaviour> [] segmentTickBehaviours;
+	Sprite[] segmentSprites;
+
 	float PhyciscSegmentOffset = 7.0f;
 	float PhaseInDelay = float.MaxValue;
 
@@ -35,7 +42,7 @@ public class GameManager : MonoBehaviour {
 
 
   // powerups
-  PowerUpSpawner PUS;
+  	PowerUpSpawner PUS;
 	public bool usePowerUps;
 
 	/// <summary>
@@ -72,7 +79,6 @@ public class GameManager : MonoBehaviour {
 		playerColors.Add (new Color32 (12, 99, 232, 255));
 		playerColors.Add (new Color32 (0, 255, 69, 255));
 
-
 		ParticleSystem[] PSS = PhaseInEffect.GetComponentsInChildren<ParticleSystem>();
 		foreach (ParticleSystem PS in PSS) {
 			if (PS.duration < PhaseInDelay) {
@@ -94,13 +100,34 @@ public class GameManager : MonoBehaviour {
 		playerNames [8] = "Liz";
 		playerNames [9] = "Bob";
 
-		RingSizes = new float[3,2];
-		RingSizes [0,0] = 10f;
-		RingSizes [0,1] = 5f;
-		RingSizes [1,0] = 17f;
-		RingSizes [1,1] = -3f;
-		RingSizes [2,0] = 24f;
-		RingSizes [2,1] = 4f;
+		int nrings = 3;
+
+		RingSizes = new float[nrings];
+		RingSizes [0] = 10f;
+		RingSizes [1] = 17f;
+		RingSizes [2] = 24f;
+
+		segmentTickBehaviours = new List<SegmentTickBehaviour>[nrings];
+		for (int i = 0; i < segmentTickBehaviours.Length; i++)
+			segmentTickBehaviours [i] = new List<SegmentTickBehaviour> ();
+		segmentTickBehaviours [0].Add (new SegmentTickBehaviourMove (5f));
+		segmentTickBehaviours [1].Add (new SegmentTickBehaviourMove (-3f));
+		segmentTickBehaviours [2].Add (new SegmentTickBehaviourMove (4f));
+
+		segmentCollisionBehaviours = new List<SegmentCollisionBehaviour>[nrings];
+		for (int i = 0; i < segmentCollisionBehaviours.Length; i++)
+			segmentCollisionBehaviours [i] = new List<SegmentCollisionBehaviour> ();
+
+		segmentTriggerBehaviours = new List<SegmentTriggerBehaviour>[nrings];
+		for (int i = 0; i < segmentTriggerBehaviours.Length; i++)
+			segmentTriggerBehaviours [i] = new List<SegmentTriggerBehaviour> ();
+		
+		segmentTriggerBehaviours [1].Add (new SegmentTriggerBehaviourDestroy ());
+
+		segmentSprites = new Sprite[nrings];
+		segmentSprites [0] = indestructableBarrier;
+		segmentSprites [1] = barrier;
+		segmentSprites [2] = indestructableBarrier;
 	}
 
 	// Update is called once per frame
@@ -128,10 +155,10 @@ public class GameManager : MonoBehaviour {
 	/// Spawns the rings defined in RingSizes.
 	/// </summary>
 	/// <param name="RingSizes">A 2d array of [distance, speed]</param>
-	public void SpawnRings(float[,] RingSizes){
+	public void SpawnRings(float[] RingSizes){
 		rings = new List<RingManager> ();
 		for (int i = 0; i < RingSizes.GetLength (0); i++) {
-			rings.Add (new RingManager (RingSizes[i,0], RingSizes[i,1]));
+			rings.Add (new RingManager (RingSizes[i], segmentCollisionBehaviours[i], segmentTickBehaviours[i], segmentTriggerBehaviours[i], segmentSprites[i]));
 		}
 	}
 
@@ -212,7 +239,7 @@ public class GameManager : MonoBehaviour {
 			if (i + 1 >= RingSizes.GetLength (0) * 4 - 3) x = 4;
 			if (i + 1 >= RingSizes.GetLength (0) * 5 - 4) x = 5;
 			int j = i % (RingSizes.GetLength (0) - 1);
-			positons [i] = new Vector3 (x*30.0f, (RingSizes [j + 1, 0] + RingSizes [j,0])/2.0f, 0.0f);
+			positons [i] = new Vector3 (x*30.0f, (RingSizes [j + 1] + RingSizes [j])/2.0f, 0.0f);
 		}
 		return positons;
 	}
