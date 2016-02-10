@@ -5,8 +5,11 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
+/// <summary>
+/// An object that has physics in polar coordinates and meshes in cartesian coordinates
+/// </summary>
 public abstract class PolarPhysicsObject : MonoBehaviour{
-	protected static readonly float widthMultiplier = 10f;
+	public static readonly float widthMultiplier = 10f;
 	protected static float scaleMultiplier = Mathf.PI*2;
 	protected static float maxHorizontalSpeed = 5f;
 	protected static float maxVerticalSpeed = 5f;
@@ -25,6 +28,7 @@ public abstract class PolarPhysicsObject : MonoBehaviour{
 	private Collider2D[] collidercopiesright;
 
 	protected void Awake(){
+		
 		Vector3 tmp = physics_parent.transform.localScale;
 		tmp.Scale (new Vector3(widthMultiplier, 1, 1));
 		physics_parent.transform.localScale = tmp;
@@ -32,8 +36,9 @@ public abstract class PolarPhysicsObject : MonoBehaviour{
 		oldVelocity = new Vector2 (0f, 0f);
 
 		colliders = physics.GetComponents<Collider2D> ();
-		collidercopiesleft = new Collider2D[colliders.Length];
-		collidercopiesright = new Collider2D[colliders.Length];
+		collidercopiesleft = new Collider2D[colliders.Length];	//Copies of colliders for use when the original collider is on 
+		collidercopiesright = new Collider2D[colliders.Length];	//the edge of the ring and needs to apply to the other side too 
+																//(eg a collider at 359 degrees needs to affect a collider at 1 degree)
 		for (int i = 0; i < colliders.Length; i++) {
 			collidercopiesleft [i] = GetCopyOf (physics.AddComponent (colliders[i].GetType ()), colliders [i]);
 			collidercopiesleft [i].enabled = false;
@@ -43,9 +48,12 @@ public abstract class PolarPhysicsObject : MonoBehaviour{
 
 		}
 	}
-
+	/// <summary>
+	/// This needs to be the first function call in the FixedUpdate of PolarPhysicsObjects!
+	/// </summary>
 	protected void StartUpdate(){
-		if (physics != null) {
+		
+		if (physics != null) { //if this object has physics that moved beyond a whole circle (eg +181 or -181 degrees) it needs to be moved by +-360 degrees
 			if (physics.transform.position.x > Mathf.PI * widthMultiplier) {
 				Vector3 tmp = physics.transform.position;
 				tmp.x -= 2 * Mathf.PI * widthMultiplier;
@@ -56,7 +64,7 @@ public abstract class PolarPhysicsObject : MonoBehaviour{
 				physics.transform.position = tmp;
 			}
 		}
-		if (rigidbody != null) {
+		if (rigidbody != null) { //if this object has physics unscale the velocity and scale so you don't need to scale when adding to it
 			Vector2 tmpvel = rigidbody.velocity;
 			tmpvel -= oldVelocity;
 			tmpvel.Scale (new Vector2 (oldscale, oldscale));
@@ -68,19 +76,12 @@ public abstract class PolarPhysicsObject : MonoBehaviour{
 				rigidbody.velocity = oldVelocity;
 			oldscale = scaleMultiplier / rigidbody.position.y;
 		}
-		if (physics != null && mesh != null) {
-			Vector3 pos = physics.transform.position;
-
-			float angle = pos.x / widthMultiplier;
-			float distance = pos.y;
-
-			float mx = distance * Mathf.Cos (angle);
-			float my = distance * Mathf.Sin (angle);
-
-			mesh.transform.position = new Vector3 (mx, my, 0);
+		if (physics != null && mesh != null) { //if it has a mesh and physics it synchronizes the positions
+			float angle = physics.transform.position.x / widthMultiplier;
+			mesh.transform.position = UtilityScript.transformToCartesian (physics.transform.position);
 			mesh.transform.rotation = Quaternion.Euler (0, 0, (angle) * 180f / Mathf.PI + 90f);
 		}
-		for(int i=0; i < colliders.Length; i++){
+		for(int i=0; i < colliders.Length; i++){ //enables the 'modulo' colliders if they need be enabled
 			Collider2D col = colliders [i];
 			Bounds bounds = col.bounds;
 			Vector3 min = bounds.min;
@@ -105,21 +106,15 @@ public abstract class PolarPhysicsObject : MonoBehaviour{
 		}
 	}
 
-
+	/// <summary>
+	/// This needs to be the last function call in FixedUpdate of PolarPhysicsObjects!
+	/// </summary>
 	protected void EndUpdate(){
-		if (rigidbody != null) {
+		if (rigidbody != null) { //if this object has a rigidbody it scales it back down again to proper size
 			oldVelocity = rigidbody.velocity;
-			//Debug.Log ("Actual velocity: " + rigidbody.velocity);
 			oldVelocity.Scale (new Vector2 (oldscale, 1f));
 			if(!UtilityScript.isVector2NanOrInf(oldVelocity))
 				rigidbody.velocity = oldVelocity;
-			
-			//Debug.Log ("Applied velocity: " + rigidbody.velocity);
-
-			//Vector3 tmpvec = rigidbody.velocity;
-			//tmpvec.Scale (new Vector2 (rigidbody.position.y, 1f));
-			//Debug.Log ("Velocity given position: " + tmpvec);
-
 			float oldyscale = rigidbody.transform.localScale.y;
 			if(!UtilityScript.isVector2NanOrInf(new Vector2(oldscale, oldyscale)))
 				rigidbody.transform.localScale = new Vector3 (oldscale, oldyscale, oldscale);

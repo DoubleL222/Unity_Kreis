@@ -3,15 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 
+/// <summary>
+/// A class that will oversee the whole game
+/// </summary>
 public class GameManager : MonoBehaviour {
 	List<Color> playerColors;
 
 	SoundManager SoundM;
 
 	List<RingManager> rings;
-
-	GameObject localPlayer1;
-	GameObject localPlayer2;
 
 	private int NumPlayers = 2;
 	public static bool gameEnded = false;
@@ -35,15 +35,16 @@ public class GameManager : MonoBehaviour {
 
 
   // powerups
-  	PowerUpSpawner PUS;
-	PowerUpManager PUM;
+  PowerUpSpawner PUS;
 	public bool usePowerUps;
 
+	/// <summary>
+	/// Starts the game. Initializes rings, players, sounds, ...
+	/// </summary>
 	public void addLCP(LocalPlayerSender LPS){
 		LocalPlayerSenders.Add (LPS);
 
 	}
-	// Use this for initialization
 	void StartGame(){
 		SpawnRings (RingSizes);
 		if(!multiplayerMode)
@@ -54,13 +55,13 @@ public class GameManager : MonoBehaviour {
     
 		if (usePowerUps) {
 			PUS = gameObject.GetComponent<PowerUpSpawner> ();
-			PUM = gameObject.GetComponent<PowerUpManager> ();
 		}
 	}
 
 	void Awake(){
 		SoundM = FindObjectOfType<SoundManager> ();
 	}
+
 	void Start() {
 
 		LivingPlayers = new List<GameObject> ();
@@ -100,26 +101,14 @@ public class GameManager : MonoBehaviour {
 		RingSizes [1,1] = -3f;
 		RingSizes [2,0] = 24f;
 		RingSizes [2,1] = 4f;
-
-
-
 	}
-	Vector3 transformToPolar(Vector3 pos){
-		
-		float angle = pos.x / 10.0f;
-		float distance = pos.y;
-		
-		float mx = distance * Mathf.Cos (angle);
-		float my = distance * Mathf.Sin (angle);
-		
-		return new Vector3 (mx, my, 0.0f);
-	}
+
 	// Update is called once per frame
 	void Update () {
 		if(Input.GetKeyDown(KeyCode.Space)){
 			Application.LoadLevel(Application.loadedLevel);
 		}
-		if(Input.GetKeyDown(KeyCode.KeypadEnter)){
+		if(Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return)){
 			StartGame ();
 		}
 		if (Input.GetKeyDown (KeyCode.Alpha2)) {
@@ -135,6 +124,10 @@ public class GameManager : MonoBehaviour {
 			NumPlayers = 5;
 		}
 	}
+	/// <summary>
+	/// Spawns the rings defined in RingSizes.
+	/// </summary>
+	/// <param name="RingSizes">A 2d array of [distance, speed]</param>
 	public void SpawnRings(float[,] RingSizes){
 		rings = new List<RingManager> ();
 		for (int i = 0; i < RingSizes.GetLength (0); i++) {
@@ -142,6 +135,10 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Spawns the players.
+	/// </summary>
+	/// <param name="NumberOfPlayers">Number of players.</param>
 	public void SpawnPlayers(int NumberOfPlayers){
 		gameEnded = false;
 		SpawnPositions = CalculateSpawnPositions (NumberOfPlayers);
@@ -199,8 +196,12 @@ public class GameManager : MonoBehaviour {
 			i++;
 		}
 	}
-
-
+        
+	/// <summary>
+	/// Calculates the spawn positions.
+	/// </summary>
+	/// <returns>The spawn positions.</returns>
+	/// <param name="NumPlayers">Number of players.</param>
 	Vector3[] CalculateSpawnPositions(int NumPlayers){
 		Vector3[] positons = new Vector3[NumPlayers];
 		for (int i = 0; i < NumPlayers; i++) {
@@ -226,7 +227,7 @@ public class GameManager : MonoBehaviour {
 
 	IEnumerator SpawnPlayerAfter(IDictionary<string,KeyCode> playerKeys, Vector3 SpawnPosition, int playerI)
   {
-		Instantiate (PhaseInEffect, transformToPolar (SpawnPosition), Quaternion.identity);
+		Instantiate (PhaseInEffect, UtilityScript.transformToCartesian (SpawnPosition), Quaternion.identity);
 		yield return new WaitForSeconds (PhaseInDelay);
 		SoundM.PlaySpawnClip ();
 		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefabs[(playerI % (localPlayerPrefabs.Length))], SpawnPosition, new Quaternion ()) as GameObject;
@@ -239,8 +240,9 @@ public class GameManager : MonoBehaviour {
 		LCP.PlayerName = playerNames [playerI % playerNames.Length];
 
     cameraLoc.updatePlayers = true;
-	if(usePowerUps)
-  		PUS.spawnPowerups = true;
+
+	  if(usePowerUps)
+  		  PUS.spawnPowerups = true;
   }
 
 	IEnumerator MultiSpawnPlayerAfter(Vector3 SpawnPosition, int playerI, LocalPlayerSender LPS)

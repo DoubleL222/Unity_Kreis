@@ -2,11 +2,9 @@
 using System.Collections;
 
 public class UtilityScript : MonoBehaviour {
-
-	// Use this for initialization
-	public static Vector3 transformToPolar(Vector3 pos){
-		
-		float angle = pos.x / 10.0f;
+	
+	public static Vector3 transformToCartesian(Vector3 pos){
+		float angle = pos.x / PolarPhysicsObject.widthMultiplier;
 		float distance = pos.y;
 		
 		float mx = distance * Mathf.Cos (angle);

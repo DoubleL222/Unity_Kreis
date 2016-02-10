@@ -69,6 +69,8 @@ public class LocalPlayerController : PolarPhysicsObject {
 		Gizmos.DrawSphere (physics.transform.position, 1.0f);
 	}
 	public void PlayerLeftControll(){
+		StartUpdate ();
+
 		if (!boosterEmiter.activeSelf) {
 			boosterEmiter.SetActive (true);
 		}
