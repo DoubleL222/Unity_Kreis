@@ -293,7 +293,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 109306}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 26.8340015, y: -37.1547775, z: 0}
+  m_LocalPosition: {x: -31.5034924, y: -1.94028735, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children:
   - {fileID: 445166}
@@ -536,6 +536,10 @@ MonoBehaviour:
   rigidbody: {fileID: 5096488}
   gravity: 0
   MultiBool: 0
+  glows:
+  - {fileID: 177160}
+  - {fileID: 150368}
+  - {fileID: 147038}
   hasShield: 0
   shieldSprite: {fileID: 146224}
   PlayerName: 

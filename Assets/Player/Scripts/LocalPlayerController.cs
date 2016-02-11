@@ -20,6 +20,10 @@ public class LocalPlayerController : PolarPhysicsObject {
 	[HideInInspector]
 	public bool MultiBool = false;
 
+    public GameObject[] glows;
+    private Vector3[] glowScales;
+    private float interpolateT = 1;
+
   // powerups
   [HideInInspector]
   public bool hasShield = false;
@@ -32,7 +36,7 @@ public class LocalPlayerController : PolarPhysicsObject {
 	private float gravityChangeRate = 0.2f;
 	private float lastGravityChange = 0.0f;
 
-    private int shootCharges = 2;
+    private int shootCharges = 3;
     private int shots = 0;
 	private float fireRate = 0.2f;
     private float lastShoot = 0.0f;
@@ -56,6 +60,11 @@ public class LocalPlayerController : PolarPhysicsObject {
 	// Use this for initialization
 	void Awake() {
 		SoundM = FindObjectOfType<SoundManager> ();
+        glowScales = new Vector3[glows.Length];
+        for(int i=0; i < glows.Length; i++)
+        {
+            glowScales[i] = new Vector3(glows[i].transform.localScale.x, glows[i].transform.localScale.y, glows[i].transform.localScale.z);
+        }
 		base.Awake();
 		//Debug.Log ("Start called");
 		gravity = 1;
@@ -107,16 +116,20 @@ public class LocalPlayerController : PolarPhysicsObject {
 	public void PlayerGravityShiftControll(){
         if (jumpCharge > 0)
         {
-            if ((lastGravityChange + gravityChangeRate) < Time.fixedTime)
+            lastGravityChange = Time.fixedTime;
+            gravity = -gravity;
+            SoundM.PlayJumpClip();
+            jumpCharge = 0;
+            /*if ((lastGravityChange + gravityChangeRate) < Time.fixedTime)
             {
                 lastGravityChange = Time.fixedTime;
                 gravity = -gravity;
                 SoundM.PlayJumpClip();
                 jumpCharge = 0;
-            }
+            }*/
         }
-		
-	}
+
+    }
 
 	public void PlayerShootControll(){
         if (shots < shootCharges)
@@ -145,9 +158,36 @@ public class LocalPlayerController : PolarPhysicsObject {
 	void FixedUpdate () {
 		isGrounded = false;
 
-		// The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
-		// This can be done using layers instead but Sample Assets will not overwrite your project settings.
+        // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
+        // This can be done using layers instead but Sample Assets will not overwrite your project settings.
+        
+        for (int i=0; i < glows.Length; i++)
+        {
+            //Debug.Log(i);
+            if (i<(shootCharges - shots))
+            {
 
+                
+                glows[i].SetActive(true);
+                /*Vector3 tmp = new Vector3((glowScales[i] * interpolateT).x, (glowScales[i] * interpolateT).y, (glowScales[i] * interpolateT).z);
+                glows[i].transform.localScale = new Vector3(tmp.x, tmp.y, tmp.z);
+                if (interpolateT < 1)
+                {
+                    interpolateT += 0.1f;
+                }*/
+            }
+            else
+            {
+                glows[i].SetActive(false);
+                /*
+                Vector3 tmp = new Vector3((glowScales[i]*interpolateT).x, (glowScales[i] * interpolateT).y, (glowScales[i] * interpolateT).z);
+                glows[i].transform.localScale = new Vector3(tmp.x, tmp.y, tmp.z);
+                if (interpolateT > 0)
+                {
+                    interpolateT -= 0.1f;
+                }*/
+            }
+        }
 
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(physics.transform.position, 0.6f);
 		if (!isGrounded) {
@@ -163,7 +203,11 @@ public class LocalPlayerController : PolarPhysicsObject {
 		StartUpdate ();
 
         //if (!MultiBool) {
-        if(shots>0)
+        if (shots == 0)
+        {
+            lastRecharge = Time.fixedTime;
+        }
+        else if(shots>0)
         {
             if ((lastRecharge + rechargeRate) < Time.fixedTime)
             {
