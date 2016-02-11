@@ -274,7 +274,7 @@ public class GameManager : MonoBehaviour {
 
 	IEnumerator MultiSpawnPlayerAfter(Vector3 SpawnPosition, int playerI, LocalPlayerSender LPS)
 	{
-		Instantiate (PhaseInEffect, transformToPolar (SpawnPosition), Quaternion.identity);
+		Instantiate (PhaseInEffect, UtilityScript.transformToCartesian(SpawnPosition), Quaternion.identity);
 		yield return new WaitForSeconds (PhaseInDelay);
 		SoundM.PlaySpawnClip ();
 		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefabs[(playerI % (localPlayerPrefabs.Length))], SpawnPosition, new Quaternion ()) as GameObject;
