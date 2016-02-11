@@ -8,8 +8,6 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/_new/Arena_Original.unity
   - enabled: 0
-    path: Assets/Multiplayer/Scenes/CastAndMultiplayer/Arena_Multiplayer.unity
-  - enabled: 0
-    path: Assets/Multiplayer/Scenes/ArenaMultiMessages.unity
+    path: Assets/Multiplayer/Scenes/MultiplayerBlazWay.unity
   - enabled: 1
     path: Assets/Scenes/_new/UIScene.unity

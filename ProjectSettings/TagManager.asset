@@ -9,6 +9,12 @@ TagManager:
   - Boundary
   - PlayerMesh
   - Shield
+  - DebugText
+  - buttonRight
+  - SegmentMesh
+  - buttonLeft
+  - buttonUp
+  - buttonShoot
   layers:
   - Default
   - TransparentFX
