@@ -28,12 +28,18 @@ public class LocalPlayerController : PolarPhysicsObject {
 	//LUKA
 	public string PlayerName;
 	public GameObject boosterEmiter;
-  private float shotOffset = 1.5f;
+    private float shotOffset = 1.5f;
 	private float gravityChangeRate = 0.2f;
 	private float lastGravityChange = 0.0f;
 
-	private float fireRate = 1.5f;
-	private float lastShoot = 0.0f;
+    private int shootCharges = 2;
+    private int shots = 0;
+	private float fireRate = 0.2f;
+    private float lastShoot = 0.0f;
+    private float rechargeRate = 2.0f;
+    private float lastRecharge = 0.0f;
+    private int jumpCharge = 0;
+	
 	public GameObject shotPrefab;
 	//END LUKA
 
@@ -68,8 +74,9 @@ public class LocalPlayerController : PolarPhysicsObject {
 		Gizmos.color = Color.yellow;
 		Gizmos.DrawSphere (physics.transform.position, 1.0f);
 	}
+
 	public void PlayerLeftControll(){
-		StartUpdate ();
+		//StartUpdate ();
 
 		if (!boosterEmiter.activeSelf) {
 			boosterEmiter.SetActive (true);
@@ -89,28 +96,50 @@ public class LocalPlayerController : PolarPhysicsObject {
 		f.Scale (sc);
 		rigidbody.AddForce (f);
 	}
+
 	public void PlayerStopMovingControll(){
 		if (boosterEmiter.activeSelf) {
 			boosterEmiter.SetActive (false);
 		}
 		rigidbody.velocity = new Vector2 (rigidbody.velocity.x * descelerationRate, rigidbody.velocity.y);
 	}
+
 	public void PlayerGravityShiftControll(){
-		if (isGrounded && (lastGravityChange + gravityChangeRate) < Time.fixedTime) {
-			lastGravityChange = Time.fixedTime;
-			gravity = -gravity;
-			SoundM.PlayJumpClip ();
-		}
+        if (jumpCharge > 0)
+        {
+            if ((lastGravityChange + gravityChangeRate) < Time.fixedTime)
+            {
+                lastGravityChange = Time.fixedTime;
+                gravity = -gravity;
+                SoundM.PlayJumpClip();
+                jumpCharge = 0;
+            }
+        }
+		
 	}
+
 	public void PlayerShootControll(){
-		if (isGrounded && (lastShoot + fireRate) < Time.fixedTime) {
+        if (shots < shootCharges)
+        {
+            if ((lastShoot + fireRate) < Time.fixedTime)
+            {
+                lastShoot = Time.fixedTime;
+                GameObject shotInstance = MonoBehaviour.Instantiate(shotPrefab, physics.transform.position + new Vector3(0.0f, -gravity * shotOffset, 0.0f), new Quaternion()) as GameObject;
+                Vector2 shotVel = new Vector2(0.0f, -gravity);
+                shotInstance.GetComponent<ShotController>().setVelocity(shotVel);
+                SoundM.PlayShotClip();
+                shots = shots + 1;
+            }
+        }
+        
+        /*if (isGrounded && (lastShoot + fireRate) < Time.fixedTime) {
 			lastShoot = Time.fixedTime;
 			GameObject shotInstance = MonoBehaviour.Instantiate (shotPrefab, physics.transform.position + new Vector3 (0.0f, -gravity * shotOffset, 0.0f), new Quaternion ()) as GameObject;
 			Vector2 shotVel = new Vector2 (0.0f, -gravity);
 			shotInstance.GetComponent<ShotController> ().setVelocity (shotVel);
 			SoundM.PlayShotClip ();
-		}
-	}
+		}*/
+    }
 
 
 	void FixedUpdate () {
@@ -120,11 +149,12 @@ public class LocalPlayerController : PolarPhysicsObject {
 		// This can be done using layers instead but Sample Assets will not overwrite your project settings.
 
 
-		Collider2D[] colliders = Physics2D.OverlapCircleAll(physics.transform.position, 1.0f);
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(physics.transform.position, 0.6f);
 		if (!isGrounded) {
 			for (int i = 0; i < colliders.Length; i++) {
 				if (colliders [i].gameObject.tag == "Segment") {
 					isGrounded = true;
+                    jumpCharge = 1;
 					//Debug.Log ("Grounded");
 				}
 			}
@@ -132,22 +162,75 @@ public class LocalPlayerController : PolarPhysicsObject {
 
 		StartUpdate ();
 
-		//if (!MultiBool) {
+        //if (!MultiBool) {
+        if(shots>0)
+        {
+            if ((lastRecharge + rechargeRate) < Time.fixedTime)
+            {
+                lastRecharge = Time.fixedTime;
+                shots--;
+            }
+        }
+        
+        if (Input.GetKey(keys["left"]))
+        {
+            leftPressed = true;
+        }
+        else
+        {
+            leftPressed = false;
+        }
 
-		if (leftPressed) {
-				PlayerLeftControll();
-		} else if (rightPressed) {
-				PlayerRightControll();
-		} else {
-			PlayerStopMovingControll();
+        if (Input.GetKey(keys["right"]))
+        {
+            rightPressed = true;
+        }
+        else
+        {
+            rightPressed = false;
+        }
+
+        if (Input.GetKeyDown(keys["gravityChange"]))
+        {
+            jumpPressed = true;
+        }
+        else
+        {
+            jumpPressed = false;
+        }
+
+
+        if (Input.GetKey(keys["shoot"]))
+        {
+            firePressed = true;
+        }
+        else
+        {
+            firePressed = false;
+        }
+
+        if (leftPressed)
+        {
+            PlayerLeftControll();
+        }
+        else if (rightPressed)
+        {
+            PlayerRightControll();
+        }
+        else
+        {
+            PlayerStopMovingControll();
+        }
+
+		if (jumpPressed)
+        {
+			PlayerGravityShiftControll();
 		}
 
-		if (jumpPressed) {
-				PlayerGravityShiftControll();
-			}
-		if (firePressed) {
-				PlayerShootControll();
-			}
+		if (firePressed)
+        {
+			PlayerShootControll();
+		}
 		//}
 		Vector2 grav = new Vector2(0f, gravityForce * gravity);
 		//Debug.Log("Grav: " + grav);

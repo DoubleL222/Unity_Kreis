@@ -15,6 +15,7 @@ TagManager:
   - buttonLeft
   - buttonUp
   - buttonShoot
+  - PlayerGlow
   layers:
   - Default
   - TransparentFX
