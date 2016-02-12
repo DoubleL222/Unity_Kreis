@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
 /// <summary>
 /// A class that will oversee the whole game
@@ -35,6 +36,11 @@ public class GameManager : MonoBehaviour {
     public GameObject[] localPlayerPrefabs;
 	public WinnerCanvasController WCC;
 
+	//MULTIPLAYER
+	public bool multiplayerMode = false;
+	public List<LocalPlayerSender> LocalPlayerSenders = new List<LocalPlayerSender> ();
+
+
   // powerups
   	PowerUpSpawner PUS;
 	public bool usePowerUps;
@@ -42,9 +48,14 @@ public class GameManager : MonoBehaviour {
 	/// <summary>
 	/// Starts the game. Initializes rings, players, sounds, ...
 	/// </summary>
+	public void addLCP(LocalPlayerSender LPS){
+		LocalPlayerSenders.Add (LPS);
+
+	}
 	void StartGame(){
 		SpawnRings (RingSizes);
-		SpawnPlayers (NumPlayers);
+		if(!multiplayerMode)
+			SpawnPlayers (NumPlayers);
 		SoundM.PlayBigBoomClip ();
 
     // powerups
@@ -59,6 +70,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void Start() {
+
 		LivingPlayers = new List<GameObject> ();
 		playerColors = new List<Color> ();
 		playerColors.Add (new Color32 (255, 238, 13, 255));
@@ -201,6 +213,17 @@ public class GameManager : MonoBehaviour {
 			StartCoroutine( SpawnPlayerAfter (keyCodes[i], SpawnPositions[i], i));
 		}
 	}
+	void MultiSpawnPlayers(){
+		SpawnPositions = CalculateSpawnPositions (LocalPlayerSenders.Count);
+		Debug.Log ( "NUMBEr OF LOCAL PLAYER SENDErS:"+ LocalPlayerSenders.Count);
+		int i = 0;
+		foreach (LocalPlayerSender LPS in LocalPlayerSenders) 
+		{
+			StartCoroutine( MultiSpawnPlayerAfter (SpawnPositions[i], i, LPS));
+			i++;
+		}
+	}
+        
 	/// <summary>
 	/// Calculates the spawn positions.
 	/// </summary>
@@ -249,6 +272,24 @@ public class GameManager : MonoBehaviour {
   		  PUS.spawnPowerups = true;
   }
 
+	IEnumerator MultiSpawnPlayerAfter(Vector3 SpawnPosition, int playerI, LocalPlayerSender LPS)
+	{
+		Instantiate (PhaseInEffect, UtilityScript.transformToCartesian(SpawnPosition), Quaternion.identity);
+		yield return new WaitForSeconds (PhaseInDelay);
+		SoundM.PlaySpawnClip ();
+		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefabs[(playerI % (localPlayerPrefabs.Length))], SpawnPosition, new Quaternion ()) as GameObject;
+		LivingPlayers.Add (localPlayer);
+		//SpriteRenderer PlayerSR = localPlayer.GetComponentInChildren<SpriteRenderer> ();
+		//Debug.Log ("GETTING COLOR AT INDEX " + playerI);
+		//PlayerSR.color = playerColors[(playerI % (playerColors.Count))];
+		LocalPlayerController LCP = localPlayer.GetComponent<LocalPlayerController> ();
+		LCP.PlayerName = playerNames [playerI % playerNames.Length];
+		LPS.myPlayerOnTheServer = LCP;
+		cameraLoc.updatePlayers = true;
+		if(usePowerUps)
+			PUS.spawnPowerups = true;
+	}
+
 	public void FinalDestruction(float delayStep){
 		float mem = delayStep;
 		foreach (RingManager rm in rings) {
@@ -270,5 +311,10 @@ public class GameManager : MonoBehaviour {
 			Destroy (LPC.gameObject);
 			WCC.FinishGame (playerMesh, PName);
 		}
+	}
+	public void ClickServerStartGame(){
+		SpawnRings (RingSizes);
+		MultiSpawnPlayers ();
+		SoundM.PlayBigBoomClip ();
 	}
 }
