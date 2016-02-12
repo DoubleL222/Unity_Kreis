@@ -3,14 +3,16 @@ using System.Collections;
 
 public class CamShakeManager : MonoBehaviour
 {
-	public float testShakeDuration;
-	public float testShakeStrength;
+	public static float testShakeDuration;
+	public static float testShakeStrength;
 
-	private Vector3 originalCamPos;
-	private float originalCamSize;
+	private static Vector3 originalCamPos;
+	private static float originalCamSize;
 
+	public static CamShakeManager Instance;
 	void Awake()
 	{
+		Instance = this;
 		Camera cam = GetComponent<Camera>();
 		originalCamSize = cam.orthographicSize;
 		originalCamPos = cam.transform.position;
@@ -22,12 +24,12 @@ public class CamShakeManager : MonoBehaviour
         originalCamPos = cameraLoc.center;
     }
 
-	public void PlayTestShake(float duration, float strength)
+	public static void PlayTestShake(float duration, float strength)
 	{
-		StopAllCoroutines();
+		Instance.StopAllCoroutines ();
 		Camera.main.orthographicSize = originalCamSize;
 		Camera.main.transform.position = originalCamPos;
-		StartCoroutine(TestShake(duration, strength));
+		Instance.StartCoroutine(Instance.TestShake(duration, strength));
 	}
 
 

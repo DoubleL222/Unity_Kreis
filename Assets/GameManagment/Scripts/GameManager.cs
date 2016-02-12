@@ -7,10 +7,10 @@ using UnityEngine.Networking;
 /// A class that will oversee the whole game
 /// </summary>
 public class GameManager : MonoBehaviour {
+	public static GameManager GMInstance;
+
 	List<Color> playerColors;
-
-	SoundManager SoundM;
-
+	
 	List<RingManager> rings;
 
 	private int NumPlayers = 2;
@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour {
 
 	public Sprite barrier, indestructableBarrier;
 
-	List<GameObject> LivingPlayers;
+	static List<GameObject> LivingPlayers;
 
 	string[] playerNames;
 	float[] RingSizes;
@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour {
 		SpawnRings (RingSizes);
 		if(!multiplayerMode)
 			SpawnPlayers (NumPlayers);
-		SoundM.PlayBigBoomClip ();
+		SoundManager.PlayBigBoomClip ();
 
     // powerups
     
@@ -66,7 +66,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void Awake(){
-		SoundM = FindObjectOfType<SoundManager> ();
+		GMInstance = this;
 	}
 
 	void Start() {
@@ -243,11 +243,12 @@ public class GameManager : MonoBehaviour {
 		}
 		return positons;
 	}
-	public void PlayerDied(GameObject player){
+	public static void PlayerDied(GameObject player){
+		Debug.Log ("playerDied");
 		if (!gameEnded) {
 			LivingPlayers.Remove (player);
 			if (LivingPlayers.Count <= 1) {
-				EndGame ();
+				GMInstance.EndGame ();
 			}
 		}
 	}
@@ -256,7 +257,7 @@ public class GameManager : MonoBehaviour {
   {
 		Instantiate (PhaseInEffect, UtilityScript.transformToCartesian (SpawnPosition), Quaternion.identity);
 		yield return new WaitForSeconds (PhaseInDelay);
-		SoundM.PlaySpawnClip ();
+		SoundManager.PlaySpawnClip ();
 		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefabs[(playerI % (localPlayerPrefabs.Length))], SpawnPosition, new Quaternion ()) as GameObject;
 		LivingPlayers.Add (localPlayer);
 		//SpriteRenderer PlayerSR = localPlayer.GetComponentInChildren<SpriteRenderer> ();
@@ -276,7 +277,7 @@ public class GameManager : MonoBehaviour {
 	{
 		Instantiate (PhaseInEffect, UtilityScript.transformToCartesian(SpawnPosition), Quaternion.identity);
 		yield return new WaitForSeconds (PhaseInDelay);
-		SoundM.PlaySpawnClip ();
+		SoundManager.PlaySpawnClip ();
 		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefabs[(playerI % (localPlayerPrefabs.Length))], SpawnPosition, new Quaternion ()) as GameObject;
 		LivingPlayers.Add (localPlayer);
 		//SpriteRenderer PlayerSR = localPlayer.GetComponentInChildren<SpriteRenderer> ();
@@ -315,6 +316,6 @@ public class GameManager : MonoBehaviour {
 	public void ClickServerStartGame(){
 		SpawnRings (RingSizes);
 		MultiSpawnPlayers ();
-		SoundM.PlayBigBoomClip ();
+		SoundManager.PlayBigBoomClip ();
 	}
 }
