@@ -191,7 +191,7 @@ public class GameManager : MonoBehaviour {
 	public void SpawnPlayers(int NumberOfPlayers){
 		gameEnded = false;
 		SpawnPositions = CalculateSpawnPositions (NumberOfPlayers);
-		IDictionary<string,KeyCode> p1keys = new Dictionary<string,KeyCode> ();
+        /*IDictionary<string,KeyCode> p1keys = new Dictionary<string,KeyCode> ();
 		p1keys.Add ("left", KeyCode.A);
 		p1keys.Add ("right", KeyCode.D);
 		p1keys.Add ("gravityChange", KeyCode.W);
@@ -213,10 +213,30 @@ public class GameManager : MonoBehaviour {
 		p4keys.Add ("left", KeyCode.Keypad4);
 		p4keys.Add ("right", KeyCode.Keypad6);
 		p4keys.Add ("gravityChange", KeyCode.Keypad8);
-		p4keys.Add ("shoot", KeyCode.Keypad5);
+		p4keys.Add ("shoot", KeyCode.Keypad5);*/
+
+        IDictionary<string, string> p1keys = new Dictionary<string, string>();
+        p1keys.Add("movement", "P1Movement");
+        p1keys.Add("gravityChange", "P1Jump");
+        p1keys.Add("shoot", "P1Shoot");
+
+        IDictionary<string, string> p2keys = new Dictionary<string, string>();
+        p2keys.Add("movement", "P2Movement");
+        p2keys.Add("gravityChange", "P2Jump");
+        p2keys.Add("shoot", "P2Shoot");
+
+        IDictionary<string, string> p3keys = new Dictionary<string, string>();
+        p3keys.Add("movement", "P3Movement");
+        p3keys.Add("gravityChange", "P3Jump");
+        p3keys.Add("shoot", "P3Shoot");
+
+        IDictionary<string, string> p4keys = new Dictionary<string, string>();
+        p4keys.Add("movement", "P4Movement");
+        p4keys.Add("gravityChange", "P4Jump");
+        p4keys.Add("shoot", "P4Shoot");
 
 
-		IDictionary<string,KeyCode>[] keyCodes = new IDictionary<string, KeyCode>[10];
+        IDictionary<string,string>[] keyCodes = new IDictionary<string, string>[10];
 		keyCodes [0] = p1keys;
 		keyCodes [1] = p2keys;
 		keyCodes [2] = p3keys;
@@ -284,7 +304,7 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	IEnumerator SpawnPlayerAfter(IDictionary<string,KeyCode> playerKeys, Vector3 SpawnPosition, int playerI, string name)
+	IEnumerator SpawnPlayerAfter(IDictionary<string,string> playerKeys, Vector3 SpawnPosition, int playerI, string name)
   {
 		Instantiate (PhaseInEffect, UtilityScript.transformToCartesian (SpawnPosition), Quaternion.identity);
 		yield return new WaitForSeconds (PhaseInDelay);

@@ -217,7 +217,7 @@ public class GameManagerMulti : MonoBehaviour {
 		//Debug.Log ("GETTING COLOR AT INDEX " + playerI);
 		//PlayerSR.color = playerColors[(playerI % (playerColors.Count))];
 		LocalPlayerController LCP = localPlayer.GetComponent<LocalPlayerController> ();
-		LCP.setKeys (playerKeys);
+		//LCP.setKeys (playerKeys);
 		LCP.PlayerName = playerNames [playerI % playerNames.Length];
 
     cameraLoc.updatePlayers = true;
