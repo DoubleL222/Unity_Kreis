@@ -4,8 +4,8 @@ using System.Collections.Generic;
 public class PowerUpSpawner : MonoBehaviour
 {
   // powerups span at random intervals from min to max duration
-  public float minSpawnDuration = 2.0f;
-  public float maxSpawnDuration = 5.0f;
+  public float minSpawnDuration = 10.0f;
+  public float maxSpawnDuration = 30.0f;
   // list of prefabs
   public List<GameObject> powerUps;
   // list of distances

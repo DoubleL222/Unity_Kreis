@@ -13,7 +13,7 @@ public class LocalPlayerController : PolarPhysicsObject {
 
 	private static float gravityChangeDelay = 0.4f;
 
-	private static float movementForce = 1200f;//400f;
+	private static float movementForce = 5000f;//400f;
 	private static float gravityForce = 120f;//30f
 
 	private IDictionary<string,KeyCode> keys;

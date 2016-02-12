@@ -45,18 +45,26 @@ public class PlayerCollisionDetector : MonoBehaviour
 				Vector2 hisVelocity = HisPCD.getPrevVelocity();
 				Rigidbody2D hisRbd = coll.rigidbody;
 					//Debug.Log("his velocity "+hisVelocity + " my velocity "+ myVelocity);
+				Debug.Log("Velocity magnitude: " + myVelocity.magnitude);
 				if(myVelocity.magnitude > hisVelocity.magnitude){
-					SoundM.PlayBumpClip ();
-					CameShakeM.PlayTestShake (0.2f, 0.2f);
-					Debug.Log ("relative Velocity " + coll.relativeVelocity);
-					Debug.Log("pushing him for" +myVelocity*BumpAwayMultiplyer);
-					HisPCD.BumpAway(myVelocity);
-					SelfBump(myVelocity);
-					Vector2 contactPoint = coll.contacts[0].point;
-					Vector3 spawnPos = transformToPolar(new Vector3(contactPoint.x, contactPoint.y, 0.0f));
+					if (myVelocity.magnitude > 13.0f) {
+						gManager.PlayerDied(coll.transform.root.gameObject);
+						GameObject explosionInstance = Instantiate(ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
+						Destroy (coll.transform.root.gameObject);
+						cameraLoc.updatePlayers = true;
+					} else {
+						SoundM.PlayBumpClip ();
+						CameShakeM.PlayTestShake (0.2f, 0.2f);
+						Debug.Log ("relative Velocity " + coll.relativeVelocity);
+						Debug.Log ("pushing him for" + myVelocity * BumpAwayMultiplyer);
+						HisPCD.BumpAway (myVelocity);
+						SelfBump (myVelocity);
+						Vector2 contactPoint = coll.contacts [0].point;
+						Vector3 spawnPos = transformToPolar (new Vector3 (contactPoint.x, contactPoint.y, 0.0f));
 
-					GameObject bumpMaker = Instantiate(bumpEffect, spawnPos, Quaternion.identity) as GameObject;
-					bumpMaker.transform.SetParent(meshTransform);
+						GameObject bumpMaker = Instantiate (bumpEffect, spawnPos, Quaternion.identity) as GameObject;
+						bumpMaker.transform.SetParent (meshTransform);
+					}
 					//hisRbd.ad
 				}
 			}
