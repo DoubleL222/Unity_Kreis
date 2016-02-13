@@ -3,6 +3,7 @@ using System.Collections;
 
 public class PlayerCollisionDetector : MonoBehaviour
 {
+	public ParticleSystem SuperBooster;
 	private Vector2 prevVelocity;
 	public Vector2 PrevVelocity
 	{
@@ -27,12 +28,17 @@ public class PlayerCollisionDetector : MonoBehaviour
 
 	public Transform meshTransform;
 
-	private float BumpAwayMultiplyer = 2.0f;
-	private float SelfBumpMultiplyer = 1.0f;
+	private float BumpAwayMultiplyer = 0.8f;
+	private float SelfBumpMultiplyer = 0.3f;
 	private float YBumpForce = 5.0f;
 
 	public void RecordSpeedNow(){
 		prevVelocity = rigidBody.velocity;
+		if (prevVelocity.magnitude >= MaxPlayerSpeed) {
+			SuperBooster.enableEmission = true;
+		} else {
+			SuperBooster.enableEmission = false;
+		}
 	}
 
 	void Awake()
@@ -62,8 +68,8 @@ public class PlayerCollisionDetector : MonoBehaviour
 	}
 	void MaxSpeedBump(PlayerCollisionDetector HisPCD, Vector2 myVelocity, Collision2D coll)
 	{
-		HisPCD.BumpAway(myVelocity*999);
-		SelfBump(myVelocity*999);
+		HisPCD.BumpAway(myVelocity);
+		SelfBump(myVelocity);
 		Vector2 contactPoint = coll.contacts[0].point;
 		MakeBumpEffect (contactPoint);
 	}
@@ -88,8 +94,12 @@ public class PlayerCollisionDetector : MonoBehaviour
 						else
 						{
 							MakeBumpEffect (coll.contacts[0].point);
-							coll.transform.root.gameObject.GetComponent<LocalPlayerController>().DestroyObject();
-
+							LocalPlayerController hisLCP = coll.transform.root.gameObject.GetComponent<LocalPlayerController>();
+							if(hisLCP.hasShield){
+								hisLCP.DisableShield();
+							}else{
+								hisLCP.DestroyObject();
+							}
 							Debug.Log("P1 At Max speed only");
 						}
 					} else{
