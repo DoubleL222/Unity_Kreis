@@ -10,12 +10,26 @@ using System.Collections.Specialized;
 /// </summary>
 public abstract class PolarPhysicsObject : MonoBehaviour{
 	public static readonly float widthMultiplier = 10f;
+	public float WidthMultiplier
+	{
+		get
+		{
+			return widthMultiplier;
+		}
+	}
 	protected static float scaleMultiplier = Mathf.PI*2;
 	protected static float maxHorizontalSpeed = 5f;
+	public float MaxHorizontalSpeed
+	{
+		get 
+		{
+			return maxVerticalSpeed;
+		}
+	}
 	protected static float maxVerticalSpeed = 5f;
 
-	protected Vector2 oldVelocity;
-	protected float oldscale;
+	public Vector2 oldVelocity;
+	public float oldscale;
 
 	public GameObject mesh;
 	public GameObject physics;

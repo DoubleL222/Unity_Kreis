@@ -57,6 +57,9 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 	public bool rightPressed = false;
 	public bool jumpPressed = false;
 
+	private PlayerCollisionDetector myPCD;
+	private Rigidbody2D myRBD2D;
+
 	public void setKeys(IDictionary<string,KeyCode> keys){
 		this.keys = keys;
 	}
@@ -72,6 +75,8 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 
 	// Use this for initialization
 	void Awake() {
+		myRBD2D = GetComponentInChildren<Rigidbody2D> ();
+		myPCD = GetComponentInChildren<PlayerCollisionDetector> ();
 		gManager = FindObjectOfType<GameManager> ();
 		SoundM = FindObjectOfType<SoundManager> ();
         glowScales = new Vector3[glows.Length];
@@ -204,7 +209,7 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
         }
 
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(physics.transform.position, 0.6f);
-		if (!isGrounded || jumpCharge ==0) {
+		if (!isGrounded || jumpCharge == 0) {
 			for (int i = 0; i < colliders.Length; i++) {
 				if (colliders [i].gameObject.tag == "Segment") {
 					isGrounded = true;
@@ -216,6 +221,7 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 
 		StartUpdate ();
 
+		myPCD.RecordSpeedNow();
         //if (!MultiBool) {
         if (shots == 0)
         {

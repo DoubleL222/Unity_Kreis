@@ -571,6 +571,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e9d2a70c93645445944c684b54b09ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  oldVelocity: {x: 0, y: 0}
+  oldscale: 0
   mesh: {fileID: 199948}
   physics: {fileID: 131202}
   physics_parent: {fileID: 125858}
