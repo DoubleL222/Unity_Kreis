@@ -35,14 +35,14 @@ public class GameManagerMulti : MonoBehaviour {
 	void StartGame(){
 		SpawnRings (RingSizes);
 		//SpawnPlayers (NumPlayers);
-		SoundM.PlayBigBoomClip ();
+		//SoundM.PlayBigBoomClip ();
 
     // powerups
     PUM = gameObject.GetComponent<PowerUpManager>();
 	}
 
 	void Awake(){
-		SoundM = FindObjectOfType<SoundManager> ();
+		//SoundM = FindObjectOfType<SoundManager> ();
 	}
 	void Start() {
 		LivingPlayers = new List<GameObject> ();
@@ -210,7 +210,7 @@ public class GameManagerMulti : MonoBehaviour {
   {
 		Instantiate (PhaseInEffect, transformToPolar (SpawnPosition), Quaternion.identity);
 		yield return new WaitForSeconds (PhaseInDelay);
-		SoundM.PlaySpawnClip ();
+//		SoundM.PlaySpawnClip ();
 		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefabs[(playerI % (localPlayerPrefabs.Length))], SpawnPosition, new Quaternion ()) as GameObject;
 		LivingPlayers.Add (localPlayer);
 		//SpriteRenderer PlayerSR = localPlayer.GetComponentInChildren<SpriteRenderer> ();

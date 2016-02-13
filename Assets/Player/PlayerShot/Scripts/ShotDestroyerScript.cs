@@ -18,7 +18,7 @@ public class ShotDestroyerScript : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D col){
 		if (!IsUsed) {
 			if (col.gameObject.tag == "Shot") {
-				CamShakeM.PlayTestShake (0.1f, 0.1f);
+				CamShakeManager.PlayTestShake (0.1f, 0.1f);
 				IsUsed = true;
 				if (col != null) {
 					if (col.gameObject != null) {

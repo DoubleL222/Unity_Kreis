@@ -1270,8 +1270,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 684d70b2bff6fdc40a3af75a19d398f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testShakeDuration: 2
-  testShakeStrength: 2
 --- !u!81 &421975462
 AudioListener:
   m_ObjectHideFlags: 0
@@ -3376,8 +3374,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 684d70b2bff6fdc40a3af75a19d398f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testShakeDuration: 2
-  testShakeStrength: 2
 --- !u!114 &1759421987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3566,9 +3562,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioClips:
-  - {fileID: 8300000, guid: c96c0b4d1b809c441bbf253f1caeeaff, type: 3}
-  - {fileID: 8300000, guid: 1c330453d09b6c544a5f7044b714ffec, type: 3}
-  - {fileID: 8300000, guid: f485a6a29d14bc44c8bbcd07ce97e78b, type: 3}
+  - {fileID: 8300000, guid: b03f4e2572b6fc24d97cb6e5b074733a, type: 3}
+  - {fileID: 8300000, guid: 3f854e02e8c610a4c90b3d49386957e7, type: 3}
+  - {fileID: 8300000, guid: 73256f71a9057f7458c91383628cd037, type: 3}
   - {fileID: 8300000, guid: f2773dc645cf4eb4d8572a4445e11016, type: 3}
   - {fileID: 8300000, guid: d15da68ac3f6e234085a03bb681a4f65, type: 3}
   - {fileID: 8300000, guid: be239b088a551dc48868ea2c87dd61bd, type: 3}

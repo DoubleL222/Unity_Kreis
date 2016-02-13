@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class LocalPlayerController : PolarPhysicsObject {
+public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
+	[HideInInspector]
 	public int gravity;
 	private LayerMask WhatIsGround;
 
@@ -30,6 +31,9 @@ public class LocalPlayerController : PolarPhysicsObject {
   public GameObject shieldSprite;
 
 	//LUKA
+	public GameObject ExplosionEffect;
+	private GameManager gManager;
+	[HideInInspector]
 	public string PlayerName;
 	public GameObject boosterEmiter;
     private float shotOffset = 1.5f;
@@ -53,12 +57,27 @@ public class LocalPlayerController : PolarPhysicsObject {
 	public bool rightPressed = false;
 	public bool jumpPressed = false;
 
+	private PlayerCollisionDetector myPCD;
+	private Rigidbody2D myRBD2D;
+
 	public void setKeys(IDictionary<string,KeyCode> keys){
 		this.keys = keys;
+	}
+	public void DestroyObject()
+	{
+		Instantiate (ExplosionEffect, mesh.transform.position, Quaternion.identity);
+		gameObject.SetActive (false);
+		GameManager.PlayerDied (gameObject);
+		cameraLoc.updatePlayers = true;
+		CamShakeManager.PlayTestShake(0.5f, 1);
+		SoundManager.PlayExplosionClip ();
 	}
 
 	// Use this for initialization
 	void Awake() {
+		myRBD2D = GetComponentInChildren<Rigidbody2D> ();
+		myPCD = GetComponentInChildren<PlayerCollisionDetector> ();
+		gManager = FindObjectOfType<GameManager> ();
 		SoundM = FindObjectOfType<SoundManager> ();
         glowScales = new Vector3[glows.Length];
         for(int i=0; i < glows.Length; i++)
@@ -118,7 +137,7 @@ public class LocalPlayerController : PolarPhysicsObject {
         {
             lastGravityChange = Time.fixedTime;
             gravity = -gravity;
-            SoundM.PlayJumpClip();
+            SoundManager.PlayJumpClip();
             jumpCharge = 0;
             /*if ((lastGravityChange + gravityChangeRate) < Time.fixedTime)
             {
@@ -140,7 +159,7 @@ public class LocalPlayerController : PolarPhysicsObject {
                 GameObject shotInstance = MonoBehaviour.Instantiate(shotPrefab, physics.transform.position + new Vector3(0.0f, -gravity * shotOffset, 0.0f), new Quaternion()) as GameObject;
                 Vector2 shotVel = new Vector2(0.0f, -gravity);
                 shotInstance.GetComponent<ShotController>().setVelocity(shotVel);
-                SoundM.PlayShotClip();
+                SoundManager.PlayShotClip();
                 shots = shots + 1;
             }
         }
@@ -190,7 +209,7 @@ public class LocalPlayerController : PolarPhysicsObject {
         }
 
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(physics.transform.position, 0.6f);
-		if (!isGrounded) {
+		if (!isGrounded || jumpCharge == 0) {
 			for (int i = 0; i < colliders.Length; i++) {
 				if (colliders [i].gameObject.tag == "Segment") {
 					isGrounded = true;
@@ -202,6 +221,7 @@ public class LocalPlayerController : PolarPhysicsObject {
 
 		StartUpdate ();
 
+		myPCD.RecordSpeedNow();
         //if (!MultiBool) {
         if (shots == 0)
         {

@@ -7,8 +7,6 @@ using System.Collections.Generic;
 /// </summary>
 
 public class SegmentController : PolarPhysicsObject{
-	private static CamShakeManager CamShakeM;
-	private static SoundManager SoundM;
 
     spawnAnim spawnAnim;
     public GameObject ExplosionEffect;
@@ -21,8 +19,6 @@ public class SegmentController : PolarPhysicsObject{
 	bool isDestroyed = false;
 
 	void Awake() {
-		SoundM = FindObjectOfType<SoundManager> ();
-		CamShakeM = FindObjectOfType<CamShakeManager> ();
 		base.Awake();
 		tickBehaviours = new List<SegmentTickBehaviour> ();
 		collisionBehaviours = new List<SegmentCollisionBehaviour> ();
@@ -90,8 +86,8 @@ public class SegmentController : PolarPhysicsObject{
 		if (!isDestroyed) {
 			isDestroyed = true;
 			GameObject explosionInstance = Instantiate (ExplosionEffect, explodePosition, Quaternion.identity) as GameObject;
-			CamShakeM.PlayTestShake (0.1f, 0.5f);
-			SoundM.PlayExplosionClip ();
+			CamShakeManager.PlayTestShake (0.1f, 0.5f);
+			SoundManager.PlayExplosionClip ();
 			mesh.transform.GetChild (0).gameObject.SetActive (false);
 			explosionInstance.transform.SetParent (mesh.transform);
 			gameObject.GetComponent<BoxCollider2D> ().enabled = false;

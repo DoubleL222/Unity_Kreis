@@ -3,38 +3,70 @@ using System.Collections;
 
 public class PlayerCollisionDetector : MonoBehaviour
 {
-	Vector2 prevVelocity;
+	private Vector2 prevVelocity;
+	public Vector2 PrevVelocity
+	{
+		get
+		{
+			return prevVelocity;
+		}
+		set
+		{
+			prevVelocity = value;
+		}
+	}
 	LocalPlayerController MyLCP;
 	Rigidbody2D rigidBody;
 	public GameObject bumpEffect;
-	public GameObject ExplosionEffect;
+
   public GameObject shieldExplosion;
 
 	private static CamShakeManager CameShakeM;
 	private static SoundManager SoundM;
+	private float MaxPlayerSpeed;
 
 	public Transform meshTransform;
 
-	private float BumpAwayMultiplyer = 5.0f;
-	private float SelfBumpMultiplyer = 2.0f;
+	private float BumpAwayMultiplyer = 2.0f;
+	private float SelfBumpMultiplyer = 1.0f;
 	private float YBumpForce = 5.0f;
 
-	GameManager gManager;
-
-	void Awake(){
-		SoundM = FindObjectOfType<SoundManager> ();
-		CameShakeM = FindObjectOfType<CamShakeManager> ();
-		gManager = FindObjectOfType<GameManager> ();
-		rigidBody = gameObject.GetComponent<Rigidbody2D> ();
-		MyLCP = GetComponentInParent<LocalPlayerController> ();
-	}
-	void FixedUpdate(){
+	public void RecordSpeedNow(){
 		prevVelocity = rigidBody.velocity;
 	}
-	public Vector2 getPrevVelocity(){
-		return prevVelocity;
+
+	void Awake()
+	{
+		SoundM = FindObjectOfType<SoundManager> ();
+		CameShakeM = FindObjectOfType<CamShakeManager> ();
+		rigidBody = gameObject.GetComponent<Rigidbody2D> ();
+		MyLCP = GetComponentInParent<LocalPlayerController> ();
+		MaxPlayerSpeed = MyLCP.WidthMultiplier * MyLCP.MaxHorizontalSpeed;
 	}
 
+	void IAmBumpKing(PlayerCollisionDetector HisPCD, Vector2 myVelocity, Collision2D coll){
+
+		HisPCD.BumpAway(myVelocity);
+		SelfBump(myVelocity);
+		Vector2 contactPoint = coll.contacts[0].point;
+		MakeBumpEffect (contactPoint);
+
+	}
+	void MakeBumpEffect(Vector2 cPoint)
+	{
+		SoundManager.PlayBumpClip ();
+		CamShakeManager.PlayTestShake (0.2f, 0.2f);
+		Vector3 spawnPos = UtilityScript.transformToCartesian(new Vector3(cPoint.x, cPoint.y, 0.0f));
+		GameObject bumpMaker = Instantiate(bumpEffect, spawnPos, Quaternion.identity) as GameObject;
+		bumpMaker.transform.SetParent(meshTransform);
+	}
+	void MaxSpeedBump(PlayerCollisionDetector HisPCD, Vector2 myVelocity, Collision2D coll)
+	{
+		HisPCD.BumpAway(myVelocity*999);
+		SelfBump(myVelocity*999);
+		Vector2 contactPoint = coll.contacts[0].point;
+		MakeBumpEffect (contactPoint);
+	}
 	// Use this for initialization
 	void OnCollisionEnter2D(Collision2D coll)
 	{
@@ -42,28 +74,28 @@ public class PlayerCollisionDetector : MonoBehaviour
 			PlayerCollisionDetector HisPCD = coll.gameObject.GetComponent<PlayerCollisionDetector>();
 			Vector2 myVelocity = prevVelocity;
 			if(HisPCD != null){
-				Vector2 hisVelocity = HisPCD.getPrevVelocity();
+				Vector2 hisVelocity = HisPCD.PrevVelocity;
 				Rigidbody2D hisRbd = coll.rigidbody;
 					//Debug.Log("his velocity "+hisVelocity + " my velocity "+ myVelocity);
-				Debug.Log("Velocity magnitude: " + myVelocity.magnitude);
-				if(myVelocity.magnitude > hisVelocity.magnitude){
-					if (myVelocity.magnitude > 13.0f) {
-						gManager.PlayerDied(coll.transform.root.gameObject);
-						GameObject explosionInstance = Instantiate(ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
-						Destroy (coll.transform.root.gameObject);
-						cameraLoc.updatePlayers = true;
-					} else {
-						SoundM.PlayBumpClip ();
-						CameShakeM.PlayTestShake (0.2f, 0.2f);
-						Debug.Log ("relative Velocity " + coll.relativeVelocity);
-						Debug.Log ("pushing him for" + myVelocity * BumpAwayMultiplyer);
-						HisPCD.BumpAway (myVelocity);
-						SelfBump (myVelocity);
-						Vector2 contactPoint = coll.contacts [0].point;
-						Vector3 spawnPos = transformToPolar (new Vector3 (contactPoint.x, contactPoint.y, 0.0f));
+				if(myVelocity.magnitude >= hisVelocity.magnitude){
+					//Debug.Log("My speed was: "+myVelocity.magnitude);
+					if(myVelocity.magnitude>=MaxPlayerSpeed){
+						if(hisVelocity.magnitude>=MaxPlayerSpeed)
+						{
+							MaxSpeedBump(HisPCD, myVelocity, coll);
+							Debug.Log ("Max Speed Collision");
+						}
+						else
+						{
+							MakeBumpEffect (coll.contacts[0].point);
+							coll.transform.root.gameObject.GetComponent<LocalPlayerController>().DestroyObject();
 
-						GameObject bumpMaker = Instantiate (bumpEffect, spawnPos, Quaternion.identity) as GameObject;
-						bumpMaker.transform.SetParent (meshTransform);
+							Debug.Log("P1 At Max speed only");
+						}
+					} else{
+						IAmBumpKing(HisPCD, myVelocity, coll);
+					}
+
 					}
 					//hisRbd.ad
 				}
@@ -93,39 +125,19 @@ public class PlayerCollisionDetector : MonoBehaviour
         }
         else
         {
-          SoundM.PlayExplosionClip();
-          CameShakeM.PlayTestShake(0.5f, 1);
           SDS.IsUsed = true;
-          Destroy(other.transform.root.gameObject);
-          GameObject explosionInstance = Instantiate(ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
-          Destroy(transform.root.gameObject);
           Debug.Log("PLAYER HIT");
-          cameraLoc.updatePlayers = true;
-          gManager.PlayerDied(transform.root.gameObject);
+		  MyLCP.DestroyObject();
+
         }
 				//explosionInstance.transform.SetParent(transform);
 			}
 		}
     else if (other.gameObject.tag == "Boundary")
     {
-			GameObject explosionInstance = Instantiate (ExplosionEffect, meshTransform.position, Quaternion.identity) as GameObject;
-			Destroy (transform.root.gameObject);
-			SoundM.PlayExplosionClip ();
-			CameShakeM.PlayTestShake (0.5f, 1);
 			Debug.Log ("PLAYER BOUNDARY");
-      cameraLoc.updatePlayers = true;
-      gManager.PlayerDied (transform.root.gameObject);
+			MyLCP.DestroyObject();
 		}
 
-	}
-	Vector3 transformToPolar(Vector3 pos){
-		
-		float angle = pos.x / 10.0f;
-		float distance = pos.y;
-		
-		float mx = distance * Mathf.Cos (angle);
-		float my = distance * Mathf.Sin (angle);
-		
-		return new Vector3 (mx, my, 0.0f);
 	}
 }
