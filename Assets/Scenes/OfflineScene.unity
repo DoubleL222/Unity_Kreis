@@ -135,9 +135,7 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -1403,9 +1401,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -1918,10 +1914,10 @@ MonoBehaviour:
     type: 3}
   PhaseInEffect: {fileID: 107756, guid: 873cb0711238e0d478688f0f518a0494, type: 2}
   localPlayerPrefabs:
-  - {fileID: 178046, guid: f83e09c224822f74b864a0d754b56fed, type: 2}
+  - {fileID: 147376, guid: 318d4d2f07c819c469ba897cbfd0ad7c, type: 2}
   - {fileID: 106480, guid: e8a1bd4d47d1f7241a6ecb72fe1f46f8, type: 2}
   - {fileID: 161022, guid: 9668904b5ae741d488a2f981e8bb19ff, type: 2}
-  - {fileID: 147376, guid: 318d4d2f07c819c469ba897cbfd0ad7c, type: 2}
+  - {fileID: 178046, guid: f83e09c224822f74b864a0d754b56fed, type: 2}
   - {fileID: 109306, guid: c807f7b65fdc36747ac654106a5f6066, type: 2}
   WCC: {fileID: 1147710129}
   multiplayerMode: 0
@@ -2064,9 +2060,7 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -3171,9 +3165,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -3705,9 +3697,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
