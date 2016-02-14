@@ -337,6 +337,7 @@ MonoBehaviour:
   ExplosionEffect: {fileID: 186268, guid: 62cd9f3a1428c1147a9005291598cf2a, type: 2}
   ShotTransform: {fileID: 475604}
   IsUsed: 0
+  root: {fileID: 458654}
 --- !u!114 &11444146
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -365,10 +366,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fcc08648e4b2044a8bc0e28d2ce97fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  oldVelocity: {x: 0, y: 0}
+  oldscale: 0
   mesh: {fileID: 185252}
   physics: {fileID: 126736}
   physics_parent: {fileID: 150350}
   rigidbody: {fileID: 5041568}
+  root: {fileID: 458654}
   allParticleSystems:
   - {fileID: 19827194}
 --- !u!198 &19827194

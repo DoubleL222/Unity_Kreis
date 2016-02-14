@@ -2,19 +2,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 /// <summary>
 /// A class that will oversee the whole game
 /// </summary>
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
+	public GameObject root;
+
 	public static GameManager GMInstance;
 
 	List<Color> playerColors;
 	
 	List<RingManager> rings;
 
-	private int NumPlayers = 2;
-	public static bool gameEnded = false;
+	public int NumPlayers = 2;
+	public static bool gameEnded = true;
+	private bool toStart = true;
 
 	public Sprite barrier, indestructableBarrier;
 
@@ -23,54 +28,62 @@ public class GameManager : MonoBehaviour {
 	string[] playerNames;
 	float[] RingSizes;
 	Vector3[] SpawnPositions;
-	List<SegmentCollisionBehaviour> [] segmentCollisionBehaviours;
-	List<SegmentTriggerBehaviour> [] segmentTriggerBehaviours;
-	List<SegmentTickBehaviour> [] segmentTickBehaviours;
+	List<SegmentCollisionBehaviour>[] segmentCollisionBehaviours;
+	List<SegmentTriggerBehaviour>[] segmentTriggerBehaviours;
+	List<SegmentTickBehaviour>[] segmentTickBehaviours;
 	Sprite[] segmentSprites;
+	static int[] playerScores;
 
 	float PhyciscSegmentOffset = 7.0f;
 	float PhaseInDelay = float.MaxValue;
 
 	public GameObject PhaseInEffect;
 	//public GameObject localPlayerPrefab;
-    public GameObject[] localPlayerPrefabs;
+	public GameObject[] localPlayerPrefabs;
 	public WinnerCanvasController WCC;
+
+	public Text[] playerTexts;
 
 	//MULTIPLAYER
 	public bool multiplayerMode = false;
 	public List<LocalPlayerSender> LocalPlayerSenders = new List<LocalPlayerSender> ();
 
 
-  // powerups
-  	PowerUpSpawner PUS;
+	// powerups
+	PowerUpSpawner PUS;
 	public bool usePowerUps;
 
 	/// <summary>
 	/// Starts the game. Initializes rings, players, sounds, ...
 	/// </summary>
-	public void addLCP(LocalPlayerSender LPS){
+	public void addLCP (LocalPlayerSender LPS)
+	{
 		LocalPlayerSenders.Add (LPS);
 
 	}
-	void StartGame(){
+
+	public void StartGame ()
+	{
 		SpawnRings (RingSizes);
-		if(!multiplayerMode)
+		if (!multiplayerMode)
 			SpawnPlayers (NumPlayers);
 		SoundManager.PlayBigBoomClip ();
 
-    // powerups
+		// powerups
     
 		if (usePowerUps) {
 			PUS = gameObject.GetComponent<PowerUpSpawner> ();
 		}
 	}
 
-	void Awake(){
+	void Awake ()
+	{
 		GMInstance = this;
 	}
 
-	void Start() {
-
+	void Start ()
+	{
+		playerScores = new int[NumPlayers];
 		LivingPlayers = new List<GameObject> ();
 		playerColors = new List<Color> ();
 		playerColors.Add (new Color32 (255, 238, 13, 255));
@@ -78,8 +91,12 @@ public class GameManager : MonoBehaviour {
 		playerColors.Add (new Color32 (234, 0, 255, 255));
 		playerColors.Add (new Color32 (12, 99, 232, 255));
 		playerColors.Add (new Color32 (0, 255, 69, 255));
-
-		ParticleSystem[] PSS = PhaseInEffect.GetComponentsInChildren<ParticleSystem>();
+		for (int i = 0; i < playerTexts.Length; i++) {
+			playerTexts [i].color = playerColors [i];
+			playerTexts [i].enabled = false;
+		}
+			
+		ParticleSystem[] PSS = PhaseInEffect.GetComponentsInChildren<ParticleSystem> ();
 		foreach (ParticleSystem PS in PSS) {
 			if (PS.duration < PhaseInDelay) {
 				PhaseInDelay = PS.duration;
@@ -128,37 +145,32 @@ public class GameManager : MonoBehaviour {
 		segmentSprites [0] = indestructableBarrier;
 		segmentSprites [1] = barrier;
 		segmentSprites [2] = indestructableBarrier;
+
 	}
 
 	// Update is called once per frame
-	void Update () {
-		if(Input.GetKeyDown(KeyCode.Space)){
-			Application.LoadLevel(Application.loadedLevel);
-		}
-		if(Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return)){
+	void Update ()
+	{
+		if (toStart) {
 			StartGame ();
-		}
-		if (Input.GetKeyDown (KeyCode.Alpha2)) {
-			NumPlayers = 2;
-		}
-		if (Input.GetKeyDown (KeyCode.Alpha3)) {
-			NumPlayers = 3;
-		}
-		if (Input.GetKeyDown (KeyCode.Alpha4)) {
-			NumPlayers = 4;
-		}
-		if (Input.GetKeyDown (KeyCode.Alpha5)) {
-			NumPlayers = 5;
+			toStart = false;
 		}
 	}
+
 	/// <summary>
 	/// Spawns the rings defined in RingSizes.
 	/// </summary>
 	/// <param name="RingSizes">A 2d array of [distance, speed]</param>
-	public void SpawnRings(float[] RingSizes){
+	public void SpawnRings (float[] RingSizes)
+	{
+		if (rings != null) {
+			for (int i = 0; i < rings.Count; i++) {
+				Destroy (rings [i].SegmentsParent);
+			}
+		}
 		rings = new List<RingManager> ();
 		for (int i = 0; i < RingSizes.GetLength (0); i++) {
-			rings.Add (new RingManager (RingSizes[i], segmentCollisionBehaviours[i], segmentTickBehaviours[i], segmentTriggerBehaviours[i], segmentSprites[i]));
+			rings.Add (new RingManager (RingSizes [i], segmentCollisionBehaviours [i], segmentTickBehaviours [i], segmentTriggerBehaviours [i], segmentSprites [i]));
 		}
 	}
 
@@ -166,7 +178,10 @@ public class GameManager : MonoBehaviour {
 	/// Spawns the players.
 	/// </summary>
 	/// <param name="NumberOfPlayers">Number of players.</param>
-	public void SpawnPlayers(int NumberOfPlayers){
+	public void SpawnPlayers (int NumberOfPlayers)
+	{
+		LivingPlayers.Clear ();
+
 		gameEnded = false;
 		SpawnPositions = CalculateSpawnPositions (NumberOfPlayers);
 		IDictionary<string,KeyCode> p1keys = new Dictionary<string,KeyCode> ();
@@ -209,76 +224,103 @@ public class GameManager : MonoBehaviour {
 		Debug.Log ("called Spawn PLayer");
 		//StartCoroutine( SpawnPlayerAfter (5.0f));
 		Vector3 SpawnPosition = new Vector3 (0, 17f, 0);
-		for(int i=0; i<NumberOfPlayers;i++){
-			StartCoroutine( SpawnPlayerAfter (keyCodes[i], SpawnPositions[i], i));
+		for (int i = 0; i < NumberOfPlayers; i++) {
+			StartCoroutine (SpawnPlayerAfter (keyCodes [i], SpawnPositions [i], i));
 		}
 	}
-	void MultiSpawnPlayers(){
+
+	void MultiSpawnPlayers ()
+	{
 		SpawnPositions = CalculateSpawnPositions (LocalPlayerSenders.Count);
-		Debug.Log ( "NUMBEr OF LOCAL PLAYER SENDErS:"+ LocalPlayerSenders.Count);
+		Debug.Log ("NUMBEr OF LOCAL PLAYER SENDErS:" + LocalPlayerSenders.Count);
 		int i = 0;
-		foreach (LocalPlayerSender LPS in LocalPlayerSenders) 
-		{
-			StartCoroutine( MultiSpawnPlayerAfter (SpawnPositions[i], i, LPS));
+		foreach (LocalPlayerSender LPS in LocalPlayerSenders) {
+			StartCoroutine (MultiSpawnPlayerAfter (SpawnPositions [i], i, LPS));
 			i++;
 		}
 	}
-        
+
 	/// <summary>
 	/// Calculates the spawn positions.
 	/// </summary>
 	/// <returns>The spawn positions.</returns>
 	/// <param name="NumPlayers">Number of players.</param>
-	Vector3[] CalculateSpawnPositions(int NumPlayers){
+	Vector3[] CalculateSpawnPositions (int NumPlayers)
+	{
 		Vector3[] positons = new Vector3[NumPlayers];
 		for (int i = 0; i < NumPlayers; i++) {
 			int x = 0;
-			if (i + 1 >= RingSizes.GetLength (0)) x = 1;
-			if (i + 1 >= RingSizes.GetLength (0) * 2 - 1) x = 2;
-			if (i + 1 >= RingSizes.GetLength (0) * 3 - 2) x = 3;
-			if (i + 1 >= RingSizes.GetLength (0) * 4 - 3) x = 4;
-			if (i + 1 >= RingSizes.GetLength (0) * 5 - 4) x = 5;
+			if (i + 1 >= RingSizes.GetLength (0))
+				x = 1;
+			if (i + 1 >= RingSizes.GetLength (0) * 2 - 1)
+				x = 2;
+			if (i + 1 >= RingSizes.GetLength (0) * 3 - 2)
+				x = 3;
+			if (i + 1 >= RingSizes.GetLength (0) * 4 - 3)
+				x = 4;
+			if (i + 1 >= RingSizes.GetLength (0) * 5 - 4)
+				x = 5;
 			int j = i % (RingSizes.GetLength (0) - 1);
-			positons [i] = new Vector3 (x*30.0f, (RingSizes [j + 1] + RingSizes [j])/2.0f, 0.0f);
+			positons [i] = new Vector3 (x * 30.0f, (RingSizes [j + 1] + RingSizes [j]) / 2.0f, 0.0f);
 		}
 		return positons;
 	}
-	public static void PlayerDied(GameObject player){
+
+	public void PlayerDied (GameObject player)
+	{
 		Debug.Log ("playerDied");
 		if (!gameEnded) {
+			Debug.Log ("pLivingPlayers.count = " + LivingPlayers.Count);
 			LivingPlayers.Remove (player);
+			Debug.Log ("LivingPlayers.count = " + LivingPlayers.Count);
+			for (int i = 0; i < LivingPlayers.Count; i++) {
+				GameObject go = LivingPlayers [i];
+				LocalPlayerController LCP = go.GetComponent<LocalPlayerController> ();
+				playerScores [LCP.playerIndex]++;
+				Debug.Log ("Player " + LCP.PlayerName + " (" + LCP.playerIndex + ") score " + playerScores [LCP.playerIndex]);
+				playerTexts [LCP.playerIndex].text = LCP.PlayerName + ": " + playerScores [LCP.playerIndex];
+			}
 			if (LivingPlayers.Count <= 1) {
 				GMInstance.EndGame ();
 			}
 		}
 	}
 
-	IEnumerator SpawnPlayerAfter(IDictionary<string,KeyCode> playerKeys, Vector3 SpawnPosition, int playerI)
-  {
-		Instantiate (PhaseInEffect, UtilityScript.transformToCartesian (SpawnPosition), Quaternion.identity);
+	IEnumerator SpawnPlayerAfter (IDictionary<string,KeyCode> playerKeys, Vector3 SpawnPosition, int playerI)
+	{
+		GameObject pie = Instantiate (PhaseInEffect, UtilityScript.transformToCartesian (SpawnPosition), Quaternion.identity) as GameObject;
+		pie.transform.SetParent (GameManager.GMInstance.transform);
 		yield return new WaitForSeconds (PhaseInDelay);
 		SoundManager.PlaySpawnClip ();
-		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefabs[(playerI % (localPlayerPrefabs.Length))], SpawnPosition, new Quaternion ()) as GameObject;
+		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefabs [(playerI % (localPlayerPrefabs.Length))], SpawnPosition, new Quaternion ()) as GameObject;
+		localPlayer.transform.SetParent (GameManager.GMInstance.root.transform);
 		LivingPlayers.Add (localPlayer);
 		//SpriteRenderer PlayerSR = localPlayer.GetComponentInChildren<SpriteRenderer> ();
 		//Debug.Log ("GETTING COLOR AT INDEX " + playerI);
 		//PlayerSR.color = playerColors[(playerI % (playerColors.Count))];
 		LocalPlayerController LCP = localPlayer.GetComponent<LocalPlayerController> ();
+		LCP.playerIndex = playerI;
 		LCP.setKeys (playerKeys);
 		LCP.PlayerName = playerNames [playerI % playerNames.Length];
 
-    cameraLoc.updatePlayers = true;
 
-	  if(usePowerUps)
-  		  PUS.spawnPowerups = true;
-  }
+		playerTexts [playerI].text = LCP.PlayerName + ": " + playerScores [playerI];
+		playerTexts [playerI].enabled = true;
 
-	IEnumerator MultiSpawnPlayerAfter(Vector3 SpawnPosition, int playerI, LocalPlayerSender LPS)
+		cameraLoc.updatePlayers = true;
+
+		if (usePowerUps)
+			PUS.spawnPowerups = true;
+	}
+
+	IEnumerator MultiSpawnPlayerAfter (Vector3 SpawnPosition, int playerI, LocalPlayerSender LPS)
 	{
-		Instantiate (PhaseInEffect, UtilityScript.transformToCartesian(SpawnPosition), Quaternion.identity);
+		GameObject pie = Instantiate (PhaseInEffect, UtilityScript.transformToCartesian (SpawnPosition), Quaternion.identity) as GameObject;
+		pie.transform.SetParent (GameManager.GMInstance.root.transform);
 		yield return new WaitForSeconds (PhaseInDelay);
 		SoundManager.PlaySpawnClip ();
-		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefabs[(playerI % (localPlayerPrefabs.Length))], SpawnPosition, new Quaternion ()) as GameObject;
+		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefabs [(playerI % (localPlayerPrefabs.Length))], SpawnPosition, new Quaternion ()) as GameObject;
+		localPlayer.transform.SetParent (GameManager.GMInstance.root.transform);
 		LivingPlayers.Add (localPlayer);
 		//SpriteRenderer PlayerSR = localPlayer.GetComponentInChildren<SpriteRenderer> ();
 		//Debug.Log ("GETTING COLOR AT INDEX " + playerI);
@@ -286,34 +328,54 @@ public class GameManager : MonoBehaviour {
 		LocalPlayerController LCP = localPlayer.GetComponent<LocalPlayerController> ();
 		LCP.PlayerName = playerNames [playerI % playerNames.Length];
 		LPS.myPlayerOnTheServer = LCP;
+		LCP.playerIndex = playerI;
+
+		playerTexts [playerI].text = LCP.PlayerName + ": " + playerScores [playerI];
+		playerTexts [playerI].enabled = true;
+
 		cameraLoc.updatePlayers = true;
-		if(usePowerUps)
+		if (usePowerUps)
 			PUS.spawnPowerups = true;
 	}
 
-	public void FinalDestruction(float delayStep){
+	public void FinalDestruction (float delayStep)
+	{
 		float mem = delayStep;
+
 		foreach (RingManager rm in rings) {
 			//Debug.Log ("final destruction called, segment controllers : " + rm.segmentControlers.Count);
 			delayStep = mem;
 			foreach (SegmentController sc in rm.segmentControlers) {
-				StartCoroutine (sc.DestroySegmentAFter (delayStep/rm.segmentControlers.Count));
+				StartCoroutine (sc.DestroySegmentAFter (delayStep / rm.segmentControlers.Count));
 				delayStep += mem;
 			}
 		}
-	} 
-	void EndGame(){
+	}
+
+	void EndGame ()
+	{
 		gameEnded = true;
 		FinalDestruction (7.5f);
 		if (LivingPlayers.Count > 0) {
+			
 			LocalPlayerController LPC = LivingPlayers [0].GetComponent<LocalPlayerController> ();
 			string PName = LPC.PlayerName;
-			GameObject playerMesh = Instantiate (LPC.mesh, LPC.mesh.transform.position, LPC.mesh.transform.rotation) as GameObject;
 			Destroy (LPC.gameObject);
-			WCC.FinishGame (playerMesh, PName);
+
+			/*GameObject playerMesh = Instantiate (LPC.mesh, LPC.mesh.transform.position, LPC.mesh.transform.rotation) as GameObject;
+			playerMesh.transform.SetParent (root.transform);
+			WCC.FinishGame (playerMesh, PName);*/
 		}
+		StartCoroutine (nextRound());
 	}
-	public void ClickServerStartGame(){
+
+	IEnumerator nextRound(){
+		yield return new WaitForSeconds (9f);
+		Main.getInstance ().nextRound ();
+	}
+
+	public void ClickServerStartGame ()
+	{
 		SpawnRings (RingSizes);
 		MultiSpawnPlayers ();
 		SoundManager.PlayBigBoomClip ();

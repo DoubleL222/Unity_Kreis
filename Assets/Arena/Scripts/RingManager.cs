@@ -9,6 +9,7 @@ public class RingManager{
 	private static GameObject segmentPrefab;
 	List<GameObject> segments;
 	public List<SegmentController> segmentControlers;	
+	public GameObject SegmentsParent;
 
 	public RingManager (float distance, List<SegmentCollisionBehaviour> segmentCollisionBehaviours, List<SegmentTickBehaviour> segmentTickBehaviours, List<SegmentTriggerBehaviour> segmentTriggerBehaviours, Sprite sprite) {
 		if (segmentPrefab == null) {
@@ -26,10 +27,11 @@ public class RingManager{
 		//SegmentTickBehaviourMove stbm = new SegmentTickBehaviourMove (tickMove); //Segments with this tick behaviour will move
 		//SegmentTriggerBehaviourDestroy stbd = new SegmentTriggerBehaviourDestroy (); //Segments with this tick behaviour will be destroyed upon getting shot
 
-		GameObject SegmentsParent = new GameObject ();
+		SegmentsParent = new GameObject ();
 		SegmentsParent.name = "SegmentsParent"+max;
 		SegmentsParent.transform.position = Vector3.zero;
 		SegmentsParent.transform.rotation = Quaternion.identity;
+		SegmentsParent.transform.SetParent (GameManager.GMInstance.root.transform);
 
 		for(int i=0; i < max; i++){
 			GameObject currentSegment = MonoBehaviour.Instantiate(segmentPrefab) as GameObject;
