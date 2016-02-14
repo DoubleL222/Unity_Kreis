@@ -21,41 +21,49 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 	[HideInInspector]
 	public bool MultiBool = false;
 
-    public GameObject[] glows;
-    private Vector3[] glowScales;
-    private float interpolateT = 1;
+  public GameObject[] glows;
+  private Vector3[] glowScales;
+  private float interpolateT = 1;
 
   // powerups
   [HideInInspector]
   public bool hasShield = false;
   public GameObject shieldSprite;
+  [HideInInspector]
+  public bool piercingShot = false;
+  public GameObject piercingShotSprite;
+  public GameObject piercingShotPrefab;
 
 	//LUKA
 	public GameObject ExplosionEffect;
 	private GameManager gManager;
 	[HideInInspector]
 	public string PlayerName;
-	public GameObject boosterEmiter;
-    private float shotOffset = 1.5f;
-	private float gravityChangeRate = 0.2f;
-	private float lastGravityChange = 0.0f;
+  public GameObject boosterEmiter;
+  private float shotOffset = 1.5f;
+  private float gravityChangeRate = 0.2f;
+  private float lastGravityChange = 0.0f;
 
-    private int shootCharges = 3;
-    private int shots = 0;
-	private float fireRate = 0.2f;
-    private float lastShoot = 0.0f;
-    private float rechargeRate = 2.0f;
-    private float lastRecharge = 0.0f;
-    private int jumpCharge = 0;
+  private int shootCharges = 3;
+  private int shots = 0;
+  private float fireRate = 0.2f;
+  private float lastShoot = 0.0f;
+  private float rechargeRate = 2.0f;
+  private float lastRecharge = 0.0f;
+  private int jumpCharge = 0;
 	
 	public GameObject shotPrefab;
-	//END LUKA
+  //END LUKA
 
-	// keys
-	public bool firePressed = false;
-	public bool leftPressed = false;
-	public bool rightPressed = false;
-	public bool jumpPressed = false;
+  // keys
+  [HideInInspector]
+  public bool firePressed = false;
+  [HideInInspector]
+  public bool leftPressed = false;
+  [HideInInspector]
+  public bool rightPressed = false;
+  [HideInInspector]
+  public bool jumpPressed = false;
 
 	private PlayerCollisionDetector myPCD;
 	private Rigidbody2D myRBD2D;
@@ -150,19 +158,30 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 
     }
 
-	public void PlayerShootControll(){
-        if (shots < shootCharges)
+  public void PlayerShootControll()
+  {
+    if (shots < shootCharges)
+    {
+      if ((lastShoot + fireRate) < Time.fixedTime)
+      {
+        lastShoot = Time.fixedTime;
+        GameObject shotInstance;
+        if (piercingShot)
         {
-            if ((lastShoot + fireRate) < Time.fixedTime)
-            {
-                lastShoot = Time.fixedTime;
-                GameObject shotInstance = MonoBehaviour.Instantiate(shotPrefab, physics.transform.position + new Vector3(0.0f, -gravity * shotOffset, 0.0f), new Quaternion()) as GameObject;
-                Vector2 shotVel = new Vector2(0.0f, -gravity);
-                shotInstance.GetComponent<ShotController>().setVelocity(shotVel);
-                SoundManager.PlayShotClip();
-                shots = shots + 1;
-            }
+          piercingShot = false;
+          piercingShotSprite.SetActive(false);
+          shotInstance = MonoBehaviour.Instantiate(piercingShotPrefab, physics.transform.position + new Vector3(0.0f, -gravity * shotOffset, 0.0f), new Quaternion()) as GameObject;
         }
+        else
+        {
+          shotInstance = MonoBehaviour.Instantiate(shotPrefab, physics.transform.position + new Vector3(0.0f, -gravity * shotOffset, 0.0f), new Quaternion()) as GameObject;
+        }
+        Vector2 shotVel = new Vector2(0.0f, -gravity);
+        shotInstance.GetComponent<ShotController>().setVelocity(shotVel);
+        SoundManager.PlayShotClip();
+        shots = shots + 1;
+      }
+    }
         
         /*if (isGrounded && (lastShoot + fireRate) < Time.fixedTime) {
 			lastShoot = Time.fixedTime;
@@ -171,7 +190,7 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 			shotInstance.GetComponent<ShotController> ().setVelocity (shotVel);
 			SoundM.PlayShotClip ();
 		}*/
-    }
+  }
 
 
 	void FixedUpdate () {

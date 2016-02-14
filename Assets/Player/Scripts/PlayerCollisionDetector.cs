@@ -118,11 +118,12 @@ public class PlayerCollisionDetector : MonoBehaviour
 		Vector2 yForce = new Vector2 (0.0f, YBumpForce*(-MyLCP.gravity));
 		rigidBody.AddForce (((BumpForce+yForce) * BumpAwayMultiplyer), ForceMode2D.Impulse);
 	}
-	void OnTriggerEnter2D(Collider2D other){
-		if (other.gameObject.tag == "Shot")
+  void OnTriggerEnter2D(Collider2D other)
+  {
+    if (other.gameObject.tag == "Shot")
     {
-			ShotDestroyerScript SDS = other.gameObject.GetComponent<ShotDestroyerScript> ();
-			if (!SDS.IsUsed)
+      ShotDestroyerScript SDS = other.gameObject.GetComponent<ShotDestroyerScript>();
+      if (!SDS.IsUsed)
       {
         if (MyLCP.hasShield)
         {
@@ -135,17 +136,19 @@ public class PlayerCollisionDetector : MonoBehaviour
         {
           SDS.IsUsed = true;
           Debug.Log("PLAYER HIT");
-		  MyLCP.DestroyObject();
+          MyLCP.DestroyObject();
 
         }
-				//explosionInstance.transform.SetParent(transform);
-			}
-		}
+        //explosionInstance.transform.SetParent(transform);
+      }
+    }
     else if (other.gameObject.tag == "Boundary")
     {
-			Debug.Log ("PLAYER BOUNDARY");
-			MyLCP.DestroyObject();
-		}
-
-	}
+      MyLCP.DestroyObject();
+    }
+    else if (other.gameObject.tag == "PiercingShot")
+    {
+      MyLCP.DestroyObject();
+    }
+  }
 }

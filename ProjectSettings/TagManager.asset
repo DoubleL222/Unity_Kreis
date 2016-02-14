@@ -16,6 +16,8 @@ TagManager:
   - buttonUp
   - buttonShoot
   - PlayerGlow
+  - PiercingShot
+  - PiercingShotPickup
   layers:
   - Default
   - TransparentFX

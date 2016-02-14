@@ -4,7 +4,7 @@ using System.Collections;
 public class PowerUpManager : PolarPhysicsObject
 {
   // shield
-  public GameObject shieldExplosion;
+  public GameObject explosion;
 
   void Start()
   {
@@ -13,24 +13,25 @@ public class PowerUpManager : PolarPhysicsObject
 
   void OnTriggerEnter2D(Collider2D collider)
   {
-    if (gameObject.tag == "Shield")
+    if (collider.gameObject.tag == "Shot" || collider.gameObject.tag == "PiercingShot")
     {
-      if (collider.gameObject.tag == "Player")
+      Instantiate(explosion, mesh.transform.position, new Quaternion());
+      Destroy(collider.transform.root.gameObject);
+      Destroy(transform.root.gameObject);
+    }
+    else if (collider.gameObject.tag == "Player")
+    {
+      LocalPlayerController LPC = collider.gameObject.GetComponentInParent<LocalPlayerController>();
+
+      if (gameObject.tag == "Shield")
+        LPC.EnableShield();
+      else if (gameObject.tag == "PiercingShotPickup")
       {
-        LocalPlayerController LPC = collider.gameObject.GetComponentInParent<LocalPlayerController>();
-        // player already has shield?
-        if (!LPC.hasShield)
-        {
-          LPC.EnableShield();
-        }
-        Destroy(transform.root.gameObject);
+        LPC.piercingShot = true;
+        LPC.piercingShotSprite.SetActive(true);
       }
-      else if (collider.gameObject.tag == "Shot")
-      {
-        Instantiate(shieldExplosion, mesh.transform.position, new Quaternion());
-        Destroy(collider.transform.root.gameObject);
-        Destroy(transform.root.gameObject);
-      }
+             
+      Destroy(transform.root.gameObject);
     }
   }
 }

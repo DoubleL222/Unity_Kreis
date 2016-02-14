@@ -1673,7 +1673,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1147710125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1788,6 +1788,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1a79b5aa7edd3a4c896fb46a94e3870, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  barrier: {fileID: 0}
+  indestructableBarrier: {fileID: 0}
   PhaseInEffect: {fileID: 107756, guid: 873cb0711238e0d478688f0f518a0494, type: 2}
   localPlayerPrefabs:
   - {fileID: 147376, guid: 318d4d2f07c819c469ba897cbfd0ad7c, type: 2}
@@ -1796,6 +1798,8 @@ MonoBehaviour:
   - {fileID: 178046, guid: f83e09c224822f74b864a0d754b56fed, type: 2}
   - {fileID: 109306, guid: c807f7b65fdc36747ac654106a5f6066, type: 2}
   WCC: {fileID: 1147710129}
+  multiplayerMode: 0
+  LocalPlayerSenders: []
   usePowerUps: 1
 --- !u!4 &1212005979
 Transform:
@@ -1820,10 +1824,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7306b5be17d4ceb4796bcc32867dc6a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minSpawnDuration: 5
-  maxSpawnDuration: 10
+  minSpawnDuration: 3
+  maxSpawnDuration: 6
   powerUps:
   - {fileID: 116500, guid: 86d320406d921fb4e958f6ba0f6bb725, type: 2}
+  - {fileID: 116500, guid: 94f998a2e0a36f145867f56214fd450c, type: 2}
   spawnDistances:
   - 13.5
   - 20.5
@@ -3220,8 +3225,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 684d70b2bff6fdc40a3af75a19d398f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testShakeDuration: 2
-  testShakeStrength: 2
 --- !u!114 &1759421987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3236,6 +3239,9 @@ MonoBehaviour:
   smoothing: .0500000007
   zoomSmoothing: .0199999996
   zoomFactor: 1
+  stationary: 1
+  MaxDist: .100000001
+  MaxZoom: .100000001
 --- !u!1 &1782367226
 GameObject:
   m_ObjectHideFlags: 0
