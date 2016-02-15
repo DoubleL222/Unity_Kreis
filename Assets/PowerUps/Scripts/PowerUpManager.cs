@@ -30,7 +30,11 @@ public class PowerUpManager : PolarPhysicsObject
         LPC.piercingShot = true;
         LPC.piercingShotSprite.SetActive(true);
       }
-             
+      else if (gameObject.tag == "DeathPowerUp")
+      {
+        Instantiate(explosion, mesh.transform.position, new Quaternion());
+        LPC.DestroyObject();
+      }
       Destroy(transform.root.gameObject);
     }
   }
