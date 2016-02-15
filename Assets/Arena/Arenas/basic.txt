@@ -1,0 +1,15 @@
+ring
+size 10
+tick SegmentTickBehaviourMove 5
+end
+
+ring 
+size 17
+tick SegmentTickBehaviourMove -3
+trigger SegmentTriggerBehaviourDestroy
+end
+
+ring 
+size 24
+tick SegmentTickBehaviourMove 4
+end

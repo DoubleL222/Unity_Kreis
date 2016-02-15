@@ -1233,8 +1233,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   root: {fileID: 111080}
   NumPlayers: 2
-  barrier: {fileID: 0}
-  indestructableBarrier: {fileID: 0}
+  barrier: {fileID: 21300000, guid: b254408cb9597c24b8f0e7708016f0bb, type: 3}
+  indestructableBarrier: {fileID: 21300000, guid: 91693ac275da7a944a22566df6530375,
+    type: 3}
   PhaseInEffect: {fileID: 107756, guid: 873cb0711238e0d478688f0f518a0494, type: 2}
   localPlayerPrefabs:
   - {fileID: 147376, guid: 318d4d2f07c819c469ba897cbfd0ad7c, type: 2}
