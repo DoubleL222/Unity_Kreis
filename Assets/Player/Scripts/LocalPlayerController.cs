@@ -120,11 +120,6 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable
 		}
 	}
 
-	void OnDrawGizmos ()
-	{
-		Gizmos.color = Color.yellow;
-		Gizmos.DrawSphere (physics.transform.position, 1.0f);
-	}
 
 	public void PlayerLeftControll ()
 	{

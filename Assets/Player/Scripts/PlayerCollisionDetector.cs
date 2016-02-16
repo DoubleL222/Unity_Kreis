@@ -20,6 +20,9 @@ public class PlayerCollisionDetector : MonoBehaviour
 	LocalPlayerController MyLCP;
 	Rigidbody2D rigidBody;
 	public GameObject bumpEffect;
+    private bool IsAtMaxSpeed = false;
+    private bool IsMaxSpeedKiller = false;
+    private float MaxSpeedKiller = 1.5f;
 
 	public GameObject shieldExplosion;
 
@@ -33,13 +36,31 @@ public class PlayerCollisionDetector : MonoBehaviour
 	private float SelfBumpMultiplyer = 0.3f;
 	private float YBumpForce = 5.0f;
 
-	public void RecordSpeedNow ()
-	{
+
+    void FixedUpdate() 
+    {
+        if (IsAtMaxSpeed) {
+            MaxSpeedKiller -= Time.fixedDeltaTime;
+            if (MaxSpeedKiller <= 0) 
+            {
+                SuperBooster.enableEmission = true;
+                if (!IsMaxSpeedKiller) {
+                    IsMaxSpeedKiller = true;
+                }
+            }
+        }
+    }
+
+	public void RecordSpeedNow(){
 		prevVelocity = rigidBody.velocity;
 		if (prevVelocity.magnitude >= MaxPlayerSpeed) {
-			SuperBooster.enableEmission = true;
+            IsAtMaxSpeed = true;
+			//SuperBooster.enableEmission = true;
 		} else {
+            IsAtMaxSpeed = false;
+            IsMaxSpeedKiller = false;
 			SuperBooster.enableEmission = false;
+			MaxSpeedKiller = 1.5f;
 		}
 	}
 
@@ -90,22 +111,32 @@ public class PlayerCollisionDetector : MonoBehaviour
 				//Debug.Log("his velocity "+hisVelocity + " my velocity "+ myVelocity);
 				if (myVelocity.magnitude >= hisVelocity.magnitude) {
 					//Debug.Log("My speed was: "+myVelocity.magnitude);
-					if (myVelocity.magnitude >= MaxPlayerSpeed) {
-						if (hisVelocity.magnitude >= MaxPlayerSpeed) {
-							MaxSpeedBump (HisPCD, myVelocity, coll);
-							Debug.Log ("Max Speed Collision");
-						} else {
-							MakeBumpEffect (coll.contacts [0].point);
-							LocalPlayerController hisLCP = coll.gameObject.GetComponentInParent<LocalPlayerController> ();
-							if (hisLCP.hasShield) {
-								hisLCP.DisableShield ();
-							} else {
-								hisLCP.DestroyObject ();
-							}
-							Debug.Log ("P1 At Max speed only");
-						}
-					} else {
-						IAmBumpKing (HisPCD, myVelocity, coll);
+
+                    if(IsMaxSpeedKiller){
+                        if (myVelocity.magnitude >= MaxPlayerSpeed)
+                        {
+                            if (hisVelocity.magnitude >= MaxPlayerSpeed)
+                            {
+                                MaxSpeedBump(HisPCD, myVelocity, coll);
+                                Debug.Log("Max Speed Collision");
+                            }
+                            else
+                            {
+                                MakeBumpEffect(coll.contacts[0].point);
+                                LocalPlayerController hisLCP = coll.gameObject.GetComponentInParent<LocalPlayerController>();
+                                if (hisLCP.hasShield)
+                                {
+                                    hisLCP.DisableShield();
+                                }
+                                else
+                                {
+                                    hisLCP.DestroyObject();
+                                }
+                                Debug.Log("P1 At Max speed only");
+                            }
+                        }
+					} else{
+						IAmBumpKing(HisPCD, myVelocity, coll);
 					}
 					//hisRbd.ad
 				}

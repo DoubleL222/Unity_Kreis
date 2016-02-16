@@ -11,7 +11,7 @@ public class ShotDestroyerScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake ()
-  {
+  	{
 		CamShakeM = FindObjectOfType<CamShakeManager> ();
 	}
 
@@ -38,7 +38,7 @@ public class ShotDestroyerScript : MonoBehaviour {
 		if (col.gameObject.tag == "Boundary") {
 			Destroy (root.gameObject);
 		}
-		if (col.gameObject.tag == "Segment") {
+		if (col.gameObject.tag == "Segment" && gameObject.tag != "PiercingShot") {
 			if(transform.root.gameObject != null)
 				MonoBehaviour.Destroy(root.gameObject);
 		}

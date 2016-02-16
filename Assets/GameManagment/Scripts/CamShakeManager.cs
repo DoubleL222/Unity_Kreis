@@ -10,12 +10,13 @@ public class CamShakeManager : MonoBehaviour
 	private static float originalCamSize;
 
 	public static CamShakeManager Instance;
+	public Camera shakeCam;
 	void Awake()
 	{
 		Instance = this;
-		Camera cam = FindObjectOfType<Camera>();
-		originalCamSize = cam.orthographicSize;
-		originalCamPos = cam.transform.position;
+		//Camera cam = FindObjectOfType<Camera>();
+		originalCamSize = shakeCam.orthographicSize;
+		originalCamPos = shakeCam.transform.position;
 	}
 
 	void Update()
@@ -26,9 +27,10 @@ public class CamShakeManager : MonoBehaviour
 
 	public static void PlayShake(float duration, float strength)
 	{
+		Debug.Log ("CAMSHAKE CALLED");
 		Instance.StopAllCoroutines ();
-		Camera.main.orthographicSize = originalCamSize;
-		Camera.main.transform.position = originalCamPos;
+		Instance.shakeCam.orthographicSize = originalCamSize;
+		Instance.shakeCam.transform.position = originalCamPos;
 		Instance.StartCoroutine(Instance.Shake(duration, strength));
 	}
 
@@ -50,13 +52,13 @@ public class CamShakeManager : MonoBehaviour
 			x *= strength * damper;
 			y *= strength * damper;
 
-			Camera.main.orthographicSize = originalCamSize - strength * damper;
-			Camera.main.transform.position = new Vector3(cameraLoc.center.x + x, cameraLoc.center.y + y, originalCamPos.z);
+			shakeCam.orthographicSize = originalCamSize - strength * damper;
+			shakeCam.transform.position = new Vector3(cameraLoc.center.x + x, cameraLoc.center.y + y, originalCamPos.z);
 
 			yield return null;
 		}
 
-		Camera.main.orthographicSize = originalCamSize;
-		Camera.main.transform.position = originalCamPos;
+		shakeCam.orthographicSize = originalCamSize;
+		shakeCam.transform.position = originalCamPos;
 	}
 }

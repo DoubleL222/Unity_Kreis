@@ -1043,6 +1043,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 684d70b2bff6fdc40a3af75a19d398f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shakeCam: {fileID: 0}
 --- !u!114 &11446280
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1269,6 +1270,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 684d70b2bff6fdc40a3af75a19d398f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shakeCam: {fileID: 2072760}
 --- !u!124 &12413964
 Behaviour:
   m_ObjectHideFlags: 1

@@ -140,35 +140,6 @@ public class GameManager : MonoBehaviour
 		playerNames [7] = "Don";
 		playerNames [8] = "Liz";
 		playerNames [9] = "Bob";
-
-		int nrings = 3;
-
-		RingSizes = new float[nrings];
-		RingSizes [0] = 10f;
-		RingSizes [1] = 17f;
-		RingSizes [2] = 24f;
-
-		segmentTickBehaviours = new List<SegmentTickBehaviour>[nrings];
-		for (int i = 0; i < segmentTickBehaviours.Length; i++)
-			segmentTickBehaviours [i] = new List<SegmentTickBehaviour> ();
-		segmentTickBehaviours [0].Add (new SegmentTickBehaviourMove (5f));
-		segmentTickBehaviours [1].Add (new SegmentTickBehaviourMove (-3f));
-		segmentTickBehaviours [2].Add (new SegmentTickBehaviourMove (4f));
-
-		segmentCollisionBehaviours = new List<SegmentCollisionBehaviour>[nrings];
-		for (int i = 0; i < segmentCollisionBehaviours.Length; i++)
-			segmentCollisionBehaviours [i] = new List<SegmentCollisionBehaviour> ();
-
-		segmentTriggerBehaviours = new List<SegmentTriggerBehaviour>[nrings];
-		for (int i = 0; i < segmentTriggerBehaviours.Length; i++)
-			segmentTriggerBehaviours [i] = new List<SegmentTriggerBehaviour> ();
-		
-		segmentTriggerBehaviours [1].Add (new SegmentTriggerBehaviourDestroy ());
-
-		segmentSprites = new Sprite[nrings];
-		segmentSprites [0] = indestructableBarrier;
-		segmentSprites [1] = barrier;
-		segmentSprites [2] = indestructableBarrier;
 	}
 
 	// Update is called once per frame
@@ -209,7 +180,7 @@ public class GameManager : MonoBehaviour
 		LivingPlayers.Clear ();
 
 		gameEnded = false;
-		SpawnPositions = CalculateSpawnPositions (NumberOfPlayers);
+		//SpawnPositions = CalculateSpawnPositions (NumberOfPlayers);
         /*IDictionary<string,KeyCode> p1keys = new Dictionary<string,KeyCode> ();
 		p1keys.Add ("left", KeyCode.A);
 		p1keys.Add ("right", KeyCode.D);
@@ -279,7 +250,7 @@ public class GameManager : MonoBehaviour
 
 	void MultiSpawnPlayers ()
 	{
-		SpawnPositions = CalculateSpawnPositions (LocalPlayerSenders.Count);
+		//SpawnPositions = CalculateSpawnPositions (LocalPlayerSenders.Count);
 		Debug.Log ("NUMBEr OF LOCAL PLAYER SENDErS:" + LocalPlayerSenders.Count);
 		int i = 0;
 		foreach (LocalPlayerSender LPS in LocalPlayerSenders) {
