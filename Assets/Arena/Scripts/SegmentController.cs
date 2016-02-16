@@ -87,7 +87,7 @@ public class SegmentController : PolarPhysicsObject{
 		if (!isDestroyed) {
 			isDestroyed = true;
 			GameObject explosionInstance = Instantiate (ExplosionEffect, explodePosition, Quaternion.identity) as GameObject;
-			CamShakeManager.PlayTestShake (0.1f, 0.5f);
+			CamShakeManager.PlayShake (0.1f, 0.5f);
 			SoundManager.PlayExplosionClip ();
 			mesh.transform.GetChild (0).gameObject.SetActive (false);
 			explosionInstance.transform.SetParent (mesh.transform);

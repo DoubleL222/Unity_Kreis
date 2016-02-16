@@ -18,13 +18,13 @@ public class GameManager : MonoBehaviour
 	List<RingManager> rings;
 
 	public int NumPlayers = 2;
+	public int winScore = 10;
 	public static bool gameEnded = true;
 	private bool toStart = true;
 
 	public Sprite barrier, indestructableBarrier;
 
 	List<GameObject> LivingPlayers;
-    List<int> PlayerTeams;
 
 	string[] playerNames;
 	float[] RingSizes;
@@ -67,7 +67,9 @@ public class GameManager : MonoBehaviour
 	}
 	public void StartGame(){
         //lobbyCanvas.enabled = false;
+
         string[] names = lobby.getNames();
+		winScore = lobby.getWinScore ();
         for(int i = 0; i < names.Length; i++)
         {
             if (names[i] != "")
@@ -104,7 +106,6 @@ public class GameManager : MonoBehaviour
 	{
 		playerScores = new int[NumPlayers];
 		LivingPlayers = new List<GameObject> ();
-        PlayerTeams = new List<int> ();
 		playerColors = new List<Color> ();
 		playerColors.Add (new Color32 (255, 238, 13, 255));
 		playerColors.Add (new Color32 (232, 94, 12, 255));
@@ -165,7 +166,6 @@ public class GameManager : MonoBehaviour
 		segmentSprites [0] = indestructableBarrier;
 		segmentSprites [1] = barrier;
 		segmentSprites [2] = indestructableBarrier;
-
 	}
 
 	// Update is called once per frame
@@ -264,13 +264,13 @@ public class GameManager : MonoBehaviour
 		keyCodes [8] = p4keys;
 		keyCodes [9] = p4keys;
 
-		Debug.Log ("called Spawn PLayer");
+		Debug.Log ("called Spawn Player");
 		//StartCoroutine( SpawnPlayerAfter (5.0f));
 		Vector3 SpawnPosition = new Vector3 (0, 17f, 0);
 
 		for (int i = 0; i < NumberOfPlayers; i++) {
 			//StartCoroutine (SpawnPlayerAfter (keyCodes [i], SpawnPositions [i], i));
-			StartCoroutine(SpawnPlayerAfter(keyCodes[i], ArenaDataLoader.arenas["basic"].getSpawnPosition(NumberOfPlayers, i), i));
+			StartCoroutine(SpawnPlayerAfter(keyCodes[i], ArenaDataLoader.arenas["basic"].getSpawnPosition(NumberOfPlayers, i), prefabInd[i] ,playerNames[i]));
 		}
 	}
 
@@ -316,7 +316,6 @@ public class GameManager : MonoBehaviour
 		Debug.Log ("playerDied");
 		if (!gameEnded) {
 			Debug.Log ("pLivingPlayers.count = " + LivingPlayers.Count);
-			PlayerTeams.RemoveAt(LivingPlayers.IndexOf(player));
 			LivingPlayers.Remove (player);
 			Debug.Log ("LivingPlayers.count = " + LivingPlayers.Count);
 			for (int i = 0; i < LivingPlayers.Count; i++) {
@@ -327,10 +326,10 @@ public class GameManager : MonoBehaviour
 				playerTexts [LCP.playerIndex].text = LCP.PlayerName + ": " + playerScores [LCP.playerIndex];
 			}
 			bool sameTeam = true;
-			int team = PlayerTeams[0];
-			for (int i=0; i < PlayerTeams.Count; i++)
+			int team = LivingPlayers[0].GetComponent<LocalPlayerController>().team;
+			for (int i=1; i < LivingPlayers.Count; i++)
 			{
-				if (PlayerTeams[i] != team)
+				if (LivingPlayers[i].GetComponent<LocalPlayerController>().team != team)
 				{
 					sameTeam = false;
 				}
@@ -342,7 +341,7 @@ public class GameManager : MonoBehaviour
 	}
 
 
-	IEnumerator SpawnPlayerAfter (IDictionary<string,KeyCode> playerKeys, Vector2 SpawnPos, int playerI)
+	IEnumerator SpawnPlayerAfter (IDictionary<string,string> playerKeys, Vector2 SpawnPos, int playerI, string name)
 	{
 		Vector3 SpawnPosition = new Vector3 (SpawnPos.x, SpawnPos.y, 0);
 		GameObject pie = Instantiate (PhaseInEffect, UtilityScript.transformToCartesian (SpawnPosition), Quaternion.identity) as GameObject;
@@ -352,18 +351,19 @@ public class GameManager : MonoBehaviour
 		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefabs [(playerI % (localPlayerPrefabs.Length))], SpawnPosition, new Quaternion ()) as GameObject;
 		localPlayer.transform.SetParent (GameManager.GMInstance.root.transform);
 		LivingPlayers.Add (localPlayer);
-        PlayerTeams.Add(playerI);
 		//SpriteRenderer PlayerSR = localPlayer.GetComponentInChildren<SpriteRenderer> ();
 		//Debug.Log ("GETTING COLOR AT INDEX " + playerI);
 		//PlayerSR.color = playerColors[(playerI % (playerColors.Count))];
+
 		LocalPlayerController LCP = localPlayer.GetComponent<LocalPlayerController> ();
+		LCP.team = playerI;
 		LCP.playerIndex = playerI;
 		LCP.setKeys (playerKeys);
 		LCP.PlayerName = name;
 
 
-		playerTexts [playerI].text = LCP.PlayerName + ": " + playerScores [playerI];
-		playerTexts [playerI].enabled = true;
+		playerTexts [playerI%4].text = LCP.PlayerName + ": " + playerScores [playerI%4];
+		playerTexts [playerI%4].enabled = true;
 
 		cameraLoc.updatePlayers = true;
 
@@ -422,7 +422,7 @@ public class GameManager : MonoBehaviour
 	void EndGame ()
 	{
 		gameEnded = true;
-		FinalDestruction (7.5f);
+		FinalDestruction (3.5f);
 		if (LivingPlayers.Count > 0) {
 			
 			LocalPlayerController LPC = LivingPlayers [0].GetComponent<LocalPlayerController> ();
@@ -441,7 +441,7 @@ public class GameManager : MonoBehaviour
                 PName += "WIN!";
             }
 			
-			GameObject playerMesh = Instantiate (LPC.mesh, LPC.mesh.transform.position, LPC.mesh.transform.rotation) as GameObject;
+			//GameObject playerMesh = Instantiate (LPC.mesh, LPC.mesh.transform.position, LPC.mesh.transform.rotation) as GameObject;
 
 			Destroy (LPC.gameObject);
 
@@ -453,7 +453,7 @@ public class GameManager : MonoBehaviour
 	}
 
 	IEnumerator nextRound(){
-		yield return new WaitForSeconds (9f);
+		yield return new WaitForSeconds (5.5f);
 		Main.getInstance ().nextRound ();
 	}
 

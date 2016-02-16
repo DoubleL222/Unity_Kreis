@@ -65,7 +65,7 @@ public class PlayerCollisionDetector : MonoBehaviour
 	void MakeBumpEffect (Vector2 cPoint)
 	{
 		SoundManager.PlayBumpClip ();
-		CamShakeManager.PlayTestShake (0.2f, 0.2f);
+		CamShakeManager.PlayShake (0.2f, 0.2f);
 		Vector3 spawnPos = UtilityScript.transformToCartesian (new Vector3 (cPoint.x, cPoint.y, 0.0f));
 		GameObject bumpMaker = Instantiate (bumpEffect, spawnPos, Quaternion.identity) as GameObject;
 		bumpMaker.transform.SetParent (meshTransform);

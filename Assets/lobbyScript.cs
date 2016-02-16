@@ -14,12 +14,12 @@ public class lobbyScript : MonoBehaviour {
     
 	// Use this for initialization
 	void Start () {
-        PlayerColors = new Color[5];
+        PlayerColors = new Color[4];
         PlayerColors[0] = new Color32(255, 238, 13, 255);
         PlayerColors[1] = new Color32(232, 94, 12, 255);
         PlayerColors[2] = new Color32(234, 0, 255, 255);
         PlayerColors[3] = new Color32(12, 99, 232, 255);
-        PlayerColors[4] = new Color32(0, 255, 69, 255);
+        //PlayerColors[4] = new Color32(0, 255, 69, 255);
 
         currentColors = new int[NameFields.Length];
         currentColors[0] = 0;
@@ -102,10 +102,10 @@ public class lobbyScript : MonoBehaviour {
         int score = 10;
         if (WinScore.text != "")
         {
-            score = int.Parse(numOfPlayers.text);
-            if (score < 1)
+			score = int.Parse(WinScore.text);
+            if (score < 10)
             {
-                score = 1;
+                score = 10;
             }
         }
         return score;

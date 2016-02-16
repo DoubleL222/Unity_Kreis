@@ -24,16 +24,16 @@ public class CamShakeManager : MonoBehaviour
         originalCamPos = cameraLoc.center;
     }
 
-	public static void PlayTestShake(float duration, float strength)
+	public static void PlayShake(float duration, float strength)
 	{
 		Instance.StopAllCoroutines ();
 		Camera.main.orthographicSize = originalCamSize;
 		Camera.main.transform.position = originalCamPos;
-		Instance.StartCoroutine(Instance.TestShake(duration, strength));
+		Instance.StartCoroutine(Instance.Shake(duration, strength));
 	}
 
 
-	IEnumerator TestShake(float duration, float strength)
+	IEnumerator Shake(float duration, float strength)
 	{
 		float elapsed = 0.0f;
 		float i = 0;

@@ -13,6 +13,8 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable
 
 	bool isGrounded = true;
 	private static SoundManager SoundM;
+	[HideInInspector]
+	public int team;
 
 	private float descelerationRate = 0.995f;
 
@@ -88,7 +90,7 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable
 		gameObject.SetActive (false);
 		GameManager.GMInstance.PlayerDied (gameObject);
 		cameraLoc.updatePlayers = true;
-		CamShakeManager.PlayTestShake (0.5f, 1);
+		CamShakeManager.PlayShake (0.5f, 1);
 		SoundManager.PlayExplosionClip ();
 
 	}

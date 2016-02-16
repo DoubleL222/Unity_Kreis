@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
+//using UnityEngine.SceneManagement;
 
 public class Main : MonoBehaviour {
 	private static Main instance;
@@ -14,12 +14,22 @@ public class Main : MonoBehaviour {
 	bool gameRunning = false;
 	GameObject game = null;
 	GameManager gameManager = null;
-
+	
+	public GameObject lobby;
 	void Start () {
 		instance = this;
 	}
 
-	void Update(){
+	public void startGame(){
+		lobby.GetComponent<lobbyScript> ().hideLobby ();
+		game = MonoBehaviour.Instantiate (gamePrefab) as GameObject;
+		gameManager = game.GetComponentInChildren<GameManager> ();
+		gameManager.NumPlayers = lobby.GetComponent<lobbyScript> ().getNumOfPlayers ();
+		gameManager.lobby = lobby.GetComponent<lobbyScript>();
+		gameRunning = true;
+	}
+
+	void Update(){/*
 		if (!gameRunning) {
 			if (game != null) {
 				MonoBehaviour.Destroy (game);
@@ -47,7 +57,7 @@ public class Main : MonoBehaviour {
 		if (game == null) {
 			gameManager = null;
 			gameRunning = false;
-		}
+		}*/
 	}
 
 	public void nextRound(){

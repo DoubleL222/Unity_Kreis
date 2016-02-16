@@ -49,7 +49,7 @@ public class cameraLoc : MonoBehaviour {
             updatePlayers = false;
         }
 
-        if (GameManager.gameEnded)//vrni kamero na izvorno lokacijo
+        if (players == null)//vrni kamero na izvorno lokacijo
         {
             tmpCenter = startLocation;
 

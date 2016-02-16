@@ -7,14 +7,18 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 0
     path: Assets/Scenes/_new/Arena_Original.unity
+  - enabled: 0
+    path: Assets/Multiplayer/Scenes/MultiplayerBlazWay.unity
 <<<<<<< HEAD
   - enabled: 0
-    path: Assets/Multiplayer/Scenes/CastAndMultiplayer/Arena_Multiplayer.unity
-  - enabled: 0
-    path: Assets/Multiplayer/Scenes/ArenaMultiMessages.unity
-  - enabled: 1
     path: Assets/Scenes/_new/UIScene.unity
+  - enabled: 1
+    path: Assets/Scenes/OfflineScene.unity
 =======
   - enabled: 1
-    path: Assets/Multiplayer/Scenes/MultiplayerBlazWay.unity
->>>>>>> dac5286bd79e953d437b0e14977058eba0e5ebc8
+    path: Assets/Scenes/_new/Main.unity
+  - enabled: 0
+    path: Assets/Scenes/_new/UIScene.unity
+  - enabled: 0
+    path: Assets/Scenes/_new/Arena_Original_NoCast.unity
+>>>>>>> origin/Scoring
