@@ -13,7 +13,7 @@ public class CamShakeManager : MonoBehaviour
 	void Awake()
 	{
 		Instance = this;
-		Camera cam = GetComponent<Camera>();
+		Camera cam = FindObjectOfType<Camera>();
 		originalCamSize = cam.orthographicSize;
 		originalCamPos = cam.transform.position;
 	}

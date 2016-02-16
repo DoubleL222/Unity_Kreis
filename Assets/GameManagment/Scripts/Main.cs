@@ -61,11 +61,14 @@ public class Main : MonoBehaviour {
 	}
 
 	public void nextRound(){
-		/*Debug.Log ("Destroying game");
-		Destroy (game);
-		game = MonoBehaviour.Instantiate (gamePrefab) as GameObject;
-		gameManager = game.GetComponentInChildren<GameManager> ();
-		gameRunning = true;*/
 		gameManager.StartGame ();
+	}
+
+	public void backToLobby(){
+		MonoBehaviour.Destroy (game);
+		game = null;
+		gameManager = null;
+		gameRunning = false;
+		lobby.GetComponent<lobbyScript> ().showLobby ();
 	}
 }

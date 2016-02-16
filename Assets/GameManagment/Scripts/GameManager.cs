@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
 
 	public int NumPlayers = 2;
 	public int winScore = 10;
+	bool scoreReached=false;
+
 	public static bool gameEnded = true;
 	private bool toStart = true;
 
@@ -70,6 +72,7 @@ public class GameManager : MonoBehaviour
 
         string[] names = lobby.getNames();
 		winScore = lobby.getWinScore ();
+		scoreReached = false;
         for(int i = 0; i < names.Length; i++)
         {
             if (names[i] != "")
@@ -420,41 +423,56 @@ public class GameManager : MonoBehaviour
 	}
 	
 	void EndGame ()
-	{
+	{	
+
 		gameEnded = true;
 		FinalDestruction (3.5f);
-		if (LivingPlayers.Count > 0) {
-			
-			LocalPlayerController LPC = LivingPlayers [0].GetComponent<LocalPlayerController> ();
+		LocalPlayerController LPC = LivingPlayers[0].GetComponent<LocalPlayerController> ();
+
+		for (int i=0; i < playerScores.Length; i++) {
+			if(playerScores[i] >= winScore){
+				scoreReached=true;
+			}
+		}
+
+		if (scoreReached) {
+
 			//TODO: end round
-            string PName = "";
-            if (LivingPlayers.Count == 1)
-            {
-                PName = LPC.PlayerName+" WINS!";
-            }
-            else
-            {
-                for(int i = 0; i < LivingPlayers.Count; i++)
-                {
-                    PName+=LivingPlayers[i].GetComponent<LocalPlayerController>().PlayerName+" ";
-                }
-                PName += "WIN!";
-            }
-			
-			//GameObject playerMesh = Instantiate (LPC.mesh, LPC.mesh.transform.position, LPC.mesh.transform.rotation) as GameObject;
+			string PName = "";
+			if (LivingPlayers.Count == 1)
+			{
+				PName = LPC.PlayerName+" WINS!";
+			}
+			else
+			{
+				for(int i = 0; i < LivingPlayers.Count; i++)
+				{
+					PName+=LivingPlayers[i].GetComponent<LocalPlayerController>().PlayerName+" ";
+				}
+				PName += "WIN!";
+			}
 
 			Destroy (LPC.gameObject);
-
-			/*GameObject playerMesh = Instantiate (LPC.mesh, LPC.mesh.transform.position, LPC.mesh.transform.rotation) as GameObject;
-			playerMesh.transform.SetParent (root.transform);
-			WCC.FinishGame (playerMesh, PName);*/
+			cameraLoc.updatePlayers=true;
+			GameObject playerMesh = Instantiate (LPC.mesh, LPC.mesh.transform.position, LPC.mesh.transform.rotation) as GameObject;
+			playerMesh.transform.SetParent(GMInstance.root.transform);
+			WCC.FinishGame (playerMesh, PName);
+			StartCoroutine(backToLobby());
+		} else {
+			Destroy (LPC.gameObject);
+			StartCoroutine (nextRound());
 		}
-		StartCoroutine (nextRound());
+
 	}
 
 	IEnumerator nextRound(){
 		yield return new WaitForSeconds (5.5f);
 		Main.getInstance ().nextRound ();
+	}
+
+	IEnumerator backToLobby(){
+		yield return new WaitForSeconds (8f);
+		Main.getInstance ().backToLobby ();
 	}
 
 	public void ClickServerStartGame ()

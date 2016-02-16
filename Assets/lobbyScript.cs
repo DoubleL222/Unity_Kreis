@@ -99,13 +99,13 @@ public class lobbyScript : MonoBehaviour {
 
     public int getWinScore()
     {
-        int score = 10;
+        int score = 1;
         if (WinScore.text != "")
         {
 			score = int.Parse(WinScore.text);
-            if (score < 10)
+            if (score < 1)
             {
-                score = 10;
+                score = 1;
             }
         }
         return score;
