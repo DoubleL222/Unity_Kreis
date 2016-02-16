@@ -19,6 +19,7 @@ TagManager:
   - PiercingShot
   - PiercingShotPickup
   - DeathPowerUp
+  - GameManager
   layers:
   - Default
   - TransparentFX

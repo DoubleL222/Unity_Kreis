@@ -38,12 +38,14 @@ public class GameManager : MonoBehaviour {
 
 	//MULTIPLAYER
 	public bool multiplayerMode = false;
-	public List<LocalPlayerSender> LocalPlayerSenders = new List<LocalPlayerSender> ();
+	public List<LocalPlayerSender> LocalPlayerSenders = new List<LocalPlayerSender>();
 
 
   // powerups
   	PowerUpSpawner PUS;
 	public bool usePowerUps;
+	[HideInInspector]
+	public List<PowerUpManager> activePowerUps = new List<PowerUpManager>();
 
 	/// <summary>
 	/// Starts the game. Initializes rings, players, sounds, ...
@@ -292,16 +294,27 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void FinalDestruction(float delayStep){
+		// disable power up spawner
+		PUS.enabled = false;
+
 		float mem = delayStep;
+		float maxDelay = .0f;
 		foreach (RingManager rm in rings) {
 			//Debug.Log ("final destruction called, segment controllers : " + rm.segmentControlers.Count);
 			delayStep = mem;
 			foreach (SegmentController sc in rm.segmentControlers) {
-				StartCoroutine (sc.DestroySegmentAFter (delayStep/rm.segmentControlers.Count));
+				StartCoroutine (sc.DestroySegmentAFter (delayStep / rm.segmentControlers.Count));
 				delayStep += mem;
+				if ((delayStep / rm.segmentControlers.Count) > maxDelay)
+					maxDelay = delayStep / rm.segmentControlers.Count;
 			}
 		}
-	} 
+		foreach (PowerUpManager PUM in activePowerUps)
+		{
+			StartCoroutine(PUM.DestroyPowerUpAfter(maxDelay));
+		}
+	}
+
 	void EndGame(){
 		gameEnded = true;
 		FinalDestruction (7.5f);

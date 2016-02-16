@@ -165,6 +165,7 @@ MonoBehaviour:
   physics_parent: {fileID: 176992}
   rigidbody: {fileID: 0}
   explosion: {fileID: 141338, guid: 9399da48510728243b3ee2740dfef5a2, type: 2}
+  scripts: {fileID: 0}
 --- !u!114 &11459900
 MonoBehaviour:
   m_ObjectHideFlags: 1
