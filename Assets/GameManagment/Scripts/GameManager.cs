@@ -34,7 +34,6 @@ public class GameManager : MonoBehaviour
 	Sprite[] segmentSprites;
 	static int[] playerScores;
 
-	float PhyciscSegmentOffset = 7.0f;
 	float PhaseInDelay = float.MaxValue;
 
 	public GameObject PhaseInEffect;
@@ -64,7 +63,7 @@ public class GameManager : MonoBehaviour
 
 	public void StartGame ()
 	{
-		SpawnRings (RingSizes);
+		SpawnRings ("basic");
 		if (!multiplayerMode)
 			SpawnPlayers (NumPlayers);
 		SoundManager.PlayBigBoomClip ();
@@ -161,7 +160,7 @@ public class GameManager : MonoBehaviour
 	/// Spawns the rings defined in RingSizes.
 	/// </summary>
 	/// <param name="RingSizes">A 2d array of [distance, speed]</param>
-	public void SpawnRings (float[] RingSizes)
+	public void SpawnRings (string arenaname)
 	{
 		if (rings != null) {
 			for (int i = 0; i < rings.Count; i++) {
@@ -169,8 +168,10 @@ public class GameManager : MonoBehaviour
 			}
 		}
 		rings = new List<RingManager> ();
-		for (int i = 0; i < RingSizes.GetLength (0); i++) {
-			rings.Add (new RingManager (RingSizes [i], segmentCollisionBehaviours [i], segmentTickBehaviours [i], segmentTriggerBehaviours [i], segmentSprites [i]));
+		List<RingData> rd = RingDataLoader.arenas [arenaname];
+
+		for (int i = 0; i < rd.Count; i++) {
+			rings.Add (new RingManager (rd[i].size, rd[i].segmentCollisionBehaviours, rd[i].segmentTickBehaviours, rd[i].segmentTriggerBehaviours, rd[i].sprite));
 		}
 	}
 
@@ -376,7 +377,7 @@ public class GameManager : MonoBehaviour
 
 	public void ClickServerStartGame ()
 	{
-		SpawnRings (RingSizes);
+		SpawnRings ("basic");
 		MultiSpawnPlayers ();
 		SoundManager.PlayBigBoomClip ();
 	}

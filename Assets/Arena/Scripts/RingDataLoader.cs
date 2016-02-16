@@ -14,23 +14,26 @@ public class RingDataLoader : MonoBehaviour
 	private static Dictionary<String, Type> triggers;
 	private static Dictionary<String, Type> collisions;
 
+	public static Dictionary<String, List<RingData> > arenas;
+
 	static RingDataLoader(){
 		sprites = new Dictionary<String, Sprite> ();
 		ticks = GetDerivativesOfInterface<SegmentTickBehaviour> ();
 		triggers = GetDerivativesOfInterface<SegmentTriggerBehaviour> ();
 		collisions = GetDerivativesOfInterface<SegmentCollisionBehaviour> ();
-		UnityEngine.Object[] textures = Resources.LoadAll ("Arena/Textures/Segments", typeof(Sprite));
-		Debug.Log ("Unity loaded " + textures.Length + " assets.");
+		arenas = new Dictionary<string, List<RingData>> ();
+		UnityEngine.Object[] textures = Resources.LoadAll ("Textures/Segments", typeof(Sprite));
+		//Debug.Log ("Unity loaded " + textures.Length + " assets.");
 		for (int i = 0; i < textures.Length; i++) {
 			if (textures [i].GetType () == typeof(Sprite)) {
 				sprites.Add (textures [i].name, textures [i] as Sprite);
 			}
-		}
+		}/*
 		String[] names = sprites.Keys.ToArray();
 		Debug.Log ("Sprites loaded: ");
 		for (int i = 0; i < names.Length; i++) {
 			Debug.Log (names [i]);
-		}
+		}*/
 		/*
 		String[] names = ticks.Keys.ToArray();
 		Type[] classes = ticks.Values.ToArray();
@@ -50,18 +53,27 @@ public class RingDataLoader : MonoBehaviour
 		for (int i = 0; i < names.Length; i++) {
 			Debug.Log (names [i] + " " + classes [i]);
 		}*/
-		Debug.Log("Loading");
-		List<RingData> rd = Load ("Assets/Arena/Arenas/basic.txt");
-		Debug.Log ("Loaded " + rd.Count + " rings");
-		for (int i = 0; i < rd.Count; i++) {
-			Debug.Log (rd [i].size);
-			Debug.Log (rd [i].sprite);
-			Debug.Log (rd [i].segmentCollisionBehaviours.Count);
-			Debug.Log (rd [i].segmentTickBehaviours.Count);
-			Debug.Log (rd [i].segmentTriggerBehaviours.Count);
+		//Debug.Log("Loading");
+		string[] filenames = Directory.GetFiles("Assets\\Arena\\Arenas").Where(s => s.EndsWith(".arena")).ToArray();
+		foreach(string filename in filenames){
+			//Debug.Log(filename);
+			List<RingData> rd = Load (filename);
+			int first = filename.LastIndexOf ('\\') + 1;
+			int last = filename.LastIndexOf (".arena");
+			arenas.Add(filename.Substring(first, last-first), rd);
+			/*
+			for (int i = 0; i < rd.Count; i++) {
+				Debug.Log (rd [i].size);
+				Debug.Log (rd [i].sprite);
+				Debug.Log (rd [i].segmentCollisionBehaviours.Count);
+				Debug.Log (rd [i].segmentTickBehaviours.Count);
+				Debug.Log (rd [i].segmentTriggerBehaviours.Count);
+			}*/
 		}
-		Debug.Log ("Loaded");
-
+		Debug.Log ("Arena names");
+		foreach (string s in arenas.Keys) {
+			Debug.Log (s);
+		}
 	}
 
 	private static Dictionary<String, Type> GetDerivativesOfInterface<T>() where T : class
@@ -115,7 +127,6 @@ public class RingDataLoader : MonoBehaviour
 							rd.segmentTriggerBehaviours.Add(stb);
 						}
 					}
-
 				}else if(entries[0] == "collision"){ //new collision behaviour
 					Type t;
 					if(collisions.TryGetValue(entries[1], out t)){
