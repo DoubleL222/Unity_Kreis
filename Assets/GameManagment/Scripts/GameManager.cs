@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour {
 
 	public Sprite barrier, indestructableBarrier;
 
-	static List<GameObject> LivingPlayers;
+	List<GameObject> LivingPlayers;
     List<int> PlayerTeams;
 
 	string[] playerNames;
@@ -287,13 +287,12 @@ public class GameManager : MonoBehaviour {
 		}
 		return positons;
 	}
-	public static void PlayerDied(GameObject player){
+	public void PlayerDied(GameObject player){
 		Debug.Log ("playerDied");
 		if (!gameEnded) {
             PlayerTeams.RemoveAt(LivingPlayers.IndexOf(player));
 			LivingPlayers.Remove (player);
             bool sameTeam = true;
-				GMInstance.EndGame ();
             int team = PlayerTeams[0];
             for (int i=0; i < PlayerTeams.Count; i++)
             {
@@ -303,6 +302,7 @@ public class GameManager : MonoBehaviour {
                 }
             }
 			if (sameTeam) {
+				EndGame ();
 			}
 		}
 	}

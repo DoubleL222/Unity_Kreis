@@ -14,7 +14,7 @@ public class PowerUpManager : PolarPhysicsObject
     StartUpdate();
 
     //GM
-	GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+	GM = FindObjectOfType<GameManager> ();
   }
 
   void OnTriggerEnter2D(Collider2D collider)

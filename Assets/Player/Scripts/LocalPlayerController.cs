@@ -75,7 +75,7 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 	{
 		Instantiate (ExplosionEffect, mesh.transform.position, Quaternion.identity);
 		gameObject.SetActive (false);
-		GameManager.PlayerDied (gameObject);
+		gManager.PlayerDied (gameObject);
 		cameraLoc.updatePlayers = true;
 		CamShakeManager.PlayTestShake(0.5f, 1);
 		SoundManager.PlayExplosionClip ();

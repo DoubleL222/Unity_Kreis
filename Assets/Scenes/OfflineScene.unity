@@ -449,7 +449,9 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -1932,8 +1934,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 684d70b2bff6fdc40a3af75a19d398f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testShakeDuration: 2
-  testShakeStrength: 2
 --- !u!81 &421975462
 AudioListener:
   m_ObjectHideFlags: 0
@@ -2285,7 +2285,9 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -3763,6 +3765,7 @@ MonoBehaviour:
   multiplayerMode: 0
   LocalPlayerSenders: []
   usePowerUps: 1
+  activePowerUps: []
 --- !u!4 &1212005979
 Transform:
   m_ObjectHideFlags: 0
@@ -3786,10 +3789,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7306b5be17d4ceb4796bcc32867dc6a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minSpawnDuration: 5
-  maxSpawnDuration: 10
+  minSpawnDuration: 2
+  maxSpawnDuration: 4
+  maxNumberOfPowerups: 3
   powerUps:
   - {fileID: 116500, guid: 86d320406d921fb4e958f6ba0f6bb725, type: 2}
+  - {fileID: 116500, guid: 94f998a2e0a36f145867f56214fd450c, type: 2}
+  - {fileID: 116500, guid: e759459b0fb80a54e9fc83186db9c0db, type: 2}
   spawnDistances:
   - 13.5
   - 20.5
@@ -4572,7 +4578,9 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -6037,7 +6045,9 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -6802,8 +6812,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 684d70b2bff6fdc40a3af75a19d398f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testShakeDuration: 2
-  testShakeStrength: 2
 --- !u!114 &1759421987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7539,6 +7547,7 @@ MonoBehaviour:
   - {fileID: 291044266}
   LobbyCanvas: {fileID: 1987336526}
   numOfPlayers: {fileID: 2109277422}
+  WinScore: {fileID: 0}
 --- !u!1 &1998371943
 GameObject:
   m_ObjectHideFlags: 0
@@ -7586,7 +7595,9 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
