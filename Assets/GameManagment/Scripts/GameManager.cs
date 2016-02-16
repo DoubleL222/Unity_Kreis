@@ -168,10 +168,10 @@ public class GameManager : MonoBehaviour
 			}
 		}
 		rings = new List<RingManager> ();
-		List<RingData> rd = RingDataLoader.arenas [arenaname];
+		ArenaData ad = ArenaDataLoader.arenas [arenaname];
 
-		for (int i = 0; i < rd.Count; i++) {
-			rings.Add (new RingManager (rd[i].size, rd[i].segmentCollisionBehaviours, rd[i].segmentTickBehaviours, rd[i].segmentTriggerBehaviours, rd[i].sprite));
+		for (int i = 0; i < ad.rings.Count; i++) {
+			rings.Add (new RingManager (ad.rings[i].size, ad.rings[i].segmentCollisionBehaviours, ad.rings[i].segmentTickBehaviours, ad.rings[i].segmentTriggerBehaviours, ad.rings[i].sprite));
 		}
 	}
 
@@ -226,7 +226,8 @@ public class GameManager : MonoBehaviour
 		//StartCoroutine( SpawnPlayerAfter (5.0f));
 		Vector3 SpawnPosition = new Vector3 (0, 17f, 0);
 		for (int i = 0; i < NumberOfPlayers; i++) {
-			StartCoroutine (SpawnPlayerAfter (keyCodes [i], SpawnPositions [i], i));
+			//StartCoroutine (SpawnPlayerAfter (keyCodes [i], SpawnPositions [i], i));
+			StartCoroutine(SpawnPlayerAfter(keyCodes[i], ArenaDataLoader.arenas["basic"].getSpawnPosition(NumberOfPlayers, i), i));
 		}
 	}
 
@@ -287,8 +288,9 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	IEnumerator SpawnPlayerAfter (IDictionary<string,KeyCode> playerKeys, Vector3 SpawnPosition, int playerI)
+	IEnumerator SpawnPlayerAfter (IDictionary<string,KeyCode> playerKeys, Vector2 SpawnPos, int playerI)
 	{
+		Vector3 SpawnPosition = new Vector3 (SpawnPos.x, SpawnPos.y, 0);
 		GameObject pie = Instantiate (PhaseInEffect, UtilityScript.transformToCartesian (SpawnPosition), Quaternion.identity) as GameObject;
 		pie.transform.SetParent (GameManager.GMInstance.transform);
 		yield return new WaitForSeconds (PhaseInDelay);

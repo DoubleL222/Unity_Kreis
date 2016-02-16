@@ -7,21 +7,21 @@ using System;
 using System.Reflection;
 using System.Linq;
 
-public class RingDataLoader : MonoBehaviour
+public class ArenaDataLoader : MonoBehaviour
 {
 	private static Dictionary<String, Sprite> sprites;
 	private static Dictionary<String, Type> ticks;
 	private static Dictionary<String, Type> triggers;
 	private static Dictionary<String, Type> collisions;
 
-	public static Dictionary<String, List<RingData> > arenas;
+	public static Dictionary<String, ArenaData > arenas;
 
-	static RingDataLoader(){
+	static ArenaDataLoader(){
 		sprites = new Dictionary<String, Sprite> ();
 		ticks = GetDerivativesOfInterface<SegmentTickBehaviour> ();
 		triggers = GetDerivativesOfInterface<SegmentTriggerBehaviour> ();
 		collisions = GetDerivativesOfInterface<SegmentCollisionBehaviour> ();
-		arenas = new Dictionary<string, List<RingData>> ();
+		arenas = new Dictionary<string, ArenaData> ();
 		UnityEngine.Object[] textures = Resources.LoadAll ("Textures/Segments", typeof(Sprite));
 		//Debug.Log ("Unity loaded " + textures.Length + " assets.");
 		for (int i = 0; i < textures.Length; i++) {
@@ -54,13 +54,15 @@ public class RingDataLoader : MonoBehaviour
 			Debug.Log (names [i] + " " + classes [i]);
 		}*/
 		//Debug.Log("Loading");
-		string[] filenames = Directory.GetFiles("Assets\\Arena\\Arenas").Where(s => s.EndsWith(".arena")).ToArray();
+		string[] filenames = null;
+		filenames = Directory.GetFiles(Application.streamingAssetsPath + "/Arenas").Where(s => s.EndsWith(".txt")).ToArray();
+		
 		foreach(string filename in filenames){
 			//Debug.Log(filename);
-			List<RingData> rd = Load (filename);
+			ArenaData ad = Load (filename);
 			int first = filename.LastIndexOf ('\\') + 1;
-			int last = filename.LastIndexOf (".arena");
-			arenas.Add(filename.Substring(first, last-first), rd);
+			int last = filename.LastIndexOf (".txt");
+			arenas.Add(filename.Substring(first, last-first), ad);
 			/*
 			for (int i = 0; i < rd.Count; i++) {
 				Debug.Log (rd [i].size);
@@ -110,6 +112,7 @@ public class RingDataLoader : MonoBehaviour
 		do {
 			line = reader.ReadLine ();
 			if (line != null) {
+				line = line.Trim();
 				string[] entries = line.Split (' ');
 				if(entries[0] == "tick"){ //new tick behaviour
 					Type t;
@@ -150,9 +153,45 @@ public class RingDataLoader : MonoBehaviour
 		return rd;
 	}
 
-	public static List<RingData> Load (string fileName)
+	private static SpawnData loadSpawns(StreamReader reader){
+		SpawnData sd = new SpawnData ();
+		string line;
+		do {
+			line = reader.ReadLine ();
+			if (line != null) {
+				line = line.Trim();
+				string[] entries = line.Split (' ');
+				if(entries[0] == "pc"){
+					sd.spawns.Add(int.Parse(entries[1]), loadSpawn(reader));
+				}else if(entries[0] == "end"){
+					return sd;
+				}	
+			}
+		} while (line != null);
+		return sd;
+	}
+
+	private static List<SpawnData.SpawnPosition> loadSpawn(StreamReader reader){
+		List<SpawnData.SpawnPosition> sd = new List<SpawnData.SpawnPosition> ();
+		string line;
+		do {
+			line = reader.ReadLine ();
+			if (line != null) {
+				line = line.Trim();
+				string[] entries = line.Split (' ');
+				if(entries[0] == "p"){
+					sd.Add(new SpawnData.SpawnPosition(int.Parse(entries[1]), float.Parse(entries[2])));
+				}else if(entries[0] == "end"){
+					return sd;
+				}
+			}
+		} while (line != null);
+		return sd;
+	}
+
+	public static ArenaData Load (string fileName)
 	{
-		List<RingData> ret = new List<RingData>();
+		ArenaData ad = new ArenaData ();
 		try {
 			string line;
 			StreamReader theReader = new StreamReader (fileName);
@@ -160,19 +199,21 @@ public class RingDataLoader : MonoBehaviour
 				do {
 					line = theReader.ReadLine ();
 					if (line != null) {
+						line = line.Trim();
 						string[] entries = line.Split (' ');
-						if(entries[0] == "ring"){			
-							RingData ringData = loadRing(theReader);
-							ret.Add(ringData);
+						if(entries[0] == "ring"){
+							ad.rings.Add(loadRing(theReader));
+						}else if(entries[0] == "spawn"){
+							ad.spawns = loadSpawns(theReader);
 						}
 					}
 				} while (line != null);
 				theReader.Close ();
-				return ret;
+				return ad;
 			}
 		} catch (Exception e) {
 			Console.WriteLine ("{0}\n", e.Message);
-			return ret;
+			return ad;
 		}
 	}
 }

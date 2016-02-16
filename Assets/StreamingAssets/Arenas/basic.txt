@@ -1,0 +1,36 @@
+ring
+	size 10
+	tick SegmentTickBehaviourMove 5
+	sprite barrierIndestructable
+end
+
+ring 
+	size 17
+	tick SegmentTickBehaviourMove -3
+	trigger SegmentTriggerBehaviourDestroy
+	sprite barrier
+end
+
+ring 
+	size 24
+	tick SegmentTickBehaviourMove 4
+	sprite barrierIndestructable
+end
+
+spawn
+	pc 2
+		p 0 0
+		p 0 180
+	end
+	pc 3
+		p 0 0
+		p 0 120
+		p 0 240
+	end
+	pc 4
+		p 0 0
+		p 0 180
+		p 1 90
+		p 1 270 
+	end
+end
