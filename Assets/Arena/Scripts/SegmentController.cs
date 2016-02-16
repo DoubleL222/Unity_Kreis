@@ -8,6 +8,7 @@ using System.Collections.Generic;
 
 public class SegmentController : PolarPhysicsObject{
 
+    public GameObject shotFart;
     spawnAnim spawnAnim;
     public GameObject ExplosionEffect;
 

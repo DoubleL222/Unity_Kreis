@@ -46,12 +46,16 @@ public class ShotDestroyerScript : MonoBehaviour {
       if (col.gameObject.tag == "Segment")
       {
         if (transform.root.gameObject != null)
-          MonoBehaviour.Destroy(transform.root.gameObject);
+          Destroy(transform.root.gameObject);
       }
     }
 
     if (col.gameObject.tag == "Boundary")
     {
+        if (ExplosionEffect != null && ShotTransform != null)
+        {
+            Instantiate(ExplosionEffect, ShotTransform.position, Quaternion.identity);
+        }
       Destroy(transform.root.gameObject);
     }
   }

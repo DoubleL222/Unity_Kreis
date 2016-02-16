@@ -121,8 +121,10 @@ public class GameManager : MonoBehaviour {
 		segmentTriggerBehaviours = new List<SegmentTriggerBehaviour>[nrings];
 		for (int i = 0; i < segmentTriggerBehaviours.Length; i++)
 			segmentTriggerBehaviours [i] = new List<SegmentTriggerBehaviour> ();
-		
+
+        segmentTriggerBehaviours[0].Add(new SegmentTriggerBehaviourShotDestroy());
 		segmentTriggerBehaviours [1].Add (new SegmentTriggerBehaviourDestroy ());
+        segmentTriggerBehaviours[2].Add(new SegmentTriggerBehaviourShotDestroy());
 
 		segmentSprites = new Sprite[nrings];
 		segmentSprites [0] = indestructableBarrier;

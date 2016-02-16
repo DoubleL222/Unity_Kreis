@@ -105,11 +105,6 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 			setKeys (defaultKeys);
 		}
 	}
-		
-	void OnDrawGizmos() {
-		Gizmos.color = Color.yellow;
-		Gizmos.DrawSphere (physics.transform.position, 1.0f);
-	}
 
 	public void PlayerLeftControll(){
 		//StartUpdate ();
