@@ -17,7 +17,7 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 	private static float movementForce = 5000f;//400f;
 	private static float gravityForce = 120f;//30f
 
-	private IDictionary<string,KeyCode> keys;
+	private IDictionary<string,string> keys;
 	[HideInInspector]
 	public bool MultiBool = false;
 
@@ -68,7 +68,7 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 	private PlayerCollisionDetector myPCD;
 	private Rigidbody2D myRBD2D;
 
-	public void setKeys(IDictionary<string,KeyCode> keys){
+	public void setKeys(IDictionary<string,string> keys){
 		this.keys = keys;
 	}
 	public void DestroyObject()
@@ -102,7 +102,7 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 			defaultKeys.Add ("right", KeyCode.D);
 			defaultKeys.Add ("gravityChange",KeyCode.S);
 			defaultKeys.Add ("shoot", KeyCode.W);
-			setKeys (defaultKeys);
+			//setKeys (defaultKeys);
 		}
 	}
 		
@@ -117,7 +117,8 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 		if (!boosterEmiter.activeSelf) {
 			boosterEmiter.SetActive (true);
 		}
-		Vector2 f = new Vector2 (-movementForce, 0);
+        
+		Vector2 f = new Vector2 (-movementForce * Mathf.Abs(Input.GetAxis(keys["movement"])), 0);
 		Vector2 sc = new Vector2 (Time.fixedDeltaTime, Time.fixedDeltaTime);
 		f.Scale (sc);
 		rigidbody.AddForce (f);
@@ -127,7 +128,7 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 		if (!boosterEmiter.activeSelf) {
 			boosterEmiter.SetActive (true);
 		}
-		Vector2 f = new Vector2 (movementForce, 0);
+		Vector2 f = new Vector2 (movementForce * Mathf.Abs(Input.GetAxis(keys["movement"])), 0);
 		Vector2 sc = new Vector2 (Time.fixedDeltaTime, Time.fixedDeltaTime);
 		f.Scale (sc);
 		rigidbody.AddForce (f);
@@ -254,26 +255,43 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
                 shots--;
             }
         }
-        
-        if (Input.GetKey(keys["left"]))
+        //Debug.Log(Input.GetAxis("P1Movement"));
+        if (Input.GetAxis(keys["movement"]) > 0)
+        {
+            leftPressed = false;
+            rightPressed = true;
+            
+        }
+        else if (Input.GetAxis(keys["movement"]) < 0)
         {
             leftPressed = true;
+            rightPressed = false;
         }
         else
         {
             leftPressed = false;
-        }
-
-        if (Input.GetKey(keys["right"]))
-        {
-            rightPressed = true;
-        }
-        else
-        {
             rightPressed = false;
         }
+            /*if (Input.GetKey(keys["left"]))
+            {
+                leftPressed = true;
+            }
+            else
+            {
+                leftPressed = false;
+            }
 
-        if (Input.GetKeyDown(keys["gravityChange"]))
+            if (Input.GetKey(keys["right"]))
+            {
+                rightPressed = true;
+            }
+            else
+            {
+                rightPressed = false;
+            }*/
+
+            if (Input.GetButtonDown(keys["gravityChange"]))
+        //if(Input.GetButtonDown("P1Jump"))
         {
             jumpPressed = true;
         }
@@ -283,7 +301,7 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
         }
 
 
-        if (Input.GetKey(keys["shoot"]))
+        if (Input.GetButton(keys["shoot"]))
         {
             firePressed = true;
         }

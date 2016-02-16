@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour {
 	public Sprite barrier, indestructableBarrier;
 
 	static List<GameObject> LivingPlayers;
+    List<int> PlayerTeams;
 
 	string[] playerNames;
 	float[] RingSizes;
@@ -34,7 +35,9 @@ public class GameManager : MonoBehaviour {
 	public GameObject PhaseInEffect;
 	//public GameObject localPlayerPrefab;
     public GameObject[] localPlayerPrefabs;
+    private int[] prefabInd;
 	public WinnerCanvasController WCC;
+    public lobbyScript lobby;
 
 	//MULTIPLAYER
 	public bool multiplayerMode = false;
@@ -54,7 +57,25 @@ public class GameManager : MonoBehaviour {
 		LocalPlayerSenders.Add (LPS);
 
 	}
-	void StartGame(){
+	public void StartGame(){
+        //lobbyCanvas.enabled = false;
+        string[] names = lobby.getNames();
+        for(int i = 0; i < names.Length; i++)
+        {
+            if (names[i] != "")
+            {
+                playerNames[i] = names[i];
+            }
+            else
+            {
+                playerNames[i] = "player " + (i + 1);
+            }
+        }
+        prefabInd = lobby.getPlayerColorInd();
+        NumPlayers = lobby.getNumOfPlayers();
+        lobby.hideLobby();
+
+
 		SpawnRings (RingSizes);
 		if(!multiplayerMode)
 			SpawnPlayers (NumPlayers);
@@ -74,6 +95,7 @@ public class GameManager : MonoBehaviour {
 	void Start() {
 
 		LivingPlayers = new List<GameObject> ();
+        PlayerTeams = new List<int> ();
 		playerColors = new List<Color> ();
 		playerColors.Add (new Color32 (255, 238, 13, 255));
 		playerColors.Add (new Color32 (232, 94, 12, 255));
@@ -134,10 +156,10 @@ public class GameManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetKeyDown(KeyCode.Space)){
+		if(Input.GetKeyDown(KeyCode.Escape)){
 			Application.LoadLevel(Application.loadedLevel);
 		}
-		if(Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return)){
+		/*if(Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return)){
 			StartGame ();
 		}
 		if (Input.GetKeyDown (KeyCode.Alpha2)) {
@@ -151,7 +173,7 @@ public class GameManager : MonoBehaviour {
 		}
 		if (Input.GetKeyDown (KeyCode.Alpha5)) {
 			NumPlayers = 5;
-		}
+		}*/
 	}
 	/// <summary>
 	/// Spawns the rings defined in RingSizes.
@@ -171,7 +193,7 @@ public class GameManager : MonoBehaviour {
 	public void SpawnPlayers(int NumberOfPlayers){
 		gameEnded = false;
 		SpawnPositions = CalculateSpawnPositions (NumberOfPlayers);
-		IDictionary<string,KeyCode> p1keys = new Dictionary<string,KeyCode> ();
+        /*IDictionary<string,KeyCode> p1keys = new Dictionary<string,KeyCode> ();
 		p1keys.Add ("left", KeyCode.A);
 		p1keys.Add ("right", KeyCode.D);
 		p1keys.Add ("gravityChange", KeyCode.W);
@@ -193,10 +215,30 @@ public class GameManager : MonoBehaviour {
 		p4keys.Add ("left", KeyCode.Keypad4);
 		p4keys.Add ("right", KeyCode.Keypad6);
 		p4keys.Add ("gravityChange", KeyCode.Keypad8);
-		p4keys.Add ("shoot", KeyCode.Keypad5);
+		p4keys.Add ("shoot", KeyCode.Keypad5);*/
+
+        IDictionary<string, string> p1keys = new Dictionary<string, string>();
+        p1keys.Add("movement", "P1Movement");
+        p1keys.Add("gravityChange", "P1Jump");
+        p1keys.Add("shoot", "P1Shoot");
+
+        IDictionary<string, string> p2keys = new Dictionary<string, string>();
+        p2keys.Add("movement", "P2Movement");
+        p2keys.Add("gravityChange", "P2Jump");
+        p2keys.Add("shoot", "P2Shoot");
+
+        IDictionary<string, string> p3keys = new Dictionary<string, string>();
+        p3keys.Add("movement", "P3Movement");
+        p3keys.Add("gravityChange", "P3Jump");
+        p3keys.Add("shoot", "P3Shoot");
+
+        IDictionary<string, string> p4keys = new Dictionary<string, string>();
+        p4keys.Add("movement", "P4Movement");
+        p4keys.Add("gravityChange", "P4Jump");
+        p4keys.Add("shoot", "P4Shoot");
 
 
-		IDictionary<string,KeyCode>[] keyCodes = new IDictionary<string, KeyCode>[10];
+        IDictionary<string,string>[] keyCodes = new IDictionary<string, string>[10];
 		keyCodes [0] = p1keys;
 		keyCodes [1] = p2keys;
 		keyCodes [2] = p3keys;
@@ -212,7 +254,7 @@ public class GameManager : MonoBehaviour {
 		//StartCoroutine( SpawnPlayerAfter (5.0f));
 		Vector3 SpawnPosition = new Vector3 (0, 17f, 0);
 		for(int i=0; i<NumberOfPlayers;i++){
-			StartCoroutine( SpawnPlayerAfter (keyCodes[i], SpawnPositions[i], i));
+			StartCoroutine( SpawnPlayerAfter (keyCodes[i], SpawnPositions[i], prefabInd[i], playerNames[i]));
 		}
 	}
 	void MultiSpawnPlayers(){
@@ -248,26 +290,37 @@ public class GameManager : MonoBehaviour {
 	public static void PlayerDied(GameObject player){
 		Debug.Log ("playerDied");
 		if (!gameEnded) {
+            PlayerTeams.RemoveAt(LivingPlayers.IndexOf(player));
 			LivingPlayers.Remove (player);
-			if (LivingPlayers.Count <= 1) {
+            bool sameTeam = true;
 				GMInstance.EndGame ();
+            int team = PlayerTeams[0];
+            for (int i=0; i < PlayerTeams.Count; i++)
+            {
+                if (PlayerTeams[i] != team)
+                {
+                    sameTeam = false;
+                }
+            }
+			if (sameTeam) {
 			}
 		}
 	}
 
-	IEnumerator SpawnPlayerAfter(IDictionary<string,KeyCode> playerKeys, Vector3 SpawnPosition, int playerI)
+	IEnumerator SpawnPlayerAfter(IDictionary<string,string> playerKeys, Vector3 SpawnPosition, int playerI, string name)
   {
 		Instantiate (PhaseInEffect, UtilityScript.transformToCartesian (SpawnPosition), Quaternion.identity);
 		yield return new WaitForSeconds (PhaseInDelay);
 		SoundManager.PlaySpawnClip ();
 		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefabs[(playerI % (localPlayerPrefabs.Length))], SpawnPosition, new Quaternion ()) as GameObject;
 		LivingPlayers.Add (localPlayer);
+        PlayerTeams.Add(playerI);
 		//SpriteRenderer PlayerSR = localPlayer.GetComponentInChildren<SpriteRenderer> ();
 		//Debug.Log ("GETTING COLOR AT INDEX " + playerI);
 		//PlayerSR.color = playerColors[(playerI % (playerColors.Count))];
 		LocalPlayerController LCP = localPlayer.GetComponent<LocalPlayerController> ();
 		LCP.setKeys (playerKeys);
-		LCP.PlayerName = playerNames [playerI % playerNames.Length];
+		LCP.PlayerName = name;
 
     cameraLoc.updatePlayers = true;
 
@@ -320,7 +373,20 @@ public class GameManager : MonoBehaviour {
 		FinalDestruction (7.5f);
 		if (LivingPlayers.Count > 0) {
 			LocalPlayerController LPC = LivingPlayers [0].GetComponent<LocalPlayerController> ();
-			string PName = LPC.PlayerName;
+            string PName = "";
+            if (LivingPlayers.Count == 1)
+            {
+                PName = LPC.PlayerName+" WINS!";
+            }
+            else
+            {
+                for(int i = 0; i < LivingPlayers.Count; i++)
+                {
+                    PName+=LivingPlayers[i].GetComponent<LocalPlayerController>().PlayerName+" ";
+                }
+                PName += "WIN!";
+            }
+			
 			GameObject playerMesh = Instantiate (LPC.mesh, LPC.mesh.transform.position, LPC.mesh.transform.rotation) as GameObject;
 			Destroy (LPC.gameObject);
 			WCC.FinishGame (playerMesh, PName);
