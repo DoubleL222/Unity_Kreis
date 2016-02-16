@@ -2,10 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
+public class LocalPlayerController : PolarPhysicsObject, IDestroyable
+{
 	[HideInInspector]
 	public int gravity;
 	private LayerMask WhatIsGround;
+
+	[HideInInspector]
+	public int playerIndex;
 
 	bool isGrounded = true;
 	private static SoundManager SoundM;
@@ -14,8 +18,10 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 
 	private static float gravityChangeDelay = 0.4f;
 
-	private static float movementForce = 5000f;//400f;
-	private static float gravityForce = 120f;//30f
+	private static float movementForce = 5000f;
+//400f;
+	private static float gravityForce = 120f;
+//30f
 
 	private IDictionary<string,string> keys;
 	[HideInInspector]
@@ -39,6 +45,7 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 	private GameManager gManager;
 	[HideInInspector]
 	public string PlayerName;
+
   public GameObject boosterEmiter;
   private float shotOffset = 1.5f;
   private float gravityChangeRate = 0.2f;
@@ -51,7 +58,7 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
   private float rechargeRate = 2.0f;
   private float lastRecharge = 0.0f;
   private int jumpCharge = 0;
-	
+
 	public GameObject shotPrefab;
   //END LUKA
 
@@ -68,50 +75,57 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 	private PlayerCollisionDetector myPCD;
 	private Rigidbody2D myRBD2D;
 
+
 	public void setKeys(IDictionary<string,string> keys){
+
 		this.keys = keys;
 	}
-	public void DestroyObject()
+
+	public void DestroyObject ()
 	{
-		Instantiate (ExplosionEffect, mesh.transform.position, Quaternion.identity);
+		GameObject ee = Instantiate (ExplosionEffect, mesh.transform.position, Quaternion.identity) as GameObject;
+		ee.transform.SetParent (GameManager.GMInstance.root.transform);
 		gameObject.SetActive (false);
-		gManager.PlayerDied (gameObject);
+		GameManager.GMInstance.PlayerDied (gameObject);
 		cameraLoc.updatePlayers = true;
-		CamShakeManager.PlayTestShake(0.5f, 1);
+		CamShakeManager.PlayTestShake (0.5f, 1);
 		SoundManager.PlayExplosionClip ();
+
 	}
 
 	// Use this for initialization
-	void Awake() {
+	void Awake ()
+	{
 		myRBD2D = GetComponentInChildren<Rigidbody2D> ();
 		myPCD = GetComponentInChildren<PlayerCollisionDetector> ();
 		gManager = FindObjectOfType<GameManager> ();
 		SoundM = FindObjectOfType<SoundManager> ();
-        glowScales = new Vector3[glows.Length];
-        for(int i=0; i < glows.Length; i++)
-        {
-            glowScales[i] = new Vector3(glows[i].transform.localScale.x, glows[i].transform.localScale.y, glows[i].transform.localScale.z);
-        }
-		base.Awake();
+		glowScales = new Vector3[glows.Length];
+		for (int i = 0; i < glows.Length; i++) {
+			glowScales [i] = new Vector3 (glows [i].transform.localScale.x, glows [i].transform.localScale.y, glows [i].transform.localScale.z);
+		}
+		base.Awake ();
 		//Debug.Log ("Start called");
 		gravity = 1;
-		oldscale = scaleMultiplier/rigidbody.position.y;
+		oldscale = scaleMultiplier / rigidbody.position.y;
 		if (keys == null) {
 			IDictionary<string,KeyCode> defaultKeys = new Dictionary<string,KeyCode> ();
 			defaultKeys.Add ("left", KeyCode.A);
 			defaultKeys.Add ("right", KeyCode.D);
-			defaultKeys.Add ("gravityChange",KeyCode.S);
+			defaultKeys.Add ("gravityChange", KeyCode.S);
 			defaultKeys.Add ("shoot", KeyCode.W);
 			//setKeys (defaultKeys);
 		}
 	}
-		
-	void OnDrawGizmos() {
+
+	void OnDrawGizmos ()
+	{
 		Gizmos.color = Color.yellow;
 		Gizmos.DrawSphere (physics.transform.position, 1.0f);
 	}
 
-	public void PlayerLeftControll(){
+	public void PlayerLeftControll ()
+	{
 		//StartUpdate ();
 
 		if (!boosterEmiter.activeSelf) {
@@ -124,7 +138,8 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 		rigidbody.AddForce (f);
 	}
 
-	public void PlayerRightControll(){
+	public void PlayerRightControll ()
+	{
 		if (!boosterEmiter.activeSelf) {
 			boosterEmiter.SetActive (true);
 		}
@@ -134,30 +149,31 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 		rigidbody.AddForce (f);
 	}
 
-	public void PlayerStopMovingControll(){
+	public void PlayerStopMovingControll ()
+	{
 		if (boosterEmiter.activeSelf) {
 			boosterEmiter.SetActive (false);
 		}
 		rigidbody.velocity = new Vector2 (rigidbody.velocity.x * descelerationRate, rigidbody.velocity.y);
 	}
 
-	public void PlayerGravityShiftControll(){
-        if (jumpCharge > 0)
-        {
-            lastGravityChange = Time.fixedTime;
-            gravity = -gravity;
-            SoundManager.PlayJumpClip();
-            jumpCharge = 0;
-            /*if ((lastGravityChange + gravityChangeRate) < Time.fixedTime)
+	public void PlayerGravityShiftControll ()
+	{
+		if (jumpCharge > 0) {
+			lastGravityChange = Time.fixedTime;
+			gravity = -gravity;
+			SoundManager.PlayJumpClip ();
+			jumpCharge = 0;
+			/*if ((lastGravityChange + gravityChangeRate) < Time.fixedTime)
             {
                 lastGravityChange = Time.fixedTime;
                 gravity = -gravity;
                 SoundM.PlayJumpClip();
                 jumpCharge = 0;
             }*/
-        }
+		}
 
-    }
+	}
 
   public void PlayerShootControll()
   {
@@ -183,8 +199,9 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
         shots = shots + 1;
       }
     }
+
         
-        /*if (isGrounded && (lastShoot + fireRate) < Time.fixedTime) {
+		/*if (isGrounded && (lastShoot + fireRate) < Time.fixedTime) {
 			lastShoot = Time.fixedTime;
 			GameObject shotInstance = MonoBehaviour.Instantiate (shotPrefab, physics.transform.position + new Vector3 (0.0f, -gravity * shotOffset, 0.0f), new Quaternion ()) as GameObject;
 			Vector2 shotVel = new Vector2 (0.0f, -gravity);
@@ -194,53 +211,50 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
   }
 
 
-	void FixedUpdate () {
+
+	void FixedUpdate ()
+	{
 		isGrounded = false;
 
-        // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
-        // This can be done using layers instead but Sample Assets will not overwrite your project settings.
+		// The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
+		// This can be done using layers instead but Sample Assets will not overwrite your project settings.
         
-        for (int i=0; i < glows.Length; i++)
-        {
-            //Debug.Log(i);
-            if (i<(shootCharges - shots))
-            {
+		for (int i = 0; i < glows.Length; i++) {
+			//Debug.Log(i);
+			if (i < (shootCharges - shots)) {
 
                 
-                glows[i].SetActive(true);
-                /*Vector3 tmp = new Vector3((glowScales[i] * interpolateT).x, (glowScales[i] * interpolateT).y, (glowScales[i] * interpolateT).z);
+				glows [i].SetActive (true);
+				/*Vector3 tmp = new Vector3((glowScales[i] * interpolateT).x, (glowScales[i] * interpolateT).y, (glowScales[i] * interpolateT).z);
                 glows[i].transform.localScale = new Vector3(tmp.x, tmp.y, tmp.z);
                 if (interpolateT < 1)
                 {
                     interpolateT += 0.1f;
                 }*/
-            }
-            else
-            {
-                glows[i].SetActive(false);
-                /*
+			} else {
+				glows [i].SetActive (false);
+				/*
                 Vector3 tmp = new Vector3((glowScales[i]*interpolateT).x, (glowScales[i] * interpolateT).y, (glowScales[i] * interpolateT).z);
                 glows[i].transform.localScale = new Vector3(tmp.x, tmp.y, tmp.z);
                 if (interpolateT > 0)
                 {
                     interpolateT -= 0.1f;
                 }*/
-            }
-        }
+			}
+		}
 
-		Collider2D[] colliders = Physics2D.OverlapCircleAll(physics.transform.position, 0.6f);
+		Collider2D[] colliders = Physics2D.OverlapCircleAll (physics.transform.position, 0.6f);
 		if (!isGrounded || jumpCharge == 0) {
 			for (int i = 0; i < colliders.Length; i++) {
 				if (colliders [i].gameObject.tag == "Segment") {
 					isGrounded = true;
-                    jumpCharge = 1;
+					jumpCharge = 1;
 					//Debug.Log ("Grounded");
 				}
 			}
 		}
 
 		StartUpdate ();
-
 		myPCD.RecordSpeedNow();
         //if (!MultiBool) {
         if (shots == 0)
@@ -328,15 +342,14 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 			PlayerGravityShiftControll();
 		}
 
-		if (firePressed)
-        {
-			PlayerShootControll();
+		if (firePressed) {
+			PlayerShootControll ();
 		}
 		//}
-		Vector2 grav = new Vector2(0f, gravityForce * gravity);
+		Vector2 grav = new Vector2 (0f, gravityForce * gravity);
 		//Debug.Log("Grav: " + grav);
 		//rigidbody.velocity += grav;
-		rigidbody.AddForce(grav);
+		rigidbody.AddForce (grav);
 
 		//rotate player mesh
 		{
@@ -354,45 +367,44 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable {
 		EndUpdate ();
 	}
 
-  // enable shield
-  public void EnableShield()
-  {
-    hasShield = true;
-    StartCoroutine(ShieldScaleIn());
+	// enable shield
+	public void EnableShield ()
+	{
+		hasShield = true;
+		StartCoroutine (ShieldScaleIn ());
 	}
 
-  IEnumerator ShieldScaleIn()
-  {
-    // enable and scale down shield
-    shieldSprite.SetActive(true);
-    shieldSprite.transform.localScale = new Vector3(.0f, .0f, .0f);
+	IEnumerator ShieldScaleIn ()
+	{
+		// enable and scale down shield
+		shieldSprite.SetActive (true);
+		shieldSprite.transform.localScale = new Vector3 (.0f, .0f, .0f);
 
-    float elapsed = 0.0f;
-    // animation duration
-    float duration = .5f;
-    Vector3 newScale;
+		float elapsed = 0.0f;
+		// animation duration
+		float duration = .5f;
+		Vector3 newScale;
 
-    // increase scale for duration
-    while (elapsed < duration)
-    {
-      elapsed += Time.deltaTime;
+		// increase scale for duration
+		while (elapsed < duration) {
+			elapsed += Time.deltaTime;
 
-      float scale = Mathf.SmoothStep(.0f, 1.0f, elapsed / duration);
-      newScale = new Vector3(scale, scale, .0f);
-      shieldSprite.transform.localScale = newScale;
+			float scale = Mathf.SmoothStep (.0f, 1.0f, elapsed / duration);
+			newScale = new Vector3 (scale, scale, .0f);
+			shieldSprite.transform.localScale = newScale;
 
-      yield return null;
-    }
+			yield return null;
+		}
 
-    // set scale to 1
-    newScale = new Vector3(1.0f, 1.0f, .0f);
-    shieldSprite.transform.localScale = newScale;
-  }
+		// set scale to 1
+		newScale = new Vector3 (1.0f, 1.0f, .0f);
+		shieldSprite.transform.localScale = newScale;
+	}
 
-  // disable shield
-  public void DisableShield()
-  {
-    hasShield = false;
-    shieldSprite.SetActive(false);
-  }
+	// disable shield
+	public void DisableShield ()
+	{
+		hasShield = false;
+		shieldSprite.SetActive (false);
+	}
 }

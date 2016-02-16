@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class ShotController : PolarPhysicsObject {
+
+	public Transform root;
 	private Vector2 moveVelocity;
 	private bool velocitySet;
 	private float shotSpeed = 30.0f;

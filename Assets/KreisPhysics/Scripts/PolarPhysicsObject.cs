@@ -93,6 +93,8 @@ public abstract class PolarPhysicsObject : MonoBehaviour{
 		}
 		for(int i=0; i < colliders.Length; i++){ //enables the 'modulo' colliders if they need be enabled
 			Collider2D col = colliders [i];
+			if (!col.enabled)
+				continue;
 			Bounds bounds = col.bounds;
 			Vector3 min = bounds.min;
 			Vector3 max = bounds.max;

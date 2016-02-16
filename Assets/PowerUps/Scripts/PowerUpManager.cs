@@ -62,3 +62,4 @@ public class PowerUpManager : PolarPhysicsObject
 	DestroyPowerUp();
   }
 }
+

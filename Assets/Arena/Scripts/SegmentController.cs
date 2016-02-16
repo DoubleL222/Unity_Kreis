@@ -7,6 +7,7 @@ using System.Collections.Generic;
 /// </summary>
 
 public class SegmentController : PolarPhysicsObject{
+	public Transform root;
 
     spawnAnim spawnAnim;
     public GameObject ExplosionEffect;

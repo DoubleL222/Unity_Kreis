@@ -10,6 +10,8 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Multiplayer/Scenes/MultiplayerBlazWay.unity
   - enabled: 0
+    path: Assets/Scenes/_new/Main.unity
+  - enabled: 0
     path: Assets/Scenes/_new/UIScene.unity
   - enabled: 1
     path: Assets/Scenes/OfflineScene.unity
