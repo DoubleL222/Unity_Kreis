@@ -7,6 +7,7 @@ public class lobbyScript : MonoBehaviour {
     public Image[] ColorPanels;
     public Canvas LobbyCanvas;
     public InputField numOfPlayers;
+    public InputField WinScore;
 
     private Color[] PlayerColors;
     private int[] currentColors;
@@ -94,5 +95,19 @@ public class lobbyScript : MonoBehaviour {
             num = int.Parse(numOfPlayers.text); 
         }
         return num;
+    }
+
+    public int getWinScore()
+    {
+        int score = 10;
+        if (WinScore.text != "")
+        {
+            score = int.Parse(numOfPlayers.text);
+            if (score < 1)
+            {
+                score = 1;
+            }
+        }
+        return score;
     }
 }
