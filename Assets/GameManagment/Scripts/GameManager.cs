@@ -142,7 +142,6 @@ public class GameManager : MonoBehaviour
 		for (int i = 0; i < NumberOfPlayers; i++) {
 			if (playerTexts [i].text.EndsWith (", ")) {
 				playerTexts [i].text = playerTexts [i].text.Substring (0, playerTexts [i].text.Length - 2) + ": 0";
-				Debug.Log (playerTexts [i].text);
 			}
 		}
 
@@ -165,7 +164,8 @@ public class GameManager : MonoBehaviour
 			StartGame ();
 			toStart = false;
 		}
-		PUS.Update ();
+		if(!gameEnded)
+			PUS.Update ();
 	}
 
 	/// <summary>

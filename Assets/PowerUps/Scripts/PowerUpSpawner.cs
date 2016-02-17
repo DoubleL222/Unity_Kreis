@@ -55,9 +55,7 @@ public class PowerUpSpawner
 				float angle = Random.Range (-10.0f * Mathf.PI, 10.0f * Mathf.PI);
 
 				// random distance
-				int randomDistance = Random.Range (0, noOfDistances);
-				Vector3 pos = new Vector3 (angle, spawnDistances [randomDistance], 0.0f);
-
+				Vector3 pos = new Vector3 (angle, spawnDistances [randomPowerup], 0.0f);
 				GameObject powerup = MonoBehaviour.Instantiate (powerUps [randomPowerup], pos, new Quaternion ()) as GameObject;
 				PowerUpManager PUM = powerup.GetComponentInChildren<PowerUpManager> ();
 				GM.activePowerUps.Add (PUM);

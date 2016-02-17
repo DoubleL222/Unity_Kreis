@@ -38,7 +38,7 @@ spawn
 end
 
 powerups 3 5 8
-	powerup DeathPowerUp 15
-	powerup PiercingShotPowerUp 15
-	powerup ShieldPowerUp 20
+	powerup DeathPowerUp 13.5
+	powerup PiercingShotPowerUp 13.5
+	powerup ShieldPowerUp 20.5
 end

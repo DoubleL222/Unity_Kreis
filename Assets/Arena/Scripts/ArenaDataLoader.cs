@@ -78,7 +78,11 @@ public class ArenaDataLoader : MonoBehaviour
 				Debug.Log (ad.powerupSpawner.maxSpawnDuration);
 				Debug.Log (ad.powerupSpawner.minSpawnDuration);
 				Debug.Log (ad.powerupSpawner.powerUps.Count);
+				for (int i = 0; i < ad.powerupSpawner.powerUps.Count; i++)
+					Debug.Log (ad.powerupSpawner.powerUps [i].name);
 				Debug.Log (ad.powerupSpawner.spawnDistances.Count);
+				for(int i=0; i < ad.powerupSpawner.spawnDistances.Count; i++)
+					Debug.Log (ad.powerupSpawner.spawnDistances[i]);
 			} else {
 				Debug.Log ("No power up spawner data:");
 			}*/
@@ -88,7 +92,7 @@ public class ArenaDataLoader : MonoBehaviour
 			Debug.Log (s);
 		}
 	}
-
+	 
 	private static Dictionary<String, Type> GetDerivativesOfInterface<T>() where T : class
 	{
 		Dictionary<String, Type> ret = new Dictionary<String, Type>();
