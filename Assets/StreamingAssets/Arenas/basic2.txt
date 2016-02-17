@@ -1,7 +1,8 @@
 ring
 size 10
 tick SegmentTickBehaviourMove 5
-sprite barrierIndestructable
+trigger SegmentTriggerBehaviourDestroy
+sprite barrier
 end
 
 ring 
@@ -14,5 +15,6 @@ end
 ring 
 size 24
 tick SegmentTickBehaviourMove 4
-sprite barrierIndestructable
+trigger SegmentTriggerBehaviourDestroy
+sprite barrier
 end

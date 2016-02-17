@@ -20,12 +20,14 @@ public class Main : MonoBehaviour {
 		instance = this;
 	}
 
+
 	public void startGame(){
-		lobby.GetComponent<lobbyScript> ().hideLobby ();
+		lobbyScript lScript = lobby.GetComponent<lobbyScript> ();
+		lScript.hideLobby ();
 		game = MonoBehaviour.Instantiate (gamePrefab) as GameObject;
 		gameManager = game.GetComponentInChildren<GameManager> ();
-		gameManager.NumPlayers = lobby.GetComponent<lobbyScript> ().getNumOfPlayers ();
-		gameManager.lobby = lobby.GetComponent<lobbyScript>();
+		gameManager.NumPlayers = lScript.getNumOfPlayers ();
+		gameManager.lobby = lScript;
 		gameRunning = true;
 	}
 

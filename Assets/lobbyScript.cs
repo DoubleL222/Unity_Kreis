@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class lobbyScript : MonoBehaviour {
     public InputField[] NameFields;
@@ -12,6 +13,9 @@ public class lobbyScript : MonoBehaviour {
     private Color[] PlayerColors;
     private int[] currentColors;
     
+	private List<string> AllMaps;
+	public InputField mapInput;
+	private int CurrMap = 0;
 	// Use this for initialization
 	void Start () {
         PlayerColors = new Color[4];
@@ -30,7 +34,29 @@ public class lobbyScript : MonoBehaviour {
         {
             ColorPanels[i].color = PlayerColors[i];
         }
+		AllMaps = new List<string> ();
+		foreach (string arenaName in ArenaDataLoader.arenas.Keys) 
+		{
+			AllMaps.Add(arenaName);
+		}
+		if(AllMaps.Count>0)
+			mapInput.text = AllMaps [CurrMap];
     }
+	public string GetSelectedMap(){
+		return AllMaps [CurrMap];
+	}
+
+	public void NextMap(int delta){
+		CurrMap += delta;
+		if (CurrMap > AllMaps.Count - 1) {
+			CurrMap = 0;
+		} else if (CurrMap < 0) {
+			CurrMap = AllMaps.Count-1;
+		}
+		if (AllMaps.Count > 0) {
+			mapInput.text = AllMaps [CurrMap];
+		}
+	}
 
     public void changeColorNext(int ind)
     {

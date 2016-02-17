@@ -88,8 +88,8 @@ public class GameManager : MonoBehaviour
         NumPlayers = lobby.getNumOfPlayers();
         lobby.hideLobby();
 
-
-		SpawnRings ("basic");
+		Debug.Log ("loading Map " + lobby.GetSelectedMap ());
+		SpawnRings (lobby.GetSelectedMap());
 		SpawnPlayers (NumPlayers);
 		SoundManager.PlayBigBoomClip ();
 
