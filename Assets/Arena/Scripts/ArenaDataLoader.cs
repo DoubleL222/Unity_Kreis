@@ -71,6 +71,17 @@ public class ArenaDataLoader : MonoBehaviour
 				Debug.Log (rd [i].segmentTickBehaviours.Count);
 				Debug.Log (rd [i].segmentTriggerBehaviours.Count);
 			}*/
+			/*
+			if (ad.powerupSpawner != null) {
+				Debug.Log ("Power up spawner data:");
+				Debug.Log (ad.powerupSpawner.maxNumberOfPowerups);
+				Debug.Log (ad.powerupSpawner.maxSpawnDuration);
+				Debug.Log (ad.powerupSpawner.minSpawnDuration);
+				Debug.Log (ad.powerupSpawner.powerUps.Count);
+				Debug.Log (ad.powerupSpawner.spawnDistances.Count);
+			} else {
+				Debug.Log ("No power up spawner data:");
+			}*/
 		}
 		Debug.Log ("Arena names");
 		foreach (string s in arenas.Keys) {
@@ -189,6 +200,25 @@ public class ArenaDataLoader : MonoBehaviour
 		return sd;
 	}
 
+	public static PowerUpSpawnerData loadSpawnerData(StreamReader reader){
+		PowerUpSpawnerData sd = new PowerUpSpawnerData ();
+		string line;
+		do {
+			line = reader.ReadLine ();
+			if (line != null) {
+				line = line.Trim();
+				string[] entries = line.Split (' ');
+				if(entries[0] == "powerup"){
+					sd.powerUps.Add(Resources.Load(entries[1]) as GameObject);
+					sd.spawnDistances.Add(float.Parse(entries[2]));
+				}else if(entries[0] == "end"){
+					return sd;
+				}
+			}
+		} while (line != null);
+		return sd;
+	}
+
 	public static ArenaData Load (string fileName)
 	{
 		ArenaData ad = new ArenaData ();
@@ -205,6 +235,11 @@ public class ArenaDataLoader : MonoBehaviour
 							ad.rings.Add(loadRing(theReader));
 						}else if(entries[0] == "spawn"){
 							ad.spawns = loadSpawns(theReader);
+						}else if(entries[0] == "powerups"){
+							ad.powerupSpawner = loadSpawnerData(theReader);
+							ad.powerupSpawner.minSpawnDuration = float.Parse(entries[1]);
+							ad.powerupSpawner.maxSpawnDuration = float.Parse(entries[2]);
+							ad.powerupSpawner.maxNumberOfPowerups = int.Parse(entries[3]);
 						}
 					}
 				} while (line != null);

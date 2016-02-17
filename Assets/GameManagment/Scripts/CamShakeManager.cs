@@ -27,7 +27,7 @@ public class CamShakeManager : MonoBehaviour
 
 	public static void PlayShake(float duration, float strength)
 	{
-		//Debug.Log ("CAMSHAKE CALLED");
+		//	Debug.Log ("CAMSHAKE CALLED");
 		Instance.StopAllCoroutines ();
 		Instance.shakeCam.orthographicSize = originalCamSize;
 		Instance.shakeCam.transform.position = originalCamPos;

@@ -9,6 +9,7 @@ public class PowerUpManager : PolarPhysicsObject
   // GM
   private GameManager GM;
 
+
   void Start()
   {
     StartUpdate();

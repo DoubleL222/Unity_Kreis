@@ -7,6 +7,7 @@ public class ArenaData
 {
 	public List<RingData> rings;
 	public SpawnData spawns;
+	public PowerUpSpawnerData powerupSpawner;
 
 	public ArenaData(){
 		rings = new List<RingData> ();

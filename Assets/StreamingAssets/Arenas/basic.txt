@@ -36,3 +36,9 @@ spawn
 		p 1 270 
 	end
 end
+
+powerups 3 5 8
+	powerup DeathPowerUp 15
+	powerup PiercingShotPowerUp 15
+	powerup ShieldPowerUp 20
+end

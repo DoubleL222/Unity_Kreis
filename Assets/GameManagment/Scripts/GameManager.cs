@@ -77,13 +77,19 @@ public class GameManager : MonoBehaviour
         Debug.Log ("loading Map " + lobby.GetSelectedMap ());
 		SpawnRings (lobby.GetSelectedMap());
 		SpawnPlayers (NumPlayers);
+		SelectPowerUpSpawner (lobby.GetSelectedMap ());
 		SoundManager.PlayBigBoomClip ();
 
 		// powerups
-    
-		if (usePowerUps) {
-			PUS = gameObject.GetComponent<PowerUpSpawner> ();
-		}
+	}
+
+	void SelectPowerUpSpawner(string arenaname){
+		ArenaData ad = ArenaDataLoader.arenas [arenaname];
+		if (ad.powerupSpawner == null)
+			PUS = new PowerUpSpawner ();
+		else
+			PUS = new PowerUpSpawner (this, ad.powerupSpawner.powerUps, ad.powerupSpawner.spawnDistances, ad.powerupSpawner.minSpawnDuration, ad.powerupSpawner.maxSpawnDuration, ad.powerupSpawner.maxNumberOfPowerups);
+		//PUS = new PowerUpSpawner(ad.
 	}
 
 	void Awake ()
@@ -159,6 +165,7 @@ public class GameManager : MonoBehaviour
 			StartGame ();
 			toStart = false;
 		}
+		PUS.Update ();
 	}
 
 	/// <summary>
@@ -386,8 +393,6 @@ public class GameManager : MonoBehaviour
 	
 	public void FinalDestruction (float delayStep)
 	{
-		PUS.enabled = false;
-		
 		float mem = delayStep;
 		float maxDelay = .0f;
 
