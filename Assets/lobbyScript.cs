@@ -90,6 +90,24 @@ public class lobbyScript : MonoBehaviour {
         return names;
     }
 
+	public int[] getTeams(){
+		Dictionary<int, int> teams = new Dictionary<int, int> ();
+		int[] inds = getPlayerColorInd ();
+		int count = 0;
+		int playercount = getNumOfPlayers ();
+		for (int i = 0; i < playercount; i++) {
+			if (!teams.ContainsKey (inds [i])) {
+				teams.Add (inds [i], count);
+				count++;
+			}
+		}
+		int[] ret = new int[playercount];
+		for (int i = 0; i < playercount; i++) {
+			ret [i] = teams [inds[i]];
+		}
+		return ret;
+	}
+
     public void hideLobby()
     {
         LobbyCanvas.enabled = false;

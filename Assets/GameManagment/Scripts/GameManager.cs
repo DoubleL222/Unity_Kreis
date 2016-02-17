@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using System;
+using System.Linq;
 
 /// <summary>
 /// A class that will oversee the whole game
@@ -35,7 +37,7 @@ public class GameManager : MonoBehaviour
 	List<SegmentTriggerBehaviour>[] segmentTriggerBehaviours;
 	List<SegmentTickBehaviour>[] segmentTickBehaviours;
 	Sprite[] segmentSprites;
-	static int[] playerScores;
+	static int[] teamScores;
 
 	float PhaseInDelay = float.MaxValue;
 
@@ -47,6 +49,8 @@ public class GameManager : MonoBehaviour
     public lobbyScript lobby;
 
 	public Text[] playerTexts;
+
+	public int[] teams;
 
 	//MULTIPLAYER
 	public bool multiplayerMode = false;
@@ -70,25 +74,7 @@ public class GameManager : MonoBehaviour
 	public void StartGame(){
         //lobbyCanvas.enabled = false;
 
-        string[] names = lobby.getNames();
-		winScore = lobby.getWinScore ();
-		scoreReached = false;
-        for(int i = 0; i < names.Length; i++)
-        {
-            if (names[i] != "")
-            {
-                playerNames[i] = names[i];
-            }
-            else
-            {
-                playerNames[i] = "player " + (i + 1);
-            }
-        }
-        prefabInd = lobby.getPlayerColorInd();
-        NumPlayers = lobby.getNumOfPlayers();
-        lobby.hideLobby();
-
-		Debug.Log ("loading Map " + lobby.GetSelectedMap ());
+        Debug.Log ("loading Map " + lobby.GetSelectedMap ());
 		SpawnRings (lobby.GetSelectedMap());
 		SpawnPlayers (NumPlayers);
 		SoundManager.PlayBigBoomClip ();
@@ -107,7 +93,27 @@ public class GameManager : MonoBehaviour
 
 	void Start ()
 	{
-		playerScores = new int[NumPlayers];
+		playerNames = new string[4];
+		string[] names = lobby.getNames();
+		winScore = lobby.getWinScore ();
+		scoreReached = false;
+		for(int i = 0; i < names.Length; i++)
+		{
+			if (names[i] != "")
+			{
+				playerNames[i] = names[i];
+			}
+			else
+			{
+				playerNames[i] = "player " + (i + 1);
+			}
+		}
+		prefabInd = lobby.getPlayerColorInd();
+		NumPlayers = lobby.getNumOfPlayers();
+		teams = lobby.getTeams ();
+		lobby.hideLobby();
+
+		teamScores = new int[lobby.getTeams().Length];
 		LivingPlayers = new List<GameObject> ();
 		playerColors = new List<Color> ();
 		playerColors.Add (new Color32 (255, 238, 13, 255));
@@ -118,8 +124,22 @@ public class GameManager : MonoBehaviour
 		for (int i = 0; i < playerTexts.Length; i++) {
 			playerTexts [i].color = playerColors [i];
 			playerTexts [i].enabled = false;
+			playerTexts [i].text = "";
 		}
-			
+
+		int NumberOfPlayers = NumPlayers;
+
+		for (int i = 0; i < NumberOfPlayers; i++) {
+			playerTexts [teams [i]].text += playerNames [i] + ", ";
+			playerTexts [teams [i]].enabled = true;
+		}
+		for (int i = 0; i < NumberOfPlayers; i++) {
+			if (playerTexts [i].text.EndsWith (", ")) {
+				playerTexts [i].text = playerTexts [i].text.Substring (0, playerTexts [i].text.Length - 2) + ": 0";
+				Debug.Log (playerTexts [i].text);
+			}
+		}
+
 		ParticleSystem[] PSS = PhaseInEffect.GetComponentsInChildren<ParticleSystem> ();
 		foreach (ParticleSystem PS in PSS) {
 			if (PS.duration < PhaseInDelay) {
@@ -129,17 +149,6 @@ public class GameManager : MonoBehaviour
 		if (PhaseInDelay == float.MaxValue) {
 			PhaseInDelay = 5.0f;
 		}
-		playerNames = new string[10];
-		playerNames [0] = "Phil";
-		playerNames [1] = "Amy";
-		playerNames [2] = "Carl";
-		playerNames [3] = "Lucy";
-		playerNames [4] = "Nick";
-		playerNames [5] = "Megan";
-		playerNames [6] = "Ralph";
-		playerNames [7] = "Don";
-		playerNames [8] = "Liz";
-		playerNames [9] = "Bob";
 	}
 
 	// Update is called once per frame
@@ -242,9 +251,10 @@ public class GameManager : MonoBehaviour
 		//StartCoroutine( SpawnPlayerAfter (5.0f));
 		Vector3 SpawnPosition = new Vector3 (0, 17f, 0);
 
+
 		for (int i = 0; i < NumberOfPlayers; i++) {
 			//StartCoroutine (SpawnPlayerAfter (keyCodes [i], SpawnPositions [i], i));
-			StartCoroutine(SpawnPlayerAfter(keyCodes[i], ArenaDataLoader.arenas["basic"].getSpawnPosition(NumberOfPlayers, i), prefabInd[i] ,playerNames[i]));
+			StartCoroutine(SpawnPlayerAfter(keyCodes[i], ArenaDataLoader.arenas["basic"].getSpawnPosition(NumberOfPlayers, i), prefabInd[i] ,playerNames[i], teams[i]));
 		}
 	}
 
@@ -289,33 +299,38 @@ public class GameManager : MonoBehaviour
 	{
 		Debug.Log ("playerDied");
 		if (!gameEnded) {
-			Debug.Log ("pLivingPlayers.count = " + LivingPlayers.Count);
 			LivingPlayers.Remove (player);
-			Debug.Log ("LivingPlayers.count = " + LivingPlayers.Count);
+			Dictionary<int, int> pteams = new Dictionary<int, int> ();
 			for (int i = 0; i < LivingPlayers.Count; i++) {
-				GameObject go = LivingPlayers [i];
-				LocalPlayerController LCP = go.GetComponent<LocalPlayerController> ();
-				playerScores [LCP.playerIndex]++;
-				Debug.Log ("Player " + LCP.PlayerName + " (" + LCP.playerIndex + ") score " + playerScores [LCP.playerIndex]);
-				playerTexts [LCP.playerIndex].text = LCP.PlayerName + ": " + playerScores [LCP.playerIndex];
-			}
-			bool sameTeam = true;
-			int team = LivingPlayers[0].GetComponent<LocalPlayerController>().team;
-			for (int i=1; i < LivingPlayers.Count; i++)
-			{
-				if (LivingPlayers[i].GetComponent<LocalPlayerController>().team != team)
-				{
-					sameTeam = false;
+				LocalPlayerController LCP = LivingPlayers[i].GetComponent<LocalPlayerController> ();
+				try{
+					pteams.Add(LCP.team, LCP.team);
+				}catch(Exception e){
 				}
 			}
-			if (sameTeam) {
+			int[] teams = pteams.Values.ToArray ();
+			for (int i = 0; i < teams.Length; i++) {
+				teamScores [teams [i]]++;
+			}
+			for (int i = 0; i < teams.Length; i++) {
+				Text t = playerTexts [teams[i]];
+				t.text = t.text.Substring (0, t.text.LastIndexOf (": ") + 2) + teamScores [teams [i]]; 
+			}
+
+			if (teams.Length < 2) {
+				gameEnded = true;
+				while (LivingPlayers.Count > 1) {
+					GameObject go = LivingPlayers [LivingPlayers.Count - 1];
+					LivingPlayers.RemoveAt (LivingPlayers.Count - 1);	
+					go.GetComponent<LocalPlayerController> ().DestroyObject ();
+				}
 				EndGame ();
 			}
 		}
 	}
 
 
-	IEnumerator SpawnPlayerAfter (IDictionary<string,string> playerKeys, Vector2 SpawnPos, int playerI, string name)
+	IEnumerator SpawnPlayerAfter (IDictionary<string,string> playerKeys, Vector2 SpawnPos, int playerI, string name, int team)
 	{
 		Vector3 SpawnPosition = new Vector3 (SpawnPos.x, SpawnPos.y, 0);
 		GameObject pie = Instantiate (PhaseInEffect, UtilityScript.transformToCartesian (SpawnPosition), Quaternion.identity) as GameObject;
@@ -335,9 +350,8 @@ public class GameManager : MonoBehaviour
 		LCP.setKeys (playerKeys);
 		LCP.PlayerName = name;
 
-
-		playerTexts [playerI%4].text = LCP.PlayerName + ": " + playerScores [playerI%4];
-		playerTexts [playerI%4].enabled = true;
+		//playerTexts [team].text = LCP.PlayerName + ", ";
+		//playerTexts [team].enabled = true;
 
 		cameraLoc.updatePlayers = true;
 
@@ -362,8 +376,8 @@ public class GameManager : MonoBehaviour
 		LPS.myPlayerOnTheServer = LCP;
 		LCP.playerIndex = playerI;
 
-		playerTexts [playerI].text = LCP.PlayerName + ": " + playerScores [playerI];
-		playerTexts [playerI].enabled = true;
+		//playerTexts [playerI].text = LCP.PlayerName + ": " + teamScores [playerI];
+		//playerTexts [playerI].enabled = true;
 
 		cameraLoc.updatePlayers = true;
 		if (usePowerUps)
@@ -400,8 +414,8 @@ public class GameManager : MonoBehaviour
 		FinalDestruction (3.5f);
 		LocalPlayerController LPC = LivingPlayers[0].GetComponent<LocalPlayerController> ();
 
-		for (int i=0; i < playerScores.Length; i++) {
-			if(playerScores[i] >= winScore){
+		for (int i=0; i < teamScores.Length; i++) {
+			if(teamScores[i] >= winScore){
 				scoreReached=true;
 			}
 		}
