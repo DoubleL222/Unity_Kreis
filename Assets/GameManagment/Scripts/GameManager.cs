@@ -223,21 +223,25 @@ public class GameManager : MonoBehaviour
 
         IDictionary<string, string> p1keys = new Dictionary<string, string>();
         p1keys.Add("movement", "P1Movement");
+        p1keys.Add("movementKey", "P1MovementKeyboard");
         p1keys.Add("gravityChange", "P1Jump");
         p1keys.Add("shoot", "P1Shoot");
 
         IDictionary<string, string> p2keys = new Dictionary<string, string>();
         p2keys.Add("movement", "P2Movement");
+        p2keys.Add("movementKey", "P2MovementKeyboard");
         p2keys.Add("gravityChange", "P2Jump");
         p2keys.Add("shoot", "P2Shoot");
 
         IDictionary<string, string> p3keys = new Dictionary<string, string>();
         p3keys.Add("movement", "P3Movement");
+        p3keys.Add("movementKey", "P3MovementKeyboard");
         p3keys.Add("gravityChange", "P3Jump");
         p3keys.Add("shoot", "P3Shoot");
 
         IDictionary<string, string> p4keys = new Dictionary<string, string>();
         p4keys.Add("movement", "P4Movement");
+        p4keys.Add("movementKey", "P4MovementKeyboard");
         p4keys.Add("gravityChange", "P4Jump");
         p4keys.Add("shoot", "P4Shoot");
 

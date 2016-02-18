@@ -129,7 +129,7 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable
 			boosterEmiter.SetActive (true);
 		}
         
-		Vector2 f = new Vector2 (-movementForce * Mathf.Abs(Input.GetAxis(keys["movement"])), 0);
+		Vector2 f = new Vector2 (-movementForce * Mathf.Abs(Mathf.Clamp(Input.GetAxis(keys["movement"]) + Input.GetAxis(keys["movementKey"]), -1, 1)), 0);
 		Vector2 sc = new Vector2 (Time.fixedDeltaTime, Time.fixedDeltaTime);
 		f.Scale (sc);
 		rigidbody.AddForce (f);
@@ -140,7 +140,8 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable
 		if (!boosterEmiter.activeSelf) {
 			boosterEmiter.SetActive (true);
 		}
-		Vector2 f = new Vector2 (movementForce * Mathf.Abs(Input.GetAxis(keys["movement"])), 0);
+
+        Vector2 f = new Vector2 (movementForce * Mathf.Abs(Mathf.Clamp(Input.GetAxis(keys["movement"]) + Input.GetAxis(keys["movementKey"]), -1, 1)), 0);
 		Vector2 sc = new Vector2 (Time.fixedDeltaTime, Time.fixedDeltaTime);
 		f.Scale (sc);
 		rigidbody.AddForce (f);
@@ -266,14 +267,14 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable
                 shots--;
             }
         }
-        //Debug.Log(Input.GetAxis("P1Movement"));
-        if (Input.GetAxis(keys["movement"]) > 0)
+        
+        if (Input.GetAxis(keys["movement"]) > 0 || Input.GetAxis(keys["movementKey"]) > 0)
         {
             leftPressed = false;
             rightPressed = true;
             
         }
-        else if (Input.GetAxis(keys["movement"]) < 0)
+        else if (Input.GetAxis(keys["movement"]) < 0 || Input.GetAxis(keys["movementKey"]) < 0)
         {
             leftPressed = true;
             rightPressed = false;
