@@ -11,6 +11,7 @@ public class PowerUpSpawner
 	// list of prefabs
 	public List<GameObject> powerUps;
 	// list of distances
+  [HideInInspector]
 	public List<float> spawnDistances;
 
 	// switch for enabling/disabling the powerup spawner
@@ -19,14 +20,15 @@ public class PowerUpSpawner
 	private float spawnDuration;
 	private float timer = .0f;
 	private int noOfPowerUps = 0;
-	private int noOfDistances = 0;
 
 	// GM
 	private GameManager GM;
-	public PowerUpSpawner(){
+
+	public PowerUpSpawner()
+  {
 		powerUps = new List<GameObject> ();
 		spawnDistances = new List<float> ();
-		maxNumberOfPowerups = 0;
+    maxNumberOfPowerups = 0;
 	}
 
 	public PowerUpSpawner (GameManager GM, List<GameObject> powerUps, List<float> spawnDistances, float minSpawnDuration, float maxSpawnDuration, int maxNumberOfPowerups)
@@ -39,7 +41,6 @@ public class PowerUpSpawner
 		this.maxNumberOfPowerups = maxNumberOfPowerups;
 		spawnDuration = Random.Range (minSpawnDuration, maxSpawnDuration);
 		noOfPowerUps = powerUps.Count;
-		noOfDistances = spawnDistances.Count;
 	}
 
 	public void Update ()

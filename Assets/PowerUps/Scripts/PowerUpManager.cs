@@ -3,48 +3,66 @@ using System.Collections;
 
 public class PowerUpManager : PolarPhysicsObject
 {
-  // shield
+  public enum PowerUpType
+  {
+    shield,
+    piercingShot,
+    death,
+    bulldozer
+  }
+
+  // type
+  public PowerUpType powerUpType;
+
+  // explosion
   public GameObject explosion;
-	
+
   // GM
   private GameManager GM;
-
 
   void Start()
   {
     StartUpdate();
 
     //GM
-	GM = FindObjectOfType<GameManager> ();
+    GM = FindObjectOfType<GameManager>();
   }
 
   void OnTriggerEnter2D(Collider2D collider)
   {
-    if (collider.gameObject.tag == "Shot" || collider.gameObject.tag == "PiercingShot")
+    if (collider.gameObject.tag == "Shot")
     {
-	  Destroy(collider.transform.root.gameObject);
-	  DestroyPowerUp();
+      Destroy(collider.transform.root.gameObject);
+      DestroyPowerUp();
+    }
+    else if (collider.gameObject.tag == "PiercingShot")
+    {
+      DestroyPowerUp();
     }
     else if (collider.gameObject.tag == "Player")
     {
       LocalPlayerController LPC = collider.gameObject.GetComponentInParent<LocalPlayerController>();
 
-      if (gameObject.tag == "Shield")
-	  {
-		GM.activePowerUps.Remove(this);
-		LPC.EnableShield();
-	  }
-	  else if (gameObject.tag == "PiercingShotPickup")
+      if (powerUpType == PowerUpType.shield)
       {
-		GM.activePowerUps.Remove(this);
-		LPC.piercingShot = true;
+        GM.activePowerUps.Remove(this);
+        LPC.EnableShield();
+      }
+      else if (powerUpType == PowerUpType.piercingShot)
+      {
+        GM.activePowerUps.Remove(this);
+        LPC.piercingShot = true;
         LPC.piercingShotSprite.SetActive(true);
       }
-      else if (gameObject.tag == "DeathPowerUp")
+      else if (powerUpType == PowerUpType.death)
       {
-		GM.activePowerUps.Remove(this);
-		Instantiate(explosion, mesh.transform.position, new Quaternion());
+        GM.activePowerUps.Remove(this);
+        Instantiate(explosion, mesh.transform.position, new Quaternion());
         LPC.DestroyObject();
+      }
+      else if (powerUpType == PowerUpType.bulldozer)
+      {
+        LPC.isBulldozer = true;
       }
       Destroy(transform.root.gameObject);
     }
@@ -54,13 +72,13 @@ public class PowerUpManager : PolarPhysicsObject
   {
     GM.activePowerUps.Remove(this);
     Instantiate(explosion, mesh.transform.position, new Quaternion());
-	Destroy(transform.root.gameObject);
+    Destroy(transform.root.gameObject);
   }
 
   public IEnumerator DestroyPowerUpAfter(float delay)
   {
-	yield return new WaitForSeconds (delay);
-	DestroyPowerUp();
+    yield return new WaitForSeconds(delay);
+    DestroyPowerUp();
   }
 }
 

@@ -39,6 +39,9 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable
   public GameObject shieldSprite;
   [HideInInspector]
   public bool piercingShot = false;
+  [HideInInspector]
+  public bool isBulldozer = false;
+  public float bulldozerDuration;
   public GameObject piercingShotSprite;
   public GameObject piercingShotPrefab;
 

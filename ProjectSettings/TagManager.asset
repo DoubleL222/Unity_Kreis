@@ -8,7 +8,6 @@ TagManager:
   - Segment
   - Boundary
   - PlayerMesh
-  - Shield
   - DebugText
   - buttonRight
   - SegmentMesh
@@ -17,9 +16,8 @@ TagManager:
   - buttonShoot
   - PlayerGlow
   - PiercingShot
-  - PiercingShotPickup
-  - DeathPowerUp
   - GameManager
+  - Shield
   layers:
   - Default
   - TransparentFX

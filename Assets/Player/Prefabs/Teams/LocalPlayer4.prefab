@@ -263,7 +263,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 178046}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.1277905, y: .360007465, z: 0}
+  m_LocalPosition: {x: -3.04244494, y: 5.03863859, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children:
   - {fileID: 415768}
@@ -565,6 +565,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e1defb638ef0da40b40a65a9476b81a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  root: {fileID: 0}
   SuperBooster: {fileID: 19877800}
   bumpEffect: {fileID: 156772, guid: e8c833e78a63f8f459c9500776a5ff2b, type: 2}
   shieldExplosion: {fileID: 141338, guid: 59920e45c611c874b970d33074fee005, type: 2}
@@ -621,6 +622,8 @@ MonoBehaviour:
   physics_parent: {fileID: 103110}
   rigidbody: {fileID: 5074628}
   gravity: 0
+  playerIndex: 0
+  team: 0
   MultiBool: 0
   glows:
   - {fileID: 159464}
@@ -629,6 +632,8 @@ MonoBehaviour:
   hasShield: 0
   shieldSprite: {fileID: 155154}
   piercingShot: 0
+  isBulldozer: 0
+  bulldozerDuration: 5
   piercingShotSprite: {fileID: 195538}
   piercingShotPrefab: {fileID: 108226, guid: cd56f497ea490834491afe70f4b164a2, type: 2}
   ExplosionEffect: {fileID: 150424, guid: 119dcc4427d639046a6d5b948ac7ab5f, type: 2}
