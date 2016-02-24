@@ -33,17 +33,7 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable
   private Vector3[] glowScales;
   private float interpolateT = 1;
 
-  // powerups
-  [HideInInspector]
-  public bool hasShield = false;
-  public GameObject shieldSprite;
-  [HideInInspector]
-  public bool piercingShot = false;
-  [HideInInspector]
-  public bool isBulldozer = false;
-  public float bulldozerDuration;
-  public GameObject piercingShotSprite;
-  public GameObject piercingShotPrefab;
+
 
 	//LUKA
 	public GameObject ExplosionEffect;
@@ -80,8 +70,20 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable
 	private PlayerCollisionDetector myPCD;
 	private Rigidbody2D myRBD2D;
 
+  // powerups
+  [Header("PowerUp Settings:")]
+  public GameObject shieldSprite;
+  [HideInInspector]
+  public bool hasShield = false;
+  [HideInInspector]
+  public bool piercingShot = false;
+  public GameObject piercingShotSprite;
+  public GameObject piercingShotPrefab;
+  [HideInInspector]
+  public bool isBulldozer = false;
+  public float bulldozerDuration;
 
-	public void setKeys(IDictionary<string,string> keys){
+  public void setKeys(IDictionary<string,string> keys){
 
 		this.keys = keys;
 	}
