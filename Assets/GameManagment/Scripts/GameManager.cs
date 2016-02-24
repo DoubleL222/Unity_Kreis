@@ -422,11 +422,20 @@ public class GameManager : MonoBehaviour
 		gameEnded = true;
 		FinalDestruction (3.5f);
 		LocalPlayerController LPC = LivingPlayers[0].GetComponent<LocalPlayerController> ();
+        int winningTeamInd = 0;
+        int winnerScore = 0;
 
 		for (int i=0; i < teamScores.Length; i++) {
 			if(teamScores[i] >= winScore){
 				scoreReached=true;
-			}
+                
+            }
+
+            if (teamScores[i] > winnerScore)
+            {
+                winnerScore = teamScores[i];
+                winningTeamInd = i;
+            }
 		}
 
 		if (scoreReached) {
@@ -435,15 +444,15 @@ public class GameManager : MonoBehaviour
 			string PName = "";
 			if (LivingPlayers.Count == 1)
 			{
-				PName = LPC.PlayerName+" WINS!";
+                Text t = playerTexts[teams[winningTeamInd]];
+                string sub = t.text.Substring(0, t.text.LastIndexOf(": "));
+                PName = sub + " WINS!";
 			}
 			else
 			{
-				for(int i = 0; i < LivingPlayers.Count; i++)
-				{
-					PName+=LivingPlayers[i].GetComponent<LocalPlayerController>().PlayerName+" ";
-				}
-				PName += "WIN!";
+                Text t = playerTexts[teams[winningTeamInd]];
+                string sub = t.text.Substring(0, t.text.LastIndexOf(": "));
+                PName = sub + " WIN!";
 			}
 
 			Destroy (LPC.gameObject);
