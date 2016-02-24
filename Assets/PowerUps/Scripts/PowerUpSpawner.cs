@@ -64,6 +64,8 @@ public class PowerUpSpawner
 				// reset timer
 				spawnDuration = Random.Range (minSpawnDuration, maxSpawnDuration);
 				timer = .0f;
+
+        //TODO SFX - PowerUp Spawn
 			}
 		}
 	}

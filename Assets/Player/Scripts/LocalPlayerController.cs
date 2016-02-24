@@ -191,6 +191,8 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable
           piercingShot = false;
           piercingShotSprite.SetActive(false);
           shotInstance = MonoBehaviour.Instantiate(piercingShotPrefab, physics.transform.position + new Vector3(0.0f, -gravity * shotOffset, 0.0f), new Quaternion()) as GameObject;
+
+          //TODO SFX - Piercing Shot Fire
         }
         else
         {
@@ -375,9 +377,11 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable
 	{
 		hasShield = true;
 		StartCoroutine (ShieldScaleIn ());
-	}
 
-	IEnumerator ShieldScaleIn ()
+    //TODO SFX - Shield ON!
+  }
+
+  IEnumerator ShieldScaleIn ()
 	{
 		// enable and scale down shield
 		shieldSprite.SetActive (true);
@@ -409,5 +413,7 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable
 	{
 		hasShield = false;
 		shieldSprite.SetActive (false);
-	}
+
+    //TODO SFX - Shield destroyed
+  }
 }
