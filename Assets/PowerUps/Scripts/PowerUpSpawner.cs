@@ -53,7 +53,7 @@ public class PowerUpSpawner
 				int randomPowerup = Random.Range (0, noOfPowerUps);
 
 				// random angle
-				float angle = Random.Range (-10.0f * Mathf.PI, 10.0f * Mathf.PI);
+				float angle = Random.Range (PolarPhysicsObject.widthMultiplier * Mathf.PI, PolarPhysicsObject.widthMultiplier * Mathf.PI);
 
 				// random distance
 				Vector3 pos = new Vector3 (angle, spawnDistances [randomPowerup], 0.0f);
