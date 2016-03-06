@@ -196,7 +196,6 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable
           piercingShot = false;
           piercingShotSprite.SetActive(false);
           shotInstance = MonoBehaviour.Instantiate(piercingShotPrefab, physics.transform.position + new Vector3(0.0f, -gravity * shotOffset, 0.0f), new Quaternion()) as GameObject;
-
           SoundManager.play_pu_piercing_fire();
         }
         else

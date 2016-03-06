@@ -41,12 +41,12 @@ public class GameManager : MonoBehaviour
 
 	float PhaseInDelay = float.MaxValue;
 
-	public GameObject PhaseInEffect;
-	//public GameObject localPlayerPrefab;
-    public GameObject[] localPlayerPrefabs;
-    private int[] prefabInd;
-	public WinnerCanvasController WCC;
-    public lobbyScript lobby;
+  public GameObject PhaseInEffect;
+  //public GameObject localPlayerPrefab;
+  public GameObject[] localPlayerPrefabs;
+  private int[] prefabInd;
+  public WinnerCanvasController WCC;
+  public lobbyScript lobby;
 
 	public Text[] playerTexts;
 
@@ -60,7 +60,9 @@ public class GameManager : MonoBehaviour
 	// powerups
 	PowerUpSpawner PUS;
 	public bool usePowerUps;
-	[HideInInspector]
+  EnvironmentManager EM;
+  public bool useEnvironmentEffects;
+  [HideInInspector]
 	public List<PowerUpManager> activePowerUps = new List<PowerUpManager>();
 
 	/// <summary>
@@ -78,6 +80,7 @@ public class GameManager : MonoBehaviour
 		SpawnRings (lobby.GetSelectedMap());
 		SpawnPlayers (NumPlayers);
 		SelectPowerUpSpawner (lobby.GetSelectedMap ());
+    SelectEnvironmentManager (lobby.GetSelectedMap());
     SoundManager.play_big_boom ();
 
     // powerups
@@ -92,7 +95,16 @@ public class GameManager : MonoBehaviour
 		//PUS = new PowerUpSpawner(ad.
 	}
 
-	void Awake ()
+  void SelectEnvironmentManager(string arenaname)
+  {
+    ArenaData ad = ArenaDataLoader.arenas[arenaname];
+    if (ad.environmentEffectsData == null)
+      EM = new EnvironmentManager();
+    else
+      EM = new EnvironmentManager(this, ad.environmentEffectsData.environmentEffects, ad.environmentEffectsData.maxSpawnDuration, ad.environmentEffectsData.maxSpawnDuration);
+  }
+
+  void Awake ()
 	{
 		GMInstance = this;
 	}
@@ -164,8 +176,11 @@ public class GameManager : MonoBehaviour
 			StartGame ();
 			toStart = false;
 		}
-		if(!gameEnded)
-			PUS.Update ();
+    if (!gameEnded)
+    {
+      PUS.Update();
+      EM.Update();
+    }
 	}
 
 	/// <summary>
@@ -368,6 +383,9 @@ public class GameManager : MonoBehaviour
 
 		if (usePowerUps)
 			PUS.spawnPowerups = true;
+
+    if (useEnvironmentEffects)
+      EM.enableEnvironmentEffects = true;
 	}
 
 	IEnumerator MultiSpawnPlayerAfter (Vector3 SpawnPosition, int playerI, LocalPlayerSender LPS)
@@ -391,9 +409,13 @@ public class GameManager : MonoBehaviour
 		//playerTexts [playerI].enabled = true;
 
 		cameraLoc.updatePlayers = true;
+
 		if (usePowerUps)
 			PUS.spawnPowerups = true;
-	}
+
+    if (useEnvironmentEffects)
+      EM.enableEnvironmentEffects = true;
+  }
 	
 	public void FinalDestruction (float delayStep)
 	{

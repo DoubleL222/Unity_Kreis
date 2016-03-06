@@ -203,14 +203,9 @@ public class PlayerCollisionDetector : MonoBehaviour
         //explosionInstance.transform.SetParent(transform);
       }
     }
-    else if (other.gameObject.tag == "Boundary")
-    {
-      MyLCP.DestroyObject();
-    }
-    else if (other.gameObject.tag == "PiercingShot")
+    else if (other.gameObject.tag == "Boundary" || other.gameObject.tag == "PiercingShot" || other.gameObject.tag == "StarPulse")
     {
       MyLCP.DestroyObject();
     }
   }
-
 }

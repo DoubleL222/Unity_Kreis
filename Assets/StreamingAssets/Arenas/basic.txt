@@ -43,3 +43,7 @@ powerups 3 5 8
 	powerup ShieldPowerUp 20.5
 	powerup BulldozerPowerUp 20.5
 end
+
+environmentEffects 3 5
+	effect StarPulse
+end

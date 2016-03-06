@@ -8,6 +8,7 @@ public class ArenaData
 	public List<RingData> rings;
 	public SpawnData spawns;
 	public PowerUpSpawnerData powerupSpawner;
+  public EnvironmentEffectsData environmentEffectsData;
 
 	public ArenaData(){
 		rings = new List<RingData> ();

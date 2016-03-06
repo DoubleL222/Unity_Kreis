@@ -223,7 +223,31 @@ public class ArenaDataLoader : MonoBehaviour
 		return sd;
 	}
 
-	public static ArenaData Load (string fileName)
+  public static EnvironmentEffectsData loadEnvironmentEffectsData(StreamReader reader)
+  {
+    EnvironmentEffectsData ed = new EnvironmentEffectsData();
+    string line;
+    do
+    {
+      line = reader.ReadLine();
+      if (line != null)
+      {
+        line = line.Trim();
+        string[] entries = line.Split(' ');
+        if (entries[0] == "effect")
+        {
+          ed.environmentEffects.Add(Resources.Load(entries[1]) as GameObject);
+        }
+        else if (entries[0] == "end")
+        {
+          return ed;
+        }
+      }
+    } while (line != null);
+    return ed;
+  }
+
+  public static ArenaData Load (string fileName)
 	{
 		ArenaData ad = new ArenaData ();
 		try {
@@ -245,7 +269,13 @@ public class ArenaDataLoader : MonoBehaviour
 							ad.powerupSpawner.maxSpawnDuration = float.Parse(entries[2]);
 							ad.powerupSpawner.maxNumberOfPowerups = int.Parse(entries[3]);
 						}
-					}
+            else if (entries[0] == "environmentEffects")
+            {
+              ad.environmentEffectsData = loadEnvironmentEffectsData(theReader);
+              ad.environmentEffectsData.minSpawnDuration = float.Parse(entries[1]);
+              ad.environmentEffectsData.maxSpawnDuration = float.Parse(entries[2]);
+            }
+          }
 				} while (line != null);
 				theReader.Close ();
 				return ad;

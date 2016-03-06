@@ -23,6 +23,7 @@ public class PowerUpManager : PolarPhysicsObject
   void Start()
   {
     StartUpdate();
+    EndUpdate();
 
     //GM
     GM = FindObjectOfType<GameManager>();
