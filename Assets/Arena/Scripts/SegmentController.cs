@@ -89,11 +89,11 @@ public class SegmentController : PolarPhysicsObject{
 			isDestroyed = true;
 			GameObject explosionInstance = Instantiate (ExplosionEffect, explodePosition, Quaternion.identity) as GameObject;
 			CamShakeManager.PlayShake (0.1f, 0.5f);
-			SoundManager.PlayExplosionClip ();
 			mesh.transform.GetChild (0).gameObject.SetActive (false);
 			explosionInstance.transform.SetParent (mesh.transform);
 			gameObject.GetComponent<BoxCollider2D> ().enabled = false;
-		}
+      SoundManager.play_segment_destroyed();
+    }
 	}
 
 	public IEnumerator DestroySegmentAFter(float delay){

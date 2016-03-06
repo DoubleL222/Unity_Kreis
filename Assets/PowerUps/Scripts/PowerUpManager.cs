@@ -48,7 +48,7 @@ public class PowerUpManager : PolarPhysicsObject
         GM.activePowerUps.Remove(this);
         LPC.EnableShield();
 
-        //TODO SFX - Shield Pickup
+        SoundManager.play_pu_shield_pickup();
       }
       else if (powerUpType == PowerUpType.piercingShot)
       {
@@ -56,7 +56,7 @@ public class PowerUpManager : PolarPhysicsObject
         LPC.piercingShot = true;
         LPC.piercingShotSprite.SetActive(true);
 
-        //TODO SFX - Piercing Shot Pickup
+        SoundManager.play_pu_piercing_pickup();
       }
       else if (powerUpType == PowerUpType.death)
       {
@@ -64,13 +64,13 @@ public class PowerUpManager : PolarPhysicsObject
         Instantiate(explosion, mesh.transform.position, new Quaternion());
         LPC.DestroyObject();
 
-        //TODO SFX - Death Pickup
+        SoundManager.play_death();
       }
       else if (powerUpType == PowerUpType.bulldozer)
       {
         LPC.isBulldozer = true;
 
-        //TODO SFX - Bulldozer Pickup
+        SoundManager.play_pu_bulldozer_pickup();
       }
       Destroy(transform.root.gameObject);
     }

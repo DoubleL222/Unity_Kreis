@@ -78,10 +78,10 @@ public class GameManager : MonoBehaviour
 		SpawnRings (lobby.GetSelectedMap());
 		SpawnPlayers (NumPlayers);
 		SelectPowerUpSpawner (lobby.GetSelectedMap ());
-		SoundManager.PlayBigBoomClip ();
+    SoundManager.play_big_boom ();
 
-		// powerups
-	}
+    // powerups
+  }
 
 	void SelectPowerUpSpawner(string arenaname){
 		ArenaData ad = ArenaDataLoader.arenas [arenaname];
@@ -347,8 +347,8 @@ public class GameManager : MonoBehaviour
 		GameObject pie = Instantiate (PhaseInEffect, UtilityScript.transformToCartesian (SpawnPosition), Quaternion.identity) as GameObject;
 		pie.transform.SetParent (GameManager.GMInstance.transform);
 		yield return new WaitForSeconds (PhaseInDelay);
-		SoundManager.PlaySpawnClip ();
-		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefabs [(playerI % (localPlayerPrefabs.Length))], SpawnPosition, new Quaternion ()) as GameObject;
+    SoundManager.play_spawn ();
+    GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefabs [(playerI % (localPlayerPrefabs.Length))], SpawnPosition, new Quaternion ()) as GameObject;
 		localPlayer.transform.SetParent (GameManager.GMInstance.root.transform);
 		LivingPlayers.Add (localPlayer);
 		//SpriteRenderer PlayerSR = localPlayer.GetComponentInChildren<SpriteRenderer> ();
@@ -375,8 +375,8 @@ public class GameManager : MonoBehaviour
 		GameObject pie = Instantiate (PhaseInEffect, UtilityScript.transformToCartesian (SpawnPosition), Quaternion.identity) as GameObject;
 		pie.transform.SetParent (GameManager.GMInstance.root.transform);
 		yield return new WaitForSeconds (PhaseInDelay);
-		SoundManager.PlaySpawnClip ();
-		GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefabs [(playerI % (localPlayerPrefabs.Length))], SpawnPosition, new Quaternion ()) as GameObject;
+    SoundManager.play_spawn ();
+    GameObject localPlayer = MonoBehaviour.Instantiate (localPlayerPrefabs [(playerI % (localPlayerPrefabs.Length))], SpawnPosition, new Quaternion ()) as GameObject;
 		localPlayer.transform.SetParent (GameManager.GMInstance.root.transform);
 		LivingPlayers.Add (localPlayer);
 		//SpriteRenderer PlayerSR = localPlayer.GetComponentInChildren<SpriteRenderer> ();
@@ -440,8 +440,9 @@ public class GameManager : MonoBehaviour
 
 		if (scoreReached) {
 
-			//TODO: end round
-			string PName = "";
+      //TODO: end round
+      SoundManager.play_victory_song();
+      string PName = "";
 			if (LivingPlayers.Count == 1)
 			{
                 Text t = playerTexts[teams[winningTeamInd]];
@@ -482,6 +483,6 @@ public class GameManager : MonoBehaviour
 	{
 		SpawnRings ("basic");
 		MultiSpawnPlayers ();
-		SoundManager.PlayBigBoomClip ();
-	}
+    SoundManager.play_big_boom ();
+  }
 }

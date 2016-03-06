@@ -65,8 +65,8 @@ public class PowerUpSpawner
 				spawnDuration = Random.Range (minSpawnDuration, maxSpawnDuration);
 				timer = .0f;
 
-        //TODO SFX - PowerUp Spawn
-			}
+        SoundManager.play_pu_spawn();
+      }
 		}
 	}
 }

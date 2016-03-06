@@ -15,7 +15,7 @@ public class SegmentTriggerBehaviourShotDestroy : SegmentTriggerBehaviour
         GameObject explosionInstance = MonoBehaviour.Instantiate(segmentController.shotFart, explodePosition, Quaternion.identity) as GameObject;
 
         CamShakeManager.PlayShake(0.1f, 0.5f);
-        SoundManager.PlayExplosionClip();
+        //SoundManager.PlayExplosionClip();
        // segmentController.mesh.transform.GetChild(0).gameObject.SetActive(false);
         explosionInstance.transform.SetParent(segmentController.mesh.transform);
     }

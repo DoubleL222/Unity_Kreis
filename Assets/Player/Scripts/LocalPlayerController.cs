@@ -96,9 +96,9 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable
 		GameManager.GMInstance.PlayerDied (gameObject);
 		cameraLoc.updatePlayers = true;
 		CamShakeManager.PlayShake (0.5f, 1);
-		SoundManager.PlayExplosionClip ();
+    SoundManager.play_death();
 
-	}
+  }
 
 	// Use this for initialization
 	void Awake ()
@@ -165,8 +165,13 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable
 		if (jumpCharge > 0) {
 			lastGravityChange = Time.fixedTime;
 			gravity = -gravity;
-			SoundManager.PlayJumpClip ();
-			jumpCharge = 0;
+
+      if (gravity < 0)
+        SoundManager.play_antigrav();
+      else
+        SoundManager.play_grav();
+
+      jumpCharge = 0;
 			/*if ((lastGravityChange + gravityChangeRate) < Time.fixedTime)
             {
                 lastGravityChange = Time.fixedTime;
@@ -192,7 +197,7 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable
           piercingShotSprite.SetActive(false);
           shotInstance = MonoBehaviour.Instantiate(piercingShotPrefab, physics.transform.position + new Vector3(0.0f, -gravity * shotOffset, 0.0f), new Quaternion()) as GameObject;
 
-          //TODO SFX - Piercing Shot Fire
+          SoundManager.play_pu_piercing_fire();
         }
         else
         {
@@ -200,7 +205,7 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable
         }
         Vector2 shotVel = new Vector2(0.0f, -gravity);
         shotInstance.GetComponent<ShotController>().setVelocity(shotVel);
-        SoundManager.PlayShotClip();
+        SoundManager.play_normal_shoot();
         shots = shots + 1;
       }
     }
@@ -378,7 +383,7 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable
 		hasShield = true;
 		StartCoroutine (ShieldScaleIn ());
 
-    //TODO SFX - Shield ON!
+    SoundManager.play_pu_shield_pickup();
   }
 
   IEnumerator ShieldScaleIn ()
@@ -414,6 +419,6 @@ public class LocalPlayerController : PolarPhysicsObject, IDestroyable
 		hasShield = false;
 		shieldSprite.SetActive (false);
 
-    //TODO SFX - Shield destroyed
+    SoundManager.play_pu_shield_destroyed();
   }
 }

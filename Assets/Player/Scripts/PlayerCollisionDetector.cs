@@ -39,6 +39,7 @@ public class PlayerCollisionDetector : MonoBehaviour
   private float SelfBumpMultiplyer = 0.3f;
   private float YBumpForce = 5.0f;
 
+  private bool was_at_max_speed = false;
 
   void FixedUpdate()
   {
@@ -47,12 +48,20 @@ public class PlayerCollisionDetector : MonoBehaviour
       MaxSpeedKiller -= Time.fixedDeltaTime;
       if (MaxSpeedKiller <= 0)
       {
+        if (was_at_max_speed == false)
+        {
+          SoundManager.play_max_speed();
+          was_at_max_speed = true;
+        }
+
         SuperBooster.enableEmission = true;
         if (!IsMaxSpeedKiller)
         {
           IsMaxSpeedKiller = true;
         }
       }
+      else
+        was_at_max_speed = false;
     }
   }
 
@@ -69,6 +78,7 @@ public class PlayerCollisionDetector : MonoBehaviour
       IsMaxSpeedKiller = false;
       SuperBooster.enableEmission = false;
       MaxSpeedKiller = 1.5f;
+      was_at_max_speed = false;
     }
   }
 
@@ -93,7 +103,7 @@ public class PlayerCollisionDetector : MonoBehaviour
 
   void MakeBumpEffect(Vector2 cPoint)
   {
-    SoundManager.PlayBumpClip();
+    SoundManager.play_crash();
     CamShakeManager.PlayShake(0.2f, 0.2f);
     Vector3 spawnPos = UtilityScript.transformToCartesian(new Vector3(cPoint.x, cPoint.y, 0.0f));
     GameObject bumpMaker = Instantiate(bumpEffect, spawnPos, Quaternion.identity) as GameObject;
