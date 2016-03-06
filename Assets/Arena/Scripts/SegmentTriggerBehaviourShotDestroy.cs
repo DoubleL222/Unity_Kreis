@@ -9,7 +9,7 @@ public class SegmentTriggerBehaviourShotDestroy : SegmentTriggerBehaviour
 {
 	void SegmentTriggerBehaviour.Enter (Collider2D other, SegmentController segmentController)
   {
-      if (other.gameObject.tag == "Shot" || other.gameObject.tag == "PiercingShot")
+      if (other.gameObject.tag == "Shot" || other.gameObject.tag == "PiercingShot" || other.gameObject.tag == "StarPulse")
     {
         Vector3 explodePosition = UtilityScript.transformToCartesian(other.transform.position);
         GameObject explosionInstance = MonoBehaviour.Instantiate(segmentController.shotFart, explodePosition, Quaternion.identity) as GameObject;

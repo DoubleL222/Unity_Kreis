@@ -45,5 +45,5 @@ powerups 3 5 8
 end
 
 environmentEffects 3 5
-	effect StarPulse
+	effect StarPulse 3 6
 end

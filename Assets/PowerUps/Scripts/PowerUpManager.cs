@@ -36,7 +36,7 @@ public class PowerUpManager : PolarPhysicsObject
       Destroy(collider.transform.root.gameObject);
       DestroyPowerUp();
     }
-    else if (collider.gameObject.tag == "PiercingShot")
+    else if (collider.gameObject.tag == "PiercingShot" || collider.gameObject.tag == "StarPulse")
     {
       DestroyPowerUp();
     }

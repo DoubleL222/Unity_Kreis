@@ -237,6 +237,8 @@ public class ArenaDataLoader : MonoBehaviour
         if (entries[0] == "effect")
         {
           ed.environmentEffects.Add(Resources.Load(entries[1]) as GameObject);
+          ed.minNoOfEffects = int.Parse(entries[2]);
+          ed.maxNoOfEffects = int.Parse(entries[3]);
         }
         else if (entries[0] == "end")
         {

@@ -7,6 +7,9 @@ public class EnvironmentEffectsData
   public float minSpawnDuration;
   public float maxSpawnDuration;
 
+  public int minNoOfEffects;
+  public int maxNoOfEffects;
+
   // list of prefabs
   public List<GameObject> environmentEffects;
 

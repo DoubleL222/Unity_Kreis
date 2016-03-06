@@ -7,6 +7,9 @@ public class EnvironmentManager
   public float minSpawnDuration;
   public float maxSpawnDuration;
 
+  public int minNoOfEffects;
+  public int maxNoOfEffects;
+
   // list of prefabs
   public List<GameObject> environmentEffects;
 
@@ -25,13 +28,15 @@ public class EnvironmentManager
     environmentEffects = new List<GameObject>();
   }
 
-  public EnvironmentManager(GameManager GM, List<GameObject> environmentEffects, float minSpawnDuration, float maxSpawnDuration)
+  public EnvironmentManager(GameManager GM, List<GameObject> environmentEffects, float minSpawnDuration, float maxSpawnDuration, int minNoOfEffects, int maxNoOfEffects)
   {
     this.GM = GM;
     this.environmentEffects = environmentEffects;
     noOfEffects = environmentEffects.Count;
     this.minSpawnDuration = minSpawnDuration;
     this.maxSpawnDuration = maxSpawnDuration;
+    this.minNoOfEffects = minNoOfEffects;
+    this.maxNoOfEffects = maxNoOfEffects;
     spawnDuration = Random.Range(minSpawnDuration, maxSpawnDuration);
   }
 
@@ -55,6 +60,9 @@ public class EnvironmentManager
           float angle = Random.Range(PolarPhysicsObject.widthMultiplier * Mathf.PI, -PolarPhysicsObject.widthMultiplier * Mathf.PI);
           Vector3 pos = new Vector3(angle, 2.0f, 0.0f);
           GameObject starPulse = MonoBehaviour.Instantiate(effect, pos, new Quaternion()) as GameObject;
+          StarPulseManager SPM = starPulse.GetComponent<StarPulseManager>();
+          SPM.minNoOfBlasts = minNoOfEffects;
+          SPM.maxNoOfBlasts = maxNoOfEffects;
 
           // TODO Star Pulse SFX
         }

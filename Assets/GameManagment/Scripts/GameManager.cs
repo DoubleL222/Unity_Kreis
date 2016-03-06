@@ -101,7 +101,7 @@ public class GameManager : MonoBehaviour
     if (ad.environmentEffectsData == null)
       EM = new EnvironmentManager();
     else
-      EM = new EnvironmentManager(this, ad.environmentEffectsData.environmentEffects, ad.environmentEffectsData.maxSpawnDuration, ad.environmentEffectsData.maxSpawnDuration);
+      EM = new EnvironmentManager(this, ad.environmentEffectsData.environmentEffects, ad.environmentEffectsData.maxSpawnDuration, ad.environmentEffectsData.maxSpawnDuration, ad.environmentEffectsData.minNoOfEffects, ad.environmentEffectsData.maxNoOfEffects);
   }
 
   void Awake ()

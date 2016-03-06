@@ -18,11 +18,10 @@ public class SegmentTriggerBehaviourDestroy : SegmentTriggerBehaviour
 				SDS.IsUsed = true;
 			}
     }
-    else if (other.gameObject.tag == "PiercingShot")
+    else if (other.gameObject.tag == "PiercingShot" || other.gameObject.tag == "StarPulse")
     {
       Vector3 spawnPos = UtilityScript.transformToCartesian(other.transform.position);
       segmentController.DestroySegment(spawnPos);
-      Debug.Log("PIERCING SHOT!");
     }
   }
 }
