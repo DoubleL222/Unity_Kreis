@@ -1,21 +1,4 @@
-Živijo
+#Unity Kreis
+Kreis is a 2D competative game made with Unity. It is meant to be played on a cast enabled device (chromecast, android tv) and controlled with a phone. [Here is a trailer for the game](https://youtu.be/pOgmTUaEWg4).
 
-Živijo ekipa.
-
-Narejen je Basecamp Campsite in Bitbucket (here) repozitorij. Če kdo ni bil povabljen naj sporoči tu ali preko drugega medija.
-Vabljeni k editiranju in dodajanju vsebi.
-
-
-Kar se tiče programiranja če se bo kdo lotil naj gre v gitu na master branch in iz tega naredi svoj branch:
-
-
-**$ git checkout -b [name_of_your_new_branch]**
-
-
-in ga pushajte na repozitorij:
-
-
-**$ git push -u origin [name_of_your_new_branch]**
-
-
-Če ima kdo težave z gitom me lahko pokliče/sms-a na 041-877-465
+The development of this game was stopped so feel free to use any resources if you find them useful.
